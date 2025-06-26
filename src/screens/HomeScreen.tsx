@@ -164,12 +164,12 @@ const styles = StyleSheet.create({
   },
   tip: {
     padding: 16,
-    backgroundColor: '#dbeafe',
+    backgroundColor: '#fce7f3',
     borderRadius: 12,
     marginBottom: 12,
   },
   tipText: {
-    color: '#1e40af',
+    color: '#be185d',
     fontWeight: '500',
   },
 }); 

@@ -74,7 +74,7 @@ const PhotoPicker = ({ onImageSelected, onError }: PhotoPickerProps) => {
               onPress={handleTakePhoto}
               style={styles.optionButton}
             >
-              <Ionicons name="camera" size={24} color="#0ea5e9" />
+              <Ionicons name="camera" size={24} color="#ec4899" />
               <Text style={styles.optionText}>
                 Take Photo
               </Text>
@@ -84,7 +84,7 @@ const PhotoPicker = ({ onImageSelected, onError }: PhotoPickerProps) => {
               onPress={handlePickFromLibrary}
               style={[styles.optionButton, { marginBottom: 24 }]}
             >
-              <Ionicons name="images" size={24} color="#0ea5e9" />
+              <Ionicons name="images" size={24} color="#ec4899" />
               <Text style={styles.optionText}>
                 Choose from Gallery
               </Text>
@@ -134,6 +134,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     color: '#1f2937',
+  },
+  button: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    gap: 12,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ec4899',
+  },
+  separator: {
+    width: 2,
   },
 });
 

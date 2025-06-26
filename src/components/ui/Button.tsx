@@ -36,9 +36,9 @@ const Button = ({
     };
 
     const variantStyles = {
-      primary: { backgroundColor: '#0ea5e9' },
-      secondary: { backgroundColor: '#ec4899' },
-      outline: { backgroundColor: 'transparent', borderWidth: 2, borderColor: '#0ea5e9' },
+      primary: { backgroundColor: '#ec4899' },
+      secondary: { backgroundColor: '#6b7280' },
+      outline: { backgroundColor: 'transparent', borderWidth: 2, borderColor: '#ec4899' },
     };
 
     return [baseStyle, sizeStyles[size], variantStyles[variant], style];
@@ -54,7 +54,7 @@ const Button = ({
     const variantStyles = {
       primary: { color: 'white', fontWeight: '600' as const },
       secondary: { color: 'white', fontWeight: '600' as const },
-      outline: { color: '#0ea5e9', fontWeight: '600' as const },
+      outline: { color: '#ec4899', fontWeight: '600' as const },
     };
 
     return [sizeStyles[size], variantStyles[variant]];
@@ -69,7 +69,7 @@ const Button = ({
       {loading && (
         <ActivityIndicator 
           size="small" 
-          color={variant === 'outline' ? '#0ea5e9' : 'white'} 
+          color={variant === 'outline' ? '#ec4899' : 'white'} 
           style={{ marginRight: 8 }}
         />
       )}
