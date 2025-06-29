@@ -1,16 +1,9 @@
-import Button from "@/components/ui/button";
 import { View, Text } from "react-native";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { useEffect } from "react";
-import { GOOGLE_WEB_CLIENT_ID } from "@env";
+import Button from "@/components/ui/button";
+import { useGoogleAuth } from "@/hooks/auth/oauth/useGoogleAuth";
 
-const Oauth = () => {
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: GOOGLE_WEB_CLIENT_ID,
-    });
-  }, []);
-  const handleGoogleLogin = async () => {};
+const OauthScreen = () => {
+  const { handleGoogleLogin } = useGoogleAuth();
 
   return (
     <View className="flex-1 justify-center items-center p-6 bg-white">
@@ -42,4 +35,4 @@ const Oauth = () => {
   );
 };
 
-export default Oauth;
+export default OauthScreen;

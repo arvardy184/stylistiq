@@ -1,8 +1,7 @@
-import { View } from "react-native";
-import Oauth from "../oauth";
+import OauthScreen from "../oauth";
 
 const AuthScreen = () => {
-  return <Oauth />;
+  return <OauthScreen />;
 };
 
 export default AuthScreen;
