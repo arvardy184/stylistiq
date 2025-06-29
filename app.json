@@ -5,9 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -28,7 +26,8 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.anonymous.stylistiq"
+      "package": "com.anonymous.stylistiq",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro"
@@ -36,7 +35,8 @@
     "plugins": [
       "expo-camera",
       "expo-image-picker",
-      "expo-font"
+      "expo-font",
+      "@react-native-google-signin/google-signin"
     ]
   }
 }
