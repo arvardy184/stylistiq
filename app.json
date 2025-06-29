@@ -5,9 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -22,11 +20,9 @@
         "WRITE_EXTERNAL_STORAGE"
       ]
     },
-    "web": {},
-    "plugins": [
-      "expo-camera",
-      "expo-image-picker",
-      "expo-font"
-    ]
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": ["expo-camera", "expo-image-picker", "expo-font"]
   }
 }
