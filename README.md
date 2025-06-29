@@ -48,6 +48,8 @@ src/
 2. **Start development server:**
    ```bash
    npx expo start
+   # kalau error
+   npx expo run:android
    ```
 
 3. **Run on device:**
