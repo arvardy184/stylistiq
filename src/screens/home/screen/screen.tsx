@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { PhotoPicker } from "../../components/PhotoPicker";
-import { Button } from "../../components/ui/Button";
+import { PhotoPicker } from "../../../components/ui/photoPicker/PhotoPicker";
+import { Button } from "../../../components/ui/button";
 
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
