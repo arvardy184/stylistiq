@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { GOOGLE_WEB_CLIENT_ID } from "@env";
+import { GOOGLE_WEB_CLIENT_ID } from "config";
 import { useOauthMutation } from "@/services/queries/auth/oauth";
 
 export const useGoogleAuth = () => {

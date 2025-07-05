@@ -1,4 +1,4 @@
-import { BASE_URL } from "@env";
+import { BASE_URL } from "config";
 import axios from "axios";
 
 export const LoginGoogle = async (token: string) => {
