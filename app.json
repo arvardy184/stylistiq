@@ -3,6 +3,12 @@
     "name": "Stylistiq",
     "slug": "stylistiq",
     "version": "1.0.0",
+    "splash": {
+      "image": "./src/assets/splash/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "icon": "./src/assets/icon/icon.png",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": ["**/*"],
