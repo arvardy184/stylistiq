@@ -1,8 +1,9 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { PhotoAnalysisScreen } from "../screens/PhotoAnalysisScreen";
+import { PhotoAnalysisScreen } from "../screens/photoAnalysis/screen/screen";
 import MainTabNavigator from "@/components/navbar/navbar";
+import AuthScreen from "@/screens/auth/screen/screen";
 
 const Stack = createStackNavigator();
 
@@ -20,7 +21,14 @@ const AppNavigator = () => {
           name="PhotoAnalysis"
           component={PhotoAnalysisScreen}
           options={{
-            headerShown: false,
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="Auth"
+          component={AuthScreen}
+          options={{
+            headerShown: true,
           }}
         />
       </Stack.Navigator>

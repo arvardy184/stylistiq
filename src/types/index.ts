@@ -3,6 +3,7 @@ export type RootStackParamList = {
   Main: undefined;
   PhotoAnalysis: { imageUri?: string };
   OutfitDetails: { outfitId: string };
+  Auth: undefined;
 };
 
 export type MainTabParamList = {
@@ -25,14 +26,14 @@ export interface OutfitAnalysis {
   analyzedAt: Date;
 }
 
-export type StyleCategory = 
-  | 'casual'
-  | 'formal'
-  | 'business'
-  | 'party'
-  | 'sporty'
-  | 'vintage'
-  | 'street';
+export type StyleCategory =
+  | "casual"
+  | "formal"
+  | "business"
+  | "party"
+  | "sporty"
+  | "vintage"
+  | "street";
 
 // User preferences
 export interface UserPreferences {
@@ -70,4 +71,4 @@ declare global {
 export interface OutfitCardProps {
   outfit: OutfitAnalysis;
   onPress: () => void;
-} 
+}

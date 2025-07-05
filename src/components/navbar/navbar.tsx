@@ -1,9 +1,9 @@
-import CameraScreen from "@/screens/camera/screen";
-import ProfileScreen from "@/screens/profile/screen";
-import WardrobeScreen from "@/screens/wardrobe/screen";
+import CameraScreen from "@/screens/camera/screen/screen";
+import ProfileScreen from "@/screens/profile/screen/screen";
+import WardrobeScreen from "@/screens/wardrobe/screen/screen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import { HomeScreen } from "@/screens/home/screen";
+import { HomeScreen } from "@/screens/home/screen/screen";
 
 const Tab = createBottomTabNavigator();
 

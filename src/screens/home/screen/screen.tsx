@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { PhotoPicker } from "../../components/PhotoPicker";
-import { Button } from "../../components/ui/Button";
+import { PhotoPicker } from "../../../components/ui/photoPicker/PhotoPicker";
+import Button from "@/components/ui/button";
 
 export const HomeScreen = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -94,6 +94,14 @@ export const HomeScreen = () => {
               </View>
             </View>
           )}
+        </View>
+
+        <View className="mb-6">
+          <Button
+            title="Login"
+            onPress={() => navigation.navigate("Auth")}
+            loading={loading}
+          />
         </View>
 
         {/* Quick Tips */}
