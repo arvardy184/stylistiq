@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import Button from "@/components/ui/button";
-import { useGoogleAuth } from "@/hooks/auth/oauth/useGoogleAuth";
+import { useGoogleAuth } from "@/screens/auth/oauth/useGoogleAuth";
 
 const OauthScreen = () => {
   const { handleGoogleLogin } = useGoogleAuth();
