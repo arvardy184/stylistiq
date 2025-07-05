@@ -21,9 +21,9 @@ const Button = ({
   };
 
   const variantClasses = {
-    primary: "bg-primary-500",
+    primary: "bg-button",
     secondary: "bg-gray-500",
-    outline: "bg-transparent border-2 border-primary-500",
+    outline: "bg-transparent border-2 border-primary",
   };
 
   const stateClasses = disabled || loading ? "opacity-50" : "";
@@ -37,7 +37,7 @@ const Button = ({
   const textVariantClasses = {
     primary: "text-white font-semibold",
     secondary: "text-white font-semibold",
-    outline: "text-primary-500 font-semibold",
+    outline: "text-white font-semibold",
   };
 
   const buttonClasses = cn(

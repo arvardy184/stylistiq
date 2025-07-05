@@ -1,57 +1,23 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  Alert,
-  RefreshControl,
-} from "react-native";
+import React from "react";
+import { View, Text, ScrollView, Image, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
 import { PhotoPicker } from "../../../components/ui/photoPicker/PhotoPicker";
 import Button from "@/components/ui/button";
+import { useHomeScreen } from "../hook/useHomeScreen";
 
 export const HomeScreen = () => {
-  const navigation = useNavigation();
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleImageSelected = (uri: string) => {
-    setSelectedImage(uri);
-  };
-
-  const handleAnalyzeOutfit = async () => {
-    if (!selectedImage) {
-      Alert.alert("Error", "Please select an image first");
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      // Simulate analysis delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Navigate to analysis result
-      navigation.navigate("PhotoAnalysis", { imageUri: selectedImage });
-
-      // Clear selected image
-      setSelectedImage(null);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Analysis failed";
-      Alert.alert("Error", message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 1000);
-  };
+  const {
+    selectedImage,
+    refreshing,
+    loading,
+    token,
+    handleImageSelected,
+    handleAnalyzeOutfit,
+    handleLogout,
+    handleLogin,
+    handleImageError,
+    onRefresh,
+  } = useHomeScreen();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -75,7 +41,7 @@ export const HomeScreen = () => {
         <View className="mb-6">
           <PhotoPicker
             onImageSelected={handleImageSelected}
-            onError={(error) => Alert.alert("Error", error)}
+            onError={handleImageError}
           />
 
           {selectedImage && (
@@ -96,12 +62,13 @@ export const HomeScreen = () => {
           )}
         </View>
 
+        {/* Authentication Button */}
         <View className="mb-6">
-          <Button
-            title="Login"
-            onPress={() => navigation.navigate("Auth")}
-            loading={loading}
-          />
+          {token ? (
+            <Button title="Logout" onPress={handleLogout} loading={loading} />
+          ) : (
+            <Button title="Login" onPress={handleLogin} loading={loading} />
+          )}
         </View>
 
         {/* Quick Tips */}
