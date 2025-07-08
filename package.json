@@ -12,6 +12,7 @@
     "build:ios": "expo build:ios"
   },
   "dependencies": {
+    "@expo-google-fonts/figtree": "^0.4.0",
     "@expo/metro-runtime": "~5.0.4",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-google-signin/google-signin": "^15.0.0",
@@ -21,6 +22,7 @@
     "@tanstack/react-query": "^5.81.5",
     "@types/react": "~19.0.10",
     "axios": "^1.6.2",
+    "dayjs": "^1.11.13",
     "expo": "~53.0.0",
     "expo-camera": "~16.1.8",
     "expo-constants": "~17.1.6",
