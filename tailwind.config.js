@@ -25,7 +25,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["System"],
+        figtree: ["Figtree"],
       },
     },
   },

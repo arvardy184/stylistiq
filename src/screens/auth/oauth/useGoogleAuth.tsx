@@ -17,7 +17,6 @@ export const useGoogleAuth = () => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const token = userInfo.data.idToken;
-      console.log("Google Sign-In Success:", token);
       mutate(token);
     } catch (error) {
       console.error("Google Sign-In Error:", error.code, error.message);
