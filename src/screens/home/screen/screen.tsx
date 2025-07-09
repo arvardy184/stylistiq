@@ -1,22 +1,21 @@
-import { View, ScrollView } from "react-native";
+import { ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ColletionBody from "./collection";
-import TotalOutfit from "./totalOutfit";
+import CollectionBody from "./collection";
+import CalendarHome from "./calender";
 import HeaderHome from "./header";
-import CalenderHome from "./calender";
 
 export const HomeScreen = () => {
   return (
-    <SafeAreaView className="flex-1 relative bg-white">
-      <View className="absolute top-0 left-0 right-0 h-64 bg-primary z-0" />
+    <SafeAreaView className="flex-1 bg-primary">
+      <StatusBar barStyle="light-content" />
       <ScrollView
-        className="z-10"
-        contentContainerStyle={{ paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        className="bg-white"
       >
-        <HeaderHome />
-        <TotalOutfit />
-        <CalenderHome />
-        <ColletionBody />
+        <HeaderHome username="Maar" totalOutfits={24} />
+        <CalendarHome />
+        <CollectionBody />
       </ScrollView>
     </SafeAreaView>
   );

@@ -1,79 +1,120 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
-import dayjs from "dayjs";
+import { Feather } from "@expo/vector-icons";
+import dayjs, { Dayjs } from "dayjs";
+import { useFocusEffect } from "@react-navigation/native";
+
+const outfitSchedule: { [key: string]: string } = {
+  "2025-07-09": "Classic White-Blue",
+  "2025-07-11": "Friday Casual",
+  "2025-07-12": "Weekend Explorer",
+};
 
 const CalenderHome = () => {
-  const today = dayjs();
-  const dayOfWeek = today.day();
-  const initialMonday = today.subtract(
-    dayOfWeek === 0 ? 6 : dayOfWeek - 1,
-    "day"
+  const [currentWeekStart, setCurrentWeekStart] = useState(() => {
+    const today = dayjs();
+    const dayOfWeek = today.day();
+    return today.subtract(dayOfWeek === 0 ? 6 : dayOfWeek - 1, "day");
+  });
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
+
+  useFocusEffect(
+    useCallback(() => {
+      const today = dayjs();
+      const dayOfWeek = today.day();
+      const initialMonday = today.subtract(
+        dayOfWeek === 0 ? 6 : dayOfWeek - 1,
+        "day"
+      );
+      setSelectedDate(today);
+      setCurrentWeekStart(initialMonday);
+    }, [])
   );
 
-  const [currentWeekStart, setCurrentWeekStart] = useState(initialMonday);
-  const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const weekdays = ["M", "T", "W", "T", "F", "S", "S"];
   const dates = Array.from({ length: 7 }, (_, i) =>
     currentWeekStart.add(i, "day")
   );
 
-  const handlePrevWeek = () => {
+  const handlePrevWeek = () =>
     setCurrentWeekStart(currentWeekStart.subtract(7, "day"));
-  };
-
-  const handleNextWeek = () => {
+  const handleNextWeek = () =>
     setCurrentWeekStart(currentWeekStart.add(7, "day"));
-  };
+
+  const outfitForSelectedDay =
+    outfitSchedule[selectedDate.format("YYYY-MM-DD")];
 
   return (
-    <View className="bg-white border m-5 border-white rounded-lg justify-between">
-      <View className="flex-row justify-between items-center px-5 pt-5">
-        <TouchableOpacity onPress={handlePrevWeek}>
-          <Text className="text-lg text-primary">{"<"}</Text>
+    <View className="bg-white rounded-2xl shadow-lg shadow-slate-600 mx-5 my-4 p-5">
+      <View className="flex-row justify-between items-center mb-4">
+        <TouchableOpacity onPress={handlePrevWeek} className="p-2">
+          <Feather name="chevron-left" size={24} color="#B2236F" />
         </TouchableOpacity>
-
-        <Text className="text-black text-2xl font-bold">
-          This Week's Outfit
+        <Text className="text-lg font-bold text-slate-800">
+          {currentWeekStart.format("MMMM YYYY")}
         </Text>
-
-        <TouchableOpacity onPress={handleNextWeek}>
-          <Text className="text-lg text-primary">{">"}</Text>
+        <TouchableOpacity onPress={handleNextWeek} className="p-2">
+          <Feather name="chevron-right" size={24} color="#B2236F" />
         </TouchableOpacity>
       </View>
-
-      <View className="flex-row justify-between px-5 mt-4">
-        {weekdays.map((day, index) => (
-          <Text
-            key={index}
-            className="text-sm text-gray-500 text-center flex-1"
-          >
-            {day}
-          </Text>
-        ))}
-      </View>
-
-      <View className="flex-row justify-between px-5 mb-4">
+      <View className="flex-row justify-around">
         {dates.map((dateObj, index) => {
-          const isToday = dateObj.isSame(today, "day");
-
+          const isSelected = dateObj.isSame(selectedDate, "day");
           return (
-            <Text
+            <TouchableOpacity
               key={index}
-              className={`text-base text-center flex-1 py-1 rounded-full ${
-                isToday ? "bg-primary text-white font-bold" : "text-black"
-              }`}
+              onPress={() => setSelectedDate(dateObj)}
+              className="items-center gap-2"
             >
-              {dateObj.date()}
-            </Text>
+              <Text className="font-semibold text-slate-500">
+                {weekdays[index]}
+              </Text>
+              <View
+                className={`w-10 h-10 rounded-full justify-center items-center ${
+                  isSelected ? "bg-primary rounded-full" : "bg-transparent"
+                }`}
+              >
+                <Text
+                  className={`text-base font-bold ${
+                    isSelected ? "text-white" : "text-slate-800"
+                  }`}
+                >
+                  {dateObj.date()}
+                </Text>
+              </View>
+            </TouchableOpacity>
           );
         })}
       </View>
 
-      <View className="w-full p-4 bg-primary rounded-b-lg">
-        <Text className="text-white text-2xl text-center">
-          Classic White-Blue
-        </Text>
-        <Text className="text-white font-thin text-center">See Details</Text>
+      <View className="mt-6 border-t border-slate-200 pt-4 items-center">
+        {outfitForSelectedDay ? (
+          <>
+            <Text className="text-sm text-slate-500">Outfit for the day:</Text>
+            <Text className="text-xl font-bold text-primary mt-1">
+              {outfitForSelectedDay}
+            </Text>
+          </>
+        ) : (
+          <Text className="text-base text-slate-400 font-medium py-4">
+            No outfit scheduled for this day.
+          </Text>
+        )}
       </View>
+      <TouchableOpacity
+        className={`mt-4 py-3 rounded-lg ${
+          outfitForSelectedDay ? "bg-primary/10" : "bg-slate-100"
+        }`}
+        disabled={!outfitForSelectedDay}
+      >
+        <Text
+          className={`font-bold text-center ${
+            outfitForSelectedDay ? "text-primary" : "text-slate-400"
+          }`}
+        >
+          View Outfit Details
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
