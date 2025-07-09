@@ -14,6 +14,8 @@ import {
   Figtree_700Bold,
 } from "@expo-google-fonts/figtree";
 import * as SplashScreen from "expo-splash-screen";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/components/ui/toast/CustomToast";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -45,6 +47,7 @@ export default function App() {
           <StatusBar style="auto" />
         </SafeAreaProvider>
       </QueryClientProvider>
+      <Toast config={toastConfig} />
     </GestureHandlerRootView>
   );
 }
