@@ -1,14 +1,37 @@
+import React from "react";
 import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-const HeaderHome = () => {
+type HeaderHomeProps = {
+  username: string;
+  totalOutfits: number;
+};
+
+const getGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning";
+  if (hour < 18) return "Good Afternoon";
+  return "Good Evening";
+};
+
+const HeaderHome = ({ username, totalOutfits }: HeaderHomeProps) => {
   return (
-    <View className="flex-row justify-between items-center p-5">
-      <View>
-        <Text className="text-white text-sm font-bold">Good Evening,</Text>
-        <Text className="text-white text-2xl font-bold">maar</Text>
+    <View className="bg-primary rounded-b-3xl px-5 pb-8 pt-5 mb-6 shadow-lg shadow-slate-300">
+      {/* Top Row */}
+      <View className="flex-row justify-between items-center">
+        <Text className="text-white text-3xl font-bold">{getGreeting()}</Text>
+        <Ionicons name="notifications-outline" size={26} color="white" />
       </View>
-      <Ionicons name="notifications" size={24} color="white" />
+
+      {/* Welcome Message & Stats */}
+      <View className="mt-6">
+        <Text className="text-white text-xl">
+          Hello, <Text className="font-bold">{username}</Text>
+        </Text>
+        <Text className="text-white/80 text-sm mt-2">
+          You have {totalOutfits} total outfits saved.
+        </Text>
+      </View>
     </View>
   );
 };
