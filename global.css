@@ -1,3 +1,10 @@
 @tailwind base;
+
+@layer base {
+  Text {
+    @apply font-figtree;
+  }
+}
+
 @tailwind components;
-@tailwind utilities; 
+@tailwind utilities;

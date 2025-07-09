@@ -1,71 +1,26 @@
-import { cn } from "@/utils/cn";
 import React from "react";
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { ButtonProps } from "./types";
+import { cn } from "@/utils/cn";
 
 const Button = ({
   title,
   onPress,
-  variant = "primary",
-  size = "md",
   disabled = false,
   loading = false,
   className,
-}: ButtonProps) => {
-  const baseClasses = "rounded-lg flex-row items-center justify-center";
-
-  const sizeClasses = {
-    sm: "px-4 py-2 min-h-8",
-    md: "px-6 py-3 min-h-11",
-    lg: "px-8 py-4 min-h-13",
-  };
-
-  const variantClasses = {
-    primary: "bg-button",
-    secondary: "bg-gray-500",
-    outline: "bg-transparent border-2 border-primary",
-  };
-
-  const stateClasses = disabled || loading ? "opacity-50" : "";
-
-  const textSizeClasses = {
-    sm: "text-sm",
-    md: "text-base",
-    lg: "text-lg",
-  };
-
-  const textVariantClasses = {
-    primary: "text-white font-semibold",
-    secondary: "text-white font-semibold",
-    outline: "text-white font-semibold",
-  };
-
-  const buttonClasses = cn(
-    baseClasses,
-    sizeClasses[size],
-    variantClasses[variant],
-    stateClasses,
-    className
-  );
-
-  const textClasses = cn(textSizeClasses[size], textVariantClasses[variant]);
-
-  const indicatorColor = variant === "outline" ? "#ec4899" : "white";
-
+  textClassName,
+}: ButtonProps & { textClassName?: string }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      className={buttonClasses}
+      className={cn("flex-row items-center justify-center", className)}
     >
       {loading && (
-        <ActivityIndicator
-          size="small"
-          color={indicatorColor}
-          className="mr-2"
-        />
+        <ActivityIndicator size="small" color="white" className="mr-2" />
       )}
-      <Text className={textClasses}>{title}</Text>
+      <Text className={textClassName}>{title}</Text>
     </TouchableOpacity>
   );
 };

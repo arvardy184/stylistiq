@@ -12,7 +12,9 @@
     "build:ios": "expo build:ios"
   },
   "dependencies": {
+    "@expo-google-fonts/figtree": "^0.4.0",
     "@expo/metro-runtime": "~5.0.4",
+    "@hookform/resolvers": "^5.1.1",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-google-signin/google-signin": "^15.0.0",
     "@react-navigation/bottom-tabs": "^6.5.20",
@@ -21,6 +23,7 @@
     "@tanstack/react-query": "^5.81.5",
     "@types/react": "~19.0.10",
     "axios": "^1.6.2",
+    "dayjs": "^1.11.13",
     "expo": "~53.0.0",
     "expo-camera": "~16.1.8",
     "expo-constants": "~17.1.6",
@@ -33,14 +36,17 @@
     "nativewind": "^4.0.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-hook-form": "^7.60.0",
     "react-native": "0.79.4",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
+    "react-native-toast-message": "^2.3.3",
     "react-native-web": "^0.20.0",
     "tailwindcss-react-native": "^1.7.10",
+    "yup": "^1.6.1",
     "zustand": "^4.4.7"
   },
   "devDependencies": {
