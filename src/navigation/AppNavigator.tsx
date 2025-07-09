@@ -14,8 +14,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={"Login"}
-        // initialRouteName={token ? "Login" : "Login"}
+        initialRouteName={token ? "Main" : "Login"}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Main" component={MainTabNavigator} />
