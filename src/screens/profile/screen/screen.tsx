@@ -1,21 +1,51 @@
-import { useState } from "react";
-import { useGetProfileUser } from "@/services/queries/user/profile";
-import { useAuthStore } from "@/store/auth/authStore";
-import { View, Text, ScrollView, Image, StatusBar, Alert } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  StatusBar,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { Gender } from "@/common/enums/gender";
-import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
-import ProfileInfoRow from "../components/ProfileInfoRow";
-import MeasurementGridItem from "../components/MeasurementGridItem";
+import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
+import ControlledTextInput from "../components/ControlledTextInput";
+import ControlledDatePicker from "../components/ControlledDatePicker";
+import ControlledDropdown from "../components/ControlledDropdown";
 import ProfileActionRow from "../components/ProfileActionRow";
+import MeasurementGridItem from "../components/MeasurementGridItem";
+import CardHeader from "../components/CardHeader";
+import ProfileInfoRow from "../components/ProfileInfoRow";
 import StatItem from "../components/StatItem";
+import ImagePickerActionSheet from "../components/ImagePickerActionSheet";
+import { useProfileScreen } from "../hook";
 
 const ProfileScreen = () => {
-  const { token, clearToken } = useAuthStore();
-  const { data: userProfile, isLoading, isError } = useGetProfileUser(token);
-  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
+  const {
+    userProfile,
+    isLoading,
+    isError,
+    isLogoutModalVisible,
+    setLogoutModalVisible,
+    isEditing,
+    isImagePickerVisible,
+    setImagePickerVisible,
+    isUpdating,
+    isUploading,
+    control,
+    handleSubmit,
+    handleEditPress,
+    handleCancelEdit,
+    onSubmit,
+    handleImagePick,
+    handleLogout,
+    onConfirmLogout,
+    formatBirthday,
+    handleBodyProfileEdit,
+  } = useProfileScreen();
 
   if (isLoading) {
     return <LoadingContent />;
@@ -32,22 +62,6 @@ const ProfileScreen = () => {
     );
   }
 
-  const handleLogout = () => setLogoutModalVisible(true);
-
-  const onConfirmLogout = () => {
-    setLogoutModalVisible(false);
-    clearToken();
-  };
-
-  const formatBirthday = (date?: Date) => {
-    if (!date) return "Not set";
-    return new Date(date).toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  };
-
   const bodyProfile = userProfile.bodyProfile;
 
   return (
@@ -57,18 +71,33 @@ const ProfileScreen = () => {
         className="flex-1 bg-gray-100"
       >
         <StatusBar barStyle="light-content" />
-        <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 24 }}
+          keyboardShouldPersistTaps="handled"
+        >
           <View className="bg-primary items-center p-6 pb-8 rounded-b-3xl">
-            {userProfile.profilePhoto ? (
-              <Image
-                source={{ uri: userProfile.profilePhoto }}
-                className="h-28 w-28 rounded-full border-4 border-white"
-              />
-            ) : (
-              <View className="h-28 w-28 items-center justify-center rounded-full bg-white/30 border-4 border-white">
-                <Feather name="user" size={60} color="white" />
+            <TouchableOpacity
+              onPress={() => setImagePickerVisible(true)}
+              disabled={isUploading}
+            >
+              {userProfile.profilePhoto ? (
+                <Image
+                  source={{ uri: userProfile.profilePhoto }}
+                  className="h-28 w-28 rounded-full border-4 border-white"
+                />
+              ) : (
+                <View className="h-28 w-28 items-center justify-center rounded-full bg-white/30 border-4 border-white">
+                  <Feather name="user" size={60} color="white" />
+                </View>
+              )}
+              <View className="absolute bottom-0 right-0 bg-white p-2 rounded-full border-2 border-primary">
+                {isUploading ? (
+                  <ActivityIndicator size="small" color="#B2236F" />
+                ) : (
+                  <Feather name="camera" size={20} color="#B2236F" />
+                )}
               </View>
-            )}
+            </TouchableOpacity>
             <Text className="mt-4 text-2xl font-bold text-white">
               {userProfile.name || "User"}
             </Text>
@@ -88,37 +117,95 @@ const ProfileScreen = () => {
 
           <View className="px-4">
             <View className="mt-6 rounded-xl bg-white p-4 shadow-sm">
-              <Text className="text-lg font-semibold text-gray-800 mb-4">
-                Personal Information
-              </Text>
-              <ProfileInfoRow
-                icon="gift"
-                label="Birthday"
-                value={formatBirthday(userProfile.birthday)}
-              />
-              <ProfileInfoRow
-                icon="hash"
-                label="Age"
-                value={userProfile.age ? `${userProfile.age} years` : "Not set"}
-              />
-              <ProfileInfoRow
-                icon="users"
-                label="Gender"
-                value={
-                  userProfile.gender
-                    ? userProfile.gender === Gender.MALE
-                      ? "Male"
-                      : "Female"
-                    : "Not set"
-                }
-                isLast
-              />
+              {!isEditing ? (
+                <>
+                  <CardHeader
+                    title="Personal Information"
+                    onEditPress={handleEditPress}
+                  />
+                  <ProfileInfoRow
+                    icon="user"
+                    label="Name"
+                    value={userProfile.name || "Not set"}
+                  />
+                  <ProfileInfoRow
+                    icon="gift"
+                    label="Birthday"
+                    value={formatBirthday(userProfile.birthday)}
+                  />
+                  <ProfileInfoRow
+                    icon="hash"
+                    label="Age"
+                    value={
+                      userProfile.age ? `${userProfile.age} years` : "Not set"
+                    }
+                  />
+                  <ProfileInfoRow
+                    icon="users"
+                    label="Gender"
+                    value={
+                      userProfile.gender
+                        ? userProfile.gender === Gender.MALE
+                          ? "Male"
+                          : "Female"
+                        : "Not set"
+                    }
+                    isLast
+                  />
+                </>
+              ) : (
+                <>
+                  <Text className="text-lg font-semibold text-gray-800 mb-4">
+                    Edit Personal Information
+                  </Text>
+                  <ControlledTextInput
+                    control={control}
+                    name="name"
+                    label="Full Name"
+                    placeholder="Enter your name"
+                  />
+                  <ControlledDatePicker
+                    control={control}
+                    name="birthday"
+                    label="Birthday"
+                  />
+                  <ControlledDropdown
+                    control={control}
+                    name="gender"
+                    label="Gender"
+                    items={[
+                      { label: "Male", value: Gender.MALE },
+                      { label: "Female", value: Gender.FEMALE },
+                    ]}
+                  />
+                  <View className="flex-row mt-4 gap-3">
+                    <TouchableOpacity
+                      onPress={handleCancelEdit}
+                      className="flex-1 py-3 bg-gray-200 rounded-lg items-center"
+                    >
+                      <Text className="font-semibold text-gray-700">
+                        Cancel
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleSubmit(onSubmit)}
+                      disabled={isUpdating}
+                      className="flex-1 py-3 bg-primary rounded-lg items-center"
+                    >
+                      <Text className="font-semibold text-white">
+                        {isUpdating ? "Saving..." : "Save Changes"}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
             </View>
             <View className="mt-6 rounded-xl bg-white p-4 shadow-sm">
-              <Text className="text-lg font-semibold text-gray-800 mb-2">
-                Body Profile
-              </Text>
-              <View className="flex-row flex-wrap justify-between mt-2">
+              <CardHeader
+                title="Body Profile"
+                onEditPress={handleBodyProfileEdit}
+              />
+              <View className="flex-row flex-wrap justify-between">
                 <MeasurementGridItem
                   label="Height"
                   value={bodyProfile?.height}
@@ -163,13 +250,6 @@ const ProfileScreen = () => {
             </View>
             <View className="mt-6 rounded-xl bg-white shadow-sm">
               <ProfileActionRow
-                icon="edit"
-                label="Edit Profile"
-                onPress={() =>
-                  Alert.alert("Navigation", "Navigate to Edit Profile screen")
-                }
-              />
-              <ProfileActionRow
                 icon="log-out"
                 label="Log Out"
                 color="text-red-500"
@@ -180,6 +260,12 @@ const ProfileScreen = () => {
           </View>
         </ScrollView>
 
+        <ImagePickerActionSheet
+          visible={isImagePickerVisible}
+          onClose={() => setImagePickerVisible(false)}
+          onLaunchCamera={() => handleImagePick("camera")}
+          onLaunchGallery={() => handleImagePick("gallery")}
+        />
         <ConfirmationModal
           visible={isLogoutModalVisible}
           onClose={() => setLogoutModalVisible(false)}
