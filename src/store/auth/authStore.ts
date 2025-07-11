@@ -5,10 +5,30 @@ import { AuthState } from "./type";
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       token: null,
-      setToken: (token: string) => set({ token }),
-      clearToken: () => set({ token: null }),
+      loginTime: null,
+
+      setToken: (token: string) =>
+        set({
+          token,
+          loginTime: Date.now(),
+        }),
+
+      clearToken: () =>
+        set({
+          token: null,
+          loginTime: null,
+        }),
+
+      isTokenExpired: () => {
+        const { loginTime } = get();
+        if (!loginTime) return false;
+
+        const now = Date.now();
+        const hoursPassed = (now - loginTime) / (1000 * 60 * 60);
+        return hoursPassed >= 24;
+      },
     }),
     {
       name: "auth-storage",
