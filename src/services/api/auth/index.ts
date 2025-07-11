@@ -1,6 +1,6 @@
 import { BASE_URL } from "@/config";
-import { LoginRequest } from "@/services/request/auth/login";
-import { RegisterRequest } from "@/services/request/auth/register";
+import { LoginFormData } from "@/screens/auth/screen/body/form/login";
+import { RegisterFormData } from "@/screens/auth/screen/body/form/register";
 import axios from "axios";
 
 export const LoginGoogle = async (token: string) => {
@@ -16,12 +16,12 @@ export const LoginGoogle = async (token: string) => {
   return response.data.data;
 };
 
-export const Login = async (data: LoginRequest) => {
+export const Login = async (data: LoginFormData) => {
   const response = await axios.post(`${BASE_URL}/auth/login`, data);
   return response.data.data;
 };
 
-export const Register = async (data: RegisterRequest) => {
+export const Register = async (data: RegisterFormData) => {
   const response = await axios.post(`${BASE_URL}/auth/register`, data);
   return response.data.data;
 };
