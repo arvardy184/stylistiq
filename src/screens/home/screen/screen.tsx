@@ -6,6 +6,7 @@ import HeaderHome from "./header";
 import { useAuthStore } from "@/store/auth/authStore";
 import { useGetProfileUser } from "@/services/queries/user/profile";
 import { useTokenExpiration } from "../hook/useTokenExpiration";
+import LoadingContent from "@/components/ui/loading/LoadingContent";
 
 export const HomeScreen = () => {
   const { token } = useAuthStore();
@@ -13,11 +14,7 @@ export const HomeScreen = () => {
   useTokenExpiration();
 
   if (isLoading) {
-    return (
-      <SafeAreaView className="flex-1 bg-primary items-center justify-center">
-        <ActivityIndicator size="large" color="#0000ff" />
-      </SafeAreaView>
-    );
+    <LoadingContent />;
   }
 
   return (
@@ -29,8 +26,8 @@ export const HomeScreen = () => {
         className="bg-white"
       >
         <HeaderHome
-          username={userProfile.name || "User"}
-          totalOutfits={userProfile.clothesCount || 0}
+          username={userProfile?.name || "User"}
+          totalOutfits={userProfile?.clothesCount || 0}
         />
         <CalendarHome />
         <CollectionBody />
