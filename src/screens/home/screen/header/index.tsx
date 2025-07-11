@@ -17,16 +17,13 @@ const getGreeting = () => {
 const HeaderHome = ({ username, totalOutfits }: HeaderHomeProps) => {
   return (
     <View className="bg-primary rounded-b-3xl px-5 pb-8 pt-5 mb-6 shadow-lg shadow-slate-300">
-      {/* Top Row */}
       <View className="flex-row justify-between items-center">
         <Text className="text-white text-3xl font-bold">{getGreeting()}</Text>
         <Ionicons name="notifications-outline" size={26} color="white" />
       </View>
-
-      {/* Welcome Message & Stats */}
       <View className="mt-6">
         <Text className="text-white text-xl">
-          Hello, <Text className="font-bold">{username}</Text>
+          Hello, <Text className="font-bold">{username.split(" ")[0]}</Text>
         </Text>
         <Text className="text-white/80 text-sm mt-2">
           You have {totalOutfits} total outfits saved.
