@@ -4,7 +4,7 @@ import CollectionBody from "./collection";
 import CalendarHome from "./calender";
 import HeaderHome from "./header";
 import { useAuthStore } from "@/store/auth/authStore";
-import { useGetProfileUser } from "@/services/queries/user/profile";
+import { useGetProfileUser } from "@/services/queries/user/getProfile";
 import { useTokenExpiration } from "../hook/useTokenExpiration";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
 
