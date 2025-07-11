@@ -1,6 +1,6 @@
 import { Gender } from "@/common/enums/gender";
 
-export interface UpdateDataFormData {
+export interface UpdateProfileFormData {
   gender: Gender;
   birthday: Date;
   name: string;
