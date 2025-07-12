@@ -1,10 +1,10 @@
-import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { PhotoAnalysisScreen } from "../screens/photoAnalysis/screen/screen";
 import MainTabNavigator from "@/components/navbar/navbar";
 import AuthScreen from "@/screens/auth/screen/screen";
 import { useAuthStore } from "@/store/auth/authStore";
+import NotificationScreen from "@/screens/notification/screen/screen";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +24,11 @@ const AppNavigator = () => {
           options={{ headerShown: true }}
         />
         <Stack.Screen name="Login" component={AuthScreen} />
+        <Stack.Screen
+          name="Notification"
+          component={NotificationScreen}
+          options={{ headerShown: true }}
+        />
         <Stack.Screen name="Register" component={AuthScreen} />
       </Stack.Navigator>
     </NavigationContainer>
