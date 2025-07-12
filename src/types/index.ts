@@ -5,6 +5,7 @@ export type RootStackParamList = {
   OutfitDetails: { outfitId: string };
   Login: undefined;
   Register: undefined;
+  Notification: undefined;
 };
 
 export type MainTabParamList = {
