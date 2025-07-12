@@ -24,11 +24,8 @@ export const UpdateProfile = async (
   return response.data.data;
 };
 
-export const UpdateProfilePicture = async (
-  token: string,
-  formData: FormData
-) => {
-  const { data } = await axios.post("/file/upload", formData, {
+export const UpdateProfilePicture = async (token: string, file: FormData) => {
+  const { data } = await axios.post("/file/upload", file, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/form-data",

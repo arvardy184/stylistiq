@@ -58,37 +58,69 @@ export const useProfileScreen = () => {
   };
 
   const handleImagePick = async (pickerFunction: "camera" | "gallery") => {
-    setImagePickerVisible(false);
+    try {
+      setImagePickerVisible(false);
+      const permission =
+        pickerFunction === "camera"
+          ? await ImagePicker.requestCameraPermissionsAsync()
+          : await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    const permission =
-      pickerFunction === "camera"
-        ? await ImagePicker.requestCameraPermissionsAsync()
-        : await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permission.status !== "granted") {
+        Alert.alert(
+          "Permission required",
+          `You need to grant permission to access the ${pickerFunction}`
+        );
+        return;
+      }
 
-    if (permission.status !== "granted") {
-      Alert.alert(
-        "Permission required",
-        "You need to grant permission to access the " + pickerFunction
-      );
-      return;
-    }
+      const result =
+        pickerFunction === "camera"
+          ? await ImagePicker.launchCameraAsync({
+              quality: 0.7,
+              allowsEditing: true,
+              aspect: [1, 1],
+            })
+          : await ImagePicker.launchImageLibraryAsync({
+              quality: 0.7,
+              allowsEditing: true,
+              aspect: [1, 1],
+            });
 
-    const result =
-      pickerFunction === "camera"
-        ? await ImagePicker.launchCameraAsync({ quality: 0.5 })
-        : await ImagePicker.launchImageLibraryAsync({ quality: 0.5 });
+      console.log("Image picker result:", result);
 
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      const asset = result.assets[0];
-      const formData = new FormData();
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
+        console.log("Selected asset:", asset);
 
-      formData.append("file", {
-        uri: asset.uri,
-        type: asset.mimeType || "image/jpeg",
-        name: asset.fileName || "profile.jpg",
-      } as any);
+        const formData = new FormData();
 
-      updatePhoto(formData);
+        formData.append("file", {
+          uri: asset.uri,
+          type: asset.type || "image/jpeg",
+          name: asset.fileName || `profile_${Date.now()}.jpg`,
+        } as any);
+
+        console.log("Uploading image...");
+
+        updatePhoto(formData, {
+          onSuccess: (data) => {
+            console.log("Upload successful:", data);
+            Alert.alert("Success", "Profile picture updated successfully!");
+          },
+          onError: (error) => {
+            console.error("Upload failed:", error);
+            Alert.alert(
+              "Error",
+              "Failed to update profile picture. Please try again."
+            );
+          },
+        });
+      } else {
+        console.log("Image selection cancelled");
+      }
+    } catch (error) {
+      console.error("Error in handleImagePick:", error);
+      Alert.alert("Error", "Something went wrong while picking the image.");
     }
   };
 
