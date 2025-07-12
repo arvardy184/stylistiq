@@ -81,7 +81,6 @@ const ProfileScreen = () => {
           contentContainerStyle={{ paddingBottom: 24 }}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Header Section */}
           <View className="bg-primary items-center p-6 pb-8 rounded-b-3xl">
             <TouchableOpacity
               onPress={() => setImagePickerVisible(true)}
@@ -101,7 +100,7 @@ const ProfileScreen = () => {
                 {isUploading ? (
                   <ActivityIndicator size="small" color="#B2236F" />
                 ) : (
-                  <Feather name="camera" size={20} color="#B2236F" />
+                  <Feather name="camera" size={18} color="#B2236F" />
                 )}
               </View>
             </TouchableOpacity>
@@ -131,11 +130,6 @@ const ProfileScreen = () => {
                   <CardHeader
                     title="Personal Information"
                     onEditPress={handleEditInfoPress}
-                  />
-                  <ProfileInfoRow
-                    icon="user"
-                    label="Name"
-                    value={userProfile.name || "Not set"}
                   />
                   <ProfileInfoRow
                     icon="gift"
