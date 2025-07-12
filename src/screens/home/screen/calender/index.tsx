@@ -1,16 +1,13 @@
 import React, { useState, useCallback } from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import dayjs, { Dayjs } from "dayjs";
 import { useFocusEffect } from "@react-navigation/native";
-
-const outfitSchedule: { [key: string]: string } = {
-  "2025-07-09": "Classic White-Blue",
-  "2025-07-11": "Friday Casual",
-  "2025-07-12": "Weekend Explorer",
-};
+import { useGetScheduleByDate } from "@/services/queries/home/getScheduleByDate";
+import { useAuthStore } from "@/store/auth/authStore";
 
 const CalenderHome = () => {
+  const { token } = useAuthStore();
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
     const today = dayjs();
     const dayOfWeek = today.day();
@@ -18,6 +15,9 @@ const CalenderHome = () => {
   });
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
 
+  const formattedDate = selectedDate.format("YYYY-MM-DD");
+  const { data: scheduleData, isLoading: isScheduleLoading } =
+    useGetScheduleByDate(token, formattedDate);
   useFocusEffect(
     useCallback(() => {
       const today = dayjs();
@@ -41,8 +41,7 @@ const CalenderHome = () => {
   const handleNextWeek = () =>
     setCurrentWeekStart(currentWeekStart.add(7, "day"));
 
-  const outfitForSelectedDay =
-    outfitSchedule[selectedDate.format("YYYY-MM-DD")];
+  const outfitForSelectedDay = scheduleData?.[0]?.note;
 
   return (
     <View className="bg-white rounded-2xl shadow-lg shadow-slate-600 mx-5 my-4 p-5">
@@ -57,6 +56,7 @@ const CalenderHome = () => {
           <Feather name="chevron-right" size={24} color="#B2236F" />
         </TouchableOpacity>
       </View>
+
       <View className="flex-row justify-around">
         {dates.map((dateObj, index) => {
           const isSelected = dateObj.isSame(selectedDate, "day");
@@ -88,7 +88,9 @@ const CalenderHome = () => {
       </View>
 
       <View className="mt-6 border-t border-slate-200 pt-4 items-center">
-        {outfitForSelectedDay ? (
+        {isScheduleLoading ? (
+          <ActivityIndicator size="large" color="#B2236F" />
+        ) : outfitForSelectedDay ? (
           <>
             <Text className="text-sm text-slate-500">Outfit for the day:</Text>
             <Text className="text-xl font-bold text-primary mt-1">
@@ -101,6 +103,7 @@ const CalenderHome = () => {
           </Text>
         )}
       </View>
+
       <TouchableOpacity
         className={`mt-4 py-3 rounded-lg ${
           outfitForSelectedDay ? "bg-primary/10" : "bg-slate-100"
