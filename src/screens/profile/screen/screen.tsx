@@ -28,23 +28,29 @@ const ProfileScreen = () => {
     userProfile,
     isLoading,
     isError,
-    isLogoutModalVisible,
-    setLogoutModalVisible,
-    isEditing,
+    isEditingInfo,
+    isUpdatingInfo,
+    infoControl,
+    handleInfoSubmit,
+    onInfoSubmit,
+    handleEditInfoPress,
+    handleCancelEditInfo,
+    isEditingBody,
+    isUpdatingBody,
+    bodyControl,
+    handleBodySubmit,
+    onBodySubmit,
+    handleEditBodyPress,
+    handleCancelEditBody,
     isImagePickerVisible,
     setImagePickerVisible,
-    isUpdating,
     isUploading,
-    control,
-    handleSubmit,
-    handleEditPress,
-    handleCancelEdit,
-    onSubmit,
     handleImagePick,
+    isLogoutModalVisible,
+    setLogoutModalVisible,
     handleLogout,
     onConfirmLogout,
     formatBirthday,
-    handleBodyProfileEdit,
   } = useProfileScreen();
 
   if (isLoading) {
@@ -75,6 +81,7 @@ const ProfileScreen = () => {
           contentContainerStyle={{ paddingBottom: 24 }}
           keyboardShouldPersistTaps="handled"
         >
+          {/* Header Section */}
           <View className="bg-primary items-center p-6 pb-8 rounded-b-3xl">
             <TouchableOpacity
               onPress={() => setImagePickerVisible(true)}
@@ -103,6 +110,8 @@ const ProfileScreen = () => {
             </Text>
             <Text className="text-base text-white/80">{userProfile.email}</Text>
           </View>
+
+          {/* Stats Section */}
           <View className="flex-row justify-around bg-white mx-4 -mt-6 p-4 rounded-xl shadow-md">
             <StatItem count={userProfile.clothesCount || 0} label="Outfits" />
             <StatItem
@@ -117,11 +126,11 @@ const ProfileScreen = () => {
 
           <View className="px-4">
             <View className="mt-6 rounded-xl bg-white p-4 shadow-sm">
-              {!isEditing ? (
+              {!isEditingInfo ? (
                 <>
                   <CardHeader
                     title="Personal Information"
-                    onEditPress={handleEditPress}
+                    onEditPress={handleEditInfoPress}
                   />
                   <ProfileInfoRow
                     icon="user"
@@ -159,18 +168,18 @@ const ProfileScreen = () => {
                     Edit Personal Information
                   </Text>
                   <ControlledTextInput
-                    control={control}
+                    control={infoControl}
                     name="name"
                     label="Full Name"
                     placeholder="Enter your name"
                   />
                   <ControlledDatePicker
-                    control={control}
+                    control={infoControl}
                     name="birthday"
                     label="Birthday"
                   />
                   <ControlledDropdown
-                    control={control}
+                    control={infoControl}
                     name="gender"
                     label="Gender"
                     items={[
@@ -180,7 +189,7 @@ const ProfileScreen = () => {
                   />
                   <View className="flex-row mt-4 gap-3">
                     <TouchableOpacity
-                      onPress={handleCancelEdit}
+                      onPress={handleCancelEditInfo}
                       className="flex-1 py-3 bg-gray-200 rounded-lg items-center"
                     >
                       <Text className="font-semibold text-gray-700">
@@ -188,12 +197,12 @@ const ProfileScreen = () => {
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={handleSubmit(onSubmit)}
-                      disabled={isUpdating}
+                      onPress={handleInfoSubmit(onInfoSubmit)}
+                      disabled={isUpdatingInfo}
                       className="flex-1 py-3 bg-primary rounded-lg items-center"
                     >
                       <Text className="font-semibold text-white">
-                        {isUpdating ? "Saving..." : "Save Changes"}
+                        {isUpdatingInfo ? "Saving..." : "Save Changes"}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -201,52 +210,147 @@ const ProfileScreen = () => {
               )}
             </View>
             <View className="mt-6 rounded-xl bg-white p-4 shadow-sm">
-              <CardHeader
-                title="Body Profile"
-                onEditPress={handleBodyProfileEdit}
-              />
-              <View className="flex-row flex-wrap justify-between">
-                <MeasurementGridItem
-                  label="Height"
-                  value={bodyProfile?.height}
-                  unit="cm"
-                />
-                <MeasurementGridItem
-                  label="Weight"
-                  value={bodyProfile?.weight}
-                  unit="kg"
-                />
-                <MeasurementGridItem
-                  label="Chest Circ."
-                  value={bodyProfile?.chestCircumference}
-                  unit="cm"
-                />
-                <MeasurementGridItem
-                  label="Waist Circ."
-                  value={bodyProfile?.waistCircumference}
-                  unit="cm"
-                />
-                <MeasurementGridItem
-                  label="Hip Circ."
-                  value={bodyProfile?.hipCircumference}
-                  unit="cm"
-                />
-                <MeasurementGridItem
-                  label="Shoulder Width"
-                  value={bodyProfile?.shoulderWidth}
-                  unit="cm"
-                />
-                <MeasurementGridItem
-                  label="Arm Length"
-                  value={bodyProfile?.armLength}
-                  unit="cm"
-                />
-                <MeasurementGridItem
-                  label="Leg Length"
-                  value={bodyProfile?.legLength}
-                  unit="cm"
-                />
-              </View>
+              {!isEditingBody ? (
+                <>
+                  <CardHeader
+                    title="Body Profile"
+                    onEditPress={handleEditBodyPress}
+                  />
+                  <View className="flex-row flex-wrap justify-between">
+                    <MeasurementGridItem
+                      label="Height"
+                      value={bodyProfile?.height}
+                      unit="cm"
+                    />
+                    <MeasurementGridItem
+                      label="Weight"
+                      value={bodyProfile?.weight}
+                      unit="kg"
+                    />
+                    <MeasurementGridItem
+                      label="Chest Circ."
+                      value={bodyProfile?.chestCircumference}
+                      unit="cm"
+                    />
+                    <MeasurementGridItem
+                      label="Waist Circ."
+                      value={bodyProfile?.waistCircumference}
+                      unit="cm"
+                    />
+                    <MeasurementGridItem
+                      label="Hip Circ."
+                      value={bodyProfile?.hipCircumference}
+                      unit="cm"
+                    />
+                    <MeasurementGridItem
+                      label="Shoulder Width"
+                      value={bodyProfile?.shoulderWidth}
+                      unit="cm"
+                    />
+                    <MeasurementGridItem
+                      label="Arm Length"
+                      value={bodyProfile?.armLength}
+                      unit="cm"
+                    />
+                    <MeasurementGridItem
+                      label="Leg Length"
+                      value={bodyProfile?.legLength}
+                      unit="cm"
+                    />
+                  </View>
+                </>
+              ) : (
+                <>
+                  <Text className="text-lg font-semibold text-gray-800 mb-4">
+                    Edit Body Profile
+                  </Text>
+                  <View className="flex-row flex-wrap justify-between">
+                    <View className="w-[48%]">
+                      <ControlledTextInput
+                        control={bodyControl}
+                        name="height"
+                        label="Height (cm)"
+                        keyboardType="numeric"
+                      />
+                    </View>
+                    <View className="w-[48%]">
+                      <ControlledTextInput
+                        control={bodyControl}
+                        name="weight"
+                        label="Weight (kg)"
+                        keyboardType="numeric"
+                      />
+                    </View>
+                    <View className="w-[48%]">
+                      <ControlledTextInput
+                        control={bodyControl}
+                        name="chestCircumference"
+                        label="Chest (cm)"
+                        keyboardType="numeric"
+                      />
+                    </View>
+                    <View className="w-[48%]">
+                      <ControlledTextInput
+                        control={bodyControl}
+                        name="waistCircumference"
+                        label="Waist (cm)"
+                        keyboardType="numeric"
+                      />
+                    </View>
+                    <View className="w-[48%]">
+                      <ControlledTextInput
+                        control={bodyControl}
+                        name="hipCircumference"
+                        label="Hip (cm)"
+                        keyboardType="numeric"
+                      />
+                    </View>
+                    <View className="w-[48%]">
+                      <ControlledTextInput
+                        control={bodyControl}
+                        name="shoulderWidth"
+                        label="Shoulder (cm)"
+                        keyboardType="numeric"
+                      />
+                    </View>
+                    <View className="w-[48%]">
+                      <ControlledTextInput
+                        control={bodyControl}
+                        name="armLength"
+                        label="Arm (cm)"
+                        keyboardType="numeric"
+                      />
+                    </View>
+                    <View className="w-[48%]">
+                      <ControlledTextInput
+                        control={bodyControl}
+                        name="legLength"
+                        label="Leg (cm)"
+                        keyboardType="numeric"
+                      />
+                    </View>
+                  </View>
+                  <View className="flex-row mt-2 gap-3">
+                    <TouchableOpacity
+                      onPress={handleCancelEditBody}
+                      className="flex-1 py-3 bg-gray-200 rounded-lg items-center"
+                    >
+                      <Text className="font-semibold text-gray-700">
+                        Cancel
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleBodySubmit(onBodySubmit)}
+                      disabled={isUpdatingBody}
+                      className="flex-1 py-3 bg-primary rounded-lg items-center"
+                    >
+                      <Text className="font-semibold text-white">
+                        {isUpdatingBody ? "Saving..." : "Save Changes"}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
             </View>
             <View className="mt-6 rounded-xl bg-white shadow-sm">
               <ProfileActionRow
@@ -259,7 +363,6 @@ const ProfileScreen = () => {
             </View>
           </View>
         </ScrollView>
-
         <ImagePickerActionSheet
           visible={isImagePickerVisible}
           onClose={() => setImagePickerVisible(false)}
@@ -281,5 +384,4 @@ const ProfileScreen = () => {
     </SafeAreaView>
   );
 };
-
 export default ProfileScreen;
