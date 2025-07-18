@@ -78,7 +78,8 @@ const ProfileScreen = () => {
       >
         <StatusBar barStyle="light-content" />
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 24 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 16 }}
           keyboardShouldPersistTaps="handled"
         >
           <View className="bg-primary items-center p-6 pb-8 rounded-b-3xl">

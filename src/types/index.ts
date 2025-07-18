@@ -3,14 +3,16 @@ export type RootStackParamList = {
   Main: undefined;
   PhotoAnalysis: { imageUri?: string };
   OutfitDetails: { outfitId: string };
+  ClothesDetail: { clothesId: string; clothesName: string };
   Login: undefined;
   Register: undefined;
 };
 
 export type MainTabParamList = {
   Home: undefined;
-  Camera: undefined;
   Wardrobe: undefined;
+  Scan: undefined;
+  Collections: undefined;
   Profile: undefined;
 };
 
