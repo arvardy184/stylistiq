@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Register: undefined;
   Notification: undefined;
   ResetPassword: { email: string };
+  ChangePassword: undefined;
 };
 
 export type MainTabParamList = {
