@@ -5,7 +5,13 @@ import { LoginFields } from "../../login";
 import { RegisterFields } from "../../register";
 import { useAuthForm } from "./hook/useAuthForm";
 
-const AuthBody = ({ isLogin }: { isLogin: boolean }) => {
+const AuthBody = ({
+  isLogin,
+  onForgotPasswordPress,
+}: {
+  isLogin: boolean;
+  onForgotPasswordPress: () => void;
+}) => {
   const {
     loginForm,
     registerForm,
@@ -22,13 +28,22 @@ const AuthBody = ({ isLogin }: { isLogin: boolean }) => {
   return (
     <View className="bg-white rounded-2xl p-6 shadow-xl shadow-black mx-1 border border-gray-100">
       {isLogin ? (
-        <LoginFields
-          control={loginForm.control}
-          errors={loginForm.formState.errors}
-          showPassword={showPassword}
-          setShowPassword={setShowPassword}
-          isLogin={isLogin}
-        />
+        <>
+          <LoginFields
+            control={loginForm.control}
+            errors={loginForm.formState.errors}
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+          />
+          <TouchableOpacity
+            onPress={onForgotPasswordPress}
+            className="self-end -mt-2 mb-5"
+          >
+            <Text className="text-[#B2236F] font-semibold text-base">
+              Forgot Password?
+            </Text>
+          </TouchableOpacity>
+        </>
       ) : (
         <RegisterFields
           control={registerForm.control}
@@ -39,7 +54,6 @@ const AuthBody = ({ isLogin }: { isLogin: boolean }) => {
           setShowConfirmPassword={setShowConfirmPassword}
         />
       )}
-
       <Button
         title={isLogin ? "Sign In" : "Sign Up"}
         onPress={
@@ -48,10 +62,9 @@ const AuthBody = ({ isLogin }: { isLogin: boolean }) => {
             : registerForm.handleSubmit(onRegisterSubmit)
         }
         disabled={isLoading}
-        className="w-full  rounded-xl py-4 bg-[#B2236F] shadow-md shadow-[#B2236F]/40"
+        className="w-full rounded-xl py-4 bg-[#B2236F] shadow-md shadow-[#B2236F]/40"
         textClassName="text-white text-lg font-bold"
       />
-
       <View className="flex-row justify-center items-center mt-6">
         <Text className="text-gray-500 text-base">
           {isLogin ? "Don't have an account? " : "Already have an account? "}
