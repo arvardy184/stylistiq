@@ -7,41 +7,17 @@ import {
   TouchableOpacity,
   Pressable,
 } from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller } from "react-hook-form";
 import Button from "@/components/ui/button";
-import { forgotPasswordSchema } from "@/schemas/auth/forgotPassword";
-import { ForgotPasswordFormData } from "../screen/body/form/forgotPassword";
 import { ForgotPasswordModalProps } from "./type";
-import { useForgotPassword } from "@/services/queries/auth/forgotPassword";
-import { useNavigation } from "@react-navigation/native";
+import { useForgotPasswordModal } from "./hook";
 
 const ForgotPasswordModal = ({
   visible,
   onClose,
 }: ForgotPasswordModalProps) => {
-  const forgotPasswordMutation = useForgotPassword();
-  const navigation = useNavigation();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<ForgotPasswordFormData>({
-    resolver: yupResolver(forgotPasswordSchema),
-    defaultValues: { email: "" },
-  });
-
-  const onSubmit = async (data: ForgotPasswordFormData) => {
-    try {
-      await forgotPasswordMutation.mutateAsync(data.email);
-      reset();
-      onClose();
-      navigation.navigate("ResetPassword", { email: data.email });
-    } catch (error) {
-      console.error("Forgot password error:", error);
-    }
-  };
+  const { control, handleSubmit, errors, onSubmit, isLoading } =
+    useForgotPasswordModal({ onClose });
 
   return (
     <Modal
@@ -89,8 +65,8 @@ const ForgotPasswordModal = ({
           <Button
             title="Send"
             onPress={handleSubmit(onSubmit)}
-            disabled={forgotPasswordMutation.isPending}
-            loading={forgotPasswordMutation.isPending}
+            disabled={isLoading}
+            loading={isLoading}
             className="w-full rounded-xl py-4 bg-[#B2236F] shadow-md shadow-[#B2236F]/40 mt-6"
             textClassName="text-white text-lg font-bold"
           />

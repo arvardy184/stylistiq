@@ -1,49 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, TextInput, SafeAreaView, Pressable } from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useRoute, RouteProp } from "@react-navigation/native";
+import { Controller } from "react-hook-form";
 import { Feather } from "@expo/vector-icons";
-import { resetPasswordSchema } from "@/schemas/auth/resetPassword";
-import { useResetPassword } from "@/services/queries/auth/resetPassword";
 import Button from "@/components/ui/button";
-import { ResetPasswordFormData } from "../screen/body/form/resetPassword";
-
-type RootStackParamList = {
-  ResetPassword: { email: string };
-};
-
-type ResetPasswordScreenRouteProp = RouteProp<
-  RootStackParamList,
-  "ResetPassword"
->;
+import { useResetPasswordScreen } from "./hook";
 
 const ResetPasswordScreen = () => {
-  const route = useRoute<ResetPasswordScreenRouteProp>();
-  const { email } = route.params;
-
-  const resetPasswordMutation = useResetPassword();
-
-  const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
-    useState(false);
-
   const {
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm<ResetPasswordFormData>({
-    resolver: yupResolver(resetPasswordSchema),
-    defaultValues: {
-      email: email,
-      newPassword: "",
-      confirmPassword: "",
-    },
-  });
-
-  const onSubmit = (data: ResetPasswordFormData) => {
-    resetPasswordMutation.mutate(data);
-  };
+    errors,
+    onSubmit,
+    isNewPasswordVisible,
+    isConfirmPasswordVisible,
+    toggleNewPasswordVisibility,
+    toggleConfirmPasswordVisibility,
+    isLoading,
+  } = useResetPasswordScreen();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -71,7 +44,7 @@ const ResetPasswordScreen = () => {
                   placeholderTextColor="#9CA3AF"
                 />
                 <Pressable
-                  onPress={() => setIsNewPasswordVisible(!isNewPasswordVisible)}
+                  onPress={toggleNewPasswordVisibility}
                   className="p-3"
                 >
                   <Feather
@@ -106,9 +79,7 @@ const ResetPasswordScreen = () => {
                   placeholderTextColor="#9CA3AF"
                 />
                 <Pressable
-                  onPress={() =>
-                    setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
-                  }
+                  onPress={toggleConfirmPasswordVisibility}
                   className="p-3"
                 >
                   <Feather
@@ -130,8 +101,8 @@ const ResetPasswordScreen = () => {
         <Button
           title="Reset Password"
           onPress={handleSubmit(onSubmit)}
-          disabled={resetPasswordMutation.isPending}
-          loading={resetPasswordMutation.isPending}
+          disabled={isLoading}
+          loading={isLoading}
           className="w-full rounded-xl py-4 bg-[#B2236F] shadow-md shadow-[#B2236F]/40 mt-8"
           textClassName="text-white text-lg font-bold"
         />

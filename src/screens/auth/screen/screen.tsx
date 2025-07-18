@@ -5,7 +5,7 @@ import { useRoute } from "@react-navigation/native";
 import AuthHeader from "./header";
 import AuthBody from "./body";
 import AuthFooter from "./footer";
-import ForgotPasswordModal from "../forgotPassword";
+import ForgotPasswordModal from "../forgotPassword/screen";
 
 const AuthScreen = () => {
   const route = useRoute();

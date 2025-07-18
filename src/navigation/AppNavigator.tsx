@@ -31,7 +31,11 @@ const AppNavigator = () => {
           options={{ headerShown: true }}
         />
         <Stack.Screen name="Register" component={AuthScreen} />
-        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+        <Stack.Screen
+          name="ResetPassword"
+          options={{ headerShown: true }}
+          component={ResetPasswordScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
