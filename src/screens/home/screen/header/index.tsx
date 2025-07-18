@@ -1,6 +1,6 @@
-import React from "react";
 import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 type HeaderHomeProps = {
   username: string;
@@ -15,11 +15,17 @@ const getGreeting = () => {
 };
 
 const HeaderHome = ({ username, totalOutfits }: HeaderHomeProps) => {
+  const navigation = useNavigation();
   return (
     <View className="bg-primary rounded-b-3xl px-5 pb-8 pt-5 mb-6 shadow-lg shadow-slate-300">
       <View className="flex-row justify-between items-center">
         <Text className="text-white text-3xl font-bold">{getGreeting()}</Text>
-        <Ionicons name="notifications-outline" size={26} color="white" />
+        <Ionicons
+          name="notifications-outline"
+          size={26}
+          color="white"
+          onPress={() => navigation.navigate("Notification")}
+        />
       </View>
       <View className="mt-6">
         <Text className="text-white text-xl">

@@ -1,4 +1,4 @@
-import { ActivityIndicator, ScrollView, StatusBar } from "react-native";
+import { ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CollectionBody from "./collection";
 import CalendarHome from "./calender";

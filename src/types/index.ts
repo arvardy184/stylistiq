@@ -5,6 +5,9 @@ export type RootStackParamList = {
   OutfitDetails: { outfitId: string };
   Login: undefined;
   Register: undefined;
+  Notification: undefined;
+  ResetPassword: { email: string };
+  ChangePassword: undefined;
 };
 
 export type MainTabParamList = {

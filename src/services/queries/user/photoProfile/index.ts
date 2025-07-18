@@ -6,7 +6,10 @@ export const useUpdateProfilePicture = (token: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (formData: FormData) => UpdateProfilePicture(token, formData),
+    mutationFn: async (formData: FormData) => {
+      const result = await UpdateProfilePicture(token, formData);
+      return result;
+    },
     onSuccess: () => {
       Toast.show({
         type: "success",
@@ -16,8 +19,12 @@ export const useUpdateProfilePicture = (token: string) => {
       queryClient.invalidateQueries({ queryKey: ["user-profile"] });
     },
     onError: (error) => {
-      Toast.show({ type: "error", text1: "Upload Failed" });
-      console.error("Error updating profile picture:", error);
+      console.error("Upload error:", error);
+      Toast.show({
+        type: "error",
+        text1: "Upload Failed",
+        text2: "Please check your internet connection and try again.",
+      });
     },
   });
 };

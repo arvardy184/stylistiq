@@ -1,4 +1,4 @@
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, KeyboardTypeOptions } from "react-native";
 import { Control, Controller } from "react-hook-form";
 
 interface Props {
@@ -6,9 +6,16 @@ interface Props {
   name: string;
   label: string;
   placeholder?: string;
+  keyboardType?: KeyboardTypeOptions;
 }
 
-const ControlledTextInput = ({ control, name, label, placeholder }: Props) => {
+const ControlledTextInput = ({
+  control,
+  name,
+  label,
+  placeholder,
+  keyboardType,
+}: Props) => {
   return (
     <Controller
       control={control}
@@ -27,6 +34,7 @@ const ControlledTextInput = ({ control, name, label, placeholder }: Props) => {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            keyboardType={keyboardType}
           />
           {error && (
             <Text className="text-red-500 text-xs mt-1">{error.message}</Text>
