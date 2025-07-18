@@ -6,6 +6,7 @@ import AuthScreen from "@/screens/auth/screen/screen";
 import { useAuthStore } from "@/store/auth/authStore";
 import NotificationScreen from "@/screens/notification/screen/screen";
 import ResetPasswordScreen from "@/screens/auth/resetPassword/screen";
+import ChangePasswordScreen from "@/screens/auth/changePassword/screen";
 
 const Stack = createStackNavigator();
 
@@ -31,7 +32,16 @@ const AppNavigator = () => {
           options={{ headerShown: true }}
         />
         <Stack.Screen name="Register" component={AuthScreen} />
-        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+        <Stack.Screen
+          name="ResetPassword"
+          options={{ headerShown: true }}
+          component={ResetPasswordScreen}
+        />
+        <Stack.Screen
+          name="ChangePassword"
+          options={{ headerShown: true }}
+          component={ChangePasswordScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

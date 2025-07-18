@@ -131,6 +131,10 @@ export const useProfileScreen = () => {
     setIsEditingBody(true);
   };
 
+  const handleChangePasswordPress = () => {
+    navigation.navigate("ChangePassword");
+  };
+
   const handleCancelEditBody = () => setIsEditingBody(false);
 
   const onBodySubmit = (formData: UpdateBodyProfileFormData) => {
@@ -250,5 +254,6 @@ export const useProfileScreen = () => {
     handleLogout,
     onConfirmLogout,
     formatBirthday,
+    handleChangePasswordPress,
   };
 };

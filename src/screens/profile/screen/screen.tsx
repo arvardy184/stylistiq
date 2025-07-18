@@ -51,6 +51,7 @@ const ProfileScreen = () => {
     handleLogout,
     onConfirmLogout,
     formatBirthday,
+    handleChangePasswordPress,
   } = useProfileScreen();
 
   if (isLoading) {
@@ -347,6 +348,11 @@ const ProfileScreen = () => {
               )}
             </View>
             <View className="mt-6 rounded-xl bg-white shadow-sm">
+              <ProfileActionRow
+                icon="lock"
+                label="Change Password"
+                onPress={handleChangePasswordPress}
+              />
               <ProfileActionRow
                 icon="log-out"
                 label="Log Out"
