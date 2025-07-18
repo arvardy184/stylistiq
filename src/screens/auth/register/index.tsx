@@ -26,7 +26,6 @@ export const RegisterFields: React.FC<RegisterFieldsProps> = ({
         errors={errors}
         showPassword={showPassword}
         setShowPassword={setShowPassword}
-        isLogin={false}
       />
 
       <View style={styles.fieldContainer}>

@@ -15,7 +15,6 @@ export const LoginFields: React.FC<LoginFieldsProps> = ({
   errors,
   showPassword,
   setShowPassword,
-  isLogin,
 }) => {
   return (
     <>
@@ -76,7 +75,6 @@ export const LoginFields: React.FC<LoginFieldsProps> = ({
             {errors.password.message as string}
           </Text>
         )}
-        {isLogin && <Text className="mt-3 text-right">Forgot Password</Text>}
       </View>
     </>
   );
