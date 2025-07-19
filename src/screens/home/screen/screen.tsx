@@ -22,7 +22,7 @@ export const HomeScreen = () => {
       <StatusBar barStyle="light-content" />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 }}
+        contentContainerStyle={{ paddingBottom: 16 }}
         className="bg-white"
       >
         <HeaderHome
