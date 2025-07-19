@@ -1,4 +1,4 @@
-import { Clothes } from "@/screens/clothes/types";
+import { Clothes } from "@/screens/collections/types";
 
 // The result for a single analyzed image
 export interface AnalysisResultItem {

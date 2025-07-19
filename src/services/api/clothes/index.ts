@@ -1,100 +1,102 @@
 import { BASE_URL } from "@/config";
 import axios from "axios";
 
+// --- GET ALL CLOTHES ---
 export const getAllClothes = async (token: string) => {
-  console.log("🔵 [API] Getting all clothes...");
+  const endpoint = `${BASE_URL}/clothes`;
+  console.log(`🚀 [API][GET] Kicking off: ${endpoint}`);
   
   try {
-    const response = await axios.get(`${BASE_URL}/clothes`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await axios.get(endpoint, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-    
-    console.log("✅ [API] Get all clothes success:", response.data);
+    console.log(`✅ [API][GET] Success: ${endpoint}`, { status: response.status, data: response.data });
     return response.data;
   } catch (error) {
-    console.error("❌ [API] Get all clothes error:", error);
+    console.error(`❌ [API][GET] Error: ${endpoint}`, error.response?.data || error.message);
     throw error;
   }
 };
 
+// --- GET CLOTHES BY ID ---
 export const getClothesById = async (token: string, clothesId: string) => {
-  console.log("🔵 [API] Getting clothes by ID:", clothesId);
-  
+  const endpoint = `${BASE_URL}/clothes/${clothesId}`;
+  console.log(`🚀 [API][GET] Kicking off: ${endpoint}`);
+
   try {
-    const response = await axios.get(`${BASE_URL}/clothes/${clothesId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await axios.get(endpoint, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-    
-    console.log("✅ [API] Get clothes by ID success:", response.data);
+    console.log(`✅ [API][GET] Success: ${endpoint}`, { status: response.status, data: response.data });
     return response.data;
   } catch (error) {
-    console.error("❌ [API] Get clothes by ID error:", error);
+    console.error(`❌ [API][GET] Error: ${endpoint}`, error.response?.data || error.message);
     throw error;
   }
 };
 
+// --- CREATE CLOTHES ---
 export const createClothes = async (token: string, data: FormData) => {
-  console.log("🔵 [API] Creating new clothes...");
-  
+  const endpoint = `${BASE_URL}/clothes`;
+  console.log(`🚀 [API][POST] Kicking off: ${endpoint}`, { data });
+
   try {
-    const response = await axios.post(`${BASE_URL}/clothes`, data, {
+    const response = await axios.post(endpoint, data, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       },
     });
-    
-    console.log("✅ [API] Create clothes success:", response.data);
+    console.log(`✅ [API][POST] Success: ${endpoint}`, { status: response.status, data: response.data });
     return response.data;
   } catch (error) {
-    console.error("❌ [API] Create clothes error:", error);
+    console.error(`❌ [API][POST] Error: ${endpoint}`, error.response?.data || error.message);
     throw error;
   }
 };
 
+// --- UPDATE CLOTHES ---
 export const updateClothes = async (token: string, clothesId: string, data: FormData) => {
-  console.log("🔵 [API] Updating clothes:", clothesId);
-  
+  const endpoint = `${BASE_URL}/clothes/${clothesId}`;
+  console.log(`🚀 [API][PUT] Kicking off: ${endpoint}`, { data });
+
   try {
-    const response = await axios.put(`${BASE_URL}/clothes/${clothesId}`, data, {
+    const response = await axios.put(endpoint, data, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       },
     });
-    
-    console.log("✅ [API] Update clothes success:", response.data);
+    console.log(`✅ [API][PUT] Success: ${endpoint}`, { status: response.status, data: response.data });
     return response.data;
   } catch (error) {
-    console.error("❌ [API] Update clothes error:", error);
+    console.error(`❌ [API][PUT] Error: ${endpoint}`, error.response?.data || error.message);
     throw error;
   }
 };
 
-export const deleteClothes = async (token: string, clothesId: string) => {
-  console.log("🔵 [API] Deleting clothes:", clothesId);
+// --- DELETE CLOTHES ---
+export const deleteClothes = async (token: string, clothesIds: string[]) => {
+  const endpoint = `${BASE_URL}/clothes`;
+  console.log(`🚀 [API][DELETE] Kicking off: ${endpoint}`, { body: { clothesIds } });
   
   try {
-    const response = await axios.delete(`${BASE_URL}/clothes/${clothesId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await axios.delete(endpoint, {
+      headers: { Authorization: `Bearer ${token}` },
+      data: { clothesIds },
     });
-    
-    console.log("✅ [API] Delete clothes success:", response.data);
+    console.log(`✅ [API][DELETE] Success: ${endpoint}`, { status: response.status, data: response.data });
     return response.data;
   } catch (error) {
-    console.error("❌ [API] Delete clothes error:", error);
+    console.error(`❌ [API][DELETE] Error: ${endpoint}`, error.response?.data || error.message);
     throw error;
   }
 };
 
+// --- ANALYZE CLOTHES ---
 export const analyzeClothes = async (token: string, images: string[]) => {
-  console.log(`🔵 [API] Analyzing ${images.length} clothes images...`);
+  const endpoint = `${BASE_URL}/clothes/analyze`;
+  console.log(`🚀 [API][POST] Kicking off: ${endpoint}`, { imageCount: images.length });
 
   try {
     const formData = new FormData();
@@ -106,19 +108,34 @@ export const analyzeClothes = async (token: string, images: string[]) => {
       } as any);
     });
 
-    const response = await axios.post(`${BASE_URL}/clothes/analyze`, formData, {
+    const response = await axios.post(endpoint, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
       },
-      // Optional: Add a timeout for long-running analysis
-      // timeout: 60000, 
     });
 
-    console.log("✅ [API] Analyze clothes success:", response.data);
+    console.log(`✅ [API][POST] Success: ${endpoint}`, { status: response.status, data: response.data });
     return response.data;
   } catch (error) {
-    console.error("❌ [API] Analyze clothes error:", error);
+    console.error(`❌ [API][POST] Error: ${endpoint}`, error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// --- UPDATE CLOTHES NAME ---
+export const updateClothesName = async (token: string, clothesId: string, newName: string) => {
+  const endpoint = `${BASE_URL}/clothes/${clothesId}/name`;
+  console.log(`🚀 [API][PATCH] Kicking off: ${endpoint}`, { newName });
+
+  try {
+    const response = await axios.patch(endpoint, { name: newName }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(`✅ [API][PATCH] Success: ${endpoint}`, { status: response.status, data: response.data });
+    return response.data;
+  } catch (error) {
+    console.error(`❌ [API][PATCH] Error: ${endpoint}`, error.response?.data || error.message);
     throw error;
   }
 }; 

@@ -68,10 +68,10 @@ export const useClothes = () => {
       console.log("🔄 Creating new clothes item...");
       
       const formData = new FormData();
-      formData.append("name", data.name);
+      // formData.append("name", data.name);
       formData.append("category", data.category);
       formData.append("color", data.color);
-      formData.append("season", data.season);
+      // formData.append("season", data.season);
       
       if (data.image) {
         formData.append("image", {
@@ -111,16 +111,18 @@ export const useClothes = () => {
       console.log("🔄 Updating clothes item:", id);
       
       const formData = new FormData();
-      formData.append("name", data.name);
+      // formData.append("name", data.name);
+      formData.append("itemType", data.itemType);
       formData.append("category", data.category);
       formData.append("color", data.color);
-      formData.append("season", data.season);
-      
-      if (data.image) {
+      // formData.append("season", data.season);
+      if(data.note) formData.append("note", data.note);
+
+      if (data.image && data.image.startsWith('file:')) {
         formData.append("image", {
           uri: data.image,
           type: "image/jpeg",
-          name: "clothes-image.jpg",
+          name: `clothes-image-${Date.now()}.jpg`,
         } as any);
       }
       
@@ -155,7 +157,7 @@ export const useClothes = () => {
     try {
       console.log("🔄 Deleting clothes item:", id);
       
-      await deleteClothes(token, id);
+      await deleteClothes(token, [id]); // Pass as an array
       
       // Remove from list optimistically
       setClothes(prev => prev.filter(item => item.id !== id));
@@ -183,9 +185,7 @@ export const useClothes = () => {
     try {
       console.log("🔄 Bulk deleting clothes items:", ids);
       
-      // Delete each item individually (assuming API doesn't support bulk delete)
-      const deletePromises = ids.map(id => deleteClothes(token, id));
-      await Promise.all(deletePromises);
+      await deleteClothes(token, ids); // Use the new bulk delete service
       
       // Remove from list optimistically
       setClothes(prev => prev.filter(item => !ids.includes(item.id)));

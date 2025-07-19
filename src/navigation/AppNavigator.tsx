@@ -13,6 +13,7 @@ import ResetPasswordScreen from "@/screens/auth/resetPassword/screen";
 import ChangePasswordScreen from "@/screens/auth/changePassword/screen";
 import OnboardingScreen from "@/screens/onboarding/screen/screen";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
+import ScheduleScreen from "@/screens/schedule/screen/ScheduleScreen";
 
 const Stack = createStackNavigator();
 
@@ -64,6 +65,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="ClothesDetail"
           component={ClothesDetailScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Schedule"
+          component={ScheduleScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Login" component={AuthScreen} />

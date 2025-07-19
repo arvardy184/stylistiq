@@ -1,10 +1,7 @@
-
 import React from "react";
-
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-
 import { HomeScreen } from "@/screens/home/screen/screen";
 import ScanScreen from "@/screens/scan/screen/screen";
 import ClothesScreen from "@/screens/clothes/screen/screen";
@@ -13,7 +10,6 @@ import ProfileScreen from "@/screens/profile/screen/screen";
 import { useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { MainTabParamList } from "@/types";
-
 const Tab = createBottomTabNavigator();
 
 const CustomScanButton = ({ children, onPress }) => (
@@ -51,13 +47,13 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen 
-        name="Wardrobe" 
+        name="Clothes" 
         component={ClothesScreen} 
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
               <Ionicons name={focused ? "shirt" : "shirt-outline"} size={24} color={focused ? '#EC4899' : '#748c94'} />
-              <Text style={[styles.iconLabel, { color: focused ? '#EC4899' : '#748c94' }]}>Wardrobe</Text>
+              <Text style={[styles.iconLabel, { color: focused ? '#EC4899' : '#748c94' }]}>Clothes</Text>
             </View>
           ),
         }}

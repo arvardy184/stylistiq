@@ -13,11 +13,13 @@ export interface User {
 
 export interface Clothes {
   id: string;
-  name: string;
+  name?: string;
+  itemType: string;
   image: string;
   category: string;
   color: string;
-  season: string;
+  season?: string;
+  note?: string; 
   createdAt: string;
   updatedAt: string;
 }

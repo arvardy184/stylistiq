@@ -2,19 +2,20 @@ import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   TextInput,
   StatusBar,
   Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { useClothes } from "../hooks/useClothes";
-import { Clothes, ClothesScreenProps } from "../types";
+import { Clothes, ClothesScreenProps, ClothesFormData } from "../types";
 import ClothesGrid from "../components/ClothesGrid";
 import EmptyState from "../components/EmptyState";
 import LoadingState from "../components/LoadingState";
+import ClothesFormModal from '../components/ClothesFormModal'; // Import the modal
 
 const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,6 +35,8 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
     clearSelection,
     selectAll,
     setSelectionMode,
+    createClothesItem, // Get mutation functions
+    updateClothesItem,
   } = useClothes();
 
   // Filter clothes based on search query
@@ -95,6 +98,17 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
   const handleCreateClothes = () => {
     setEditingClothes(null);
     setShowFormModal(true);
+  };
+
+  // Handle form submission
+  const handleFormSubmit = (data: ClothesFormData) => {
+    if (editingClothes) {
+      updateClothesItem(editingClothes.id, data);
+    } else {
+      createClothesItem(data);
+    }
+    setShowFormModal(false);
+    setEditingClothes(null);
   };
 
   // Reset focus
@@ -189,7 +203,7 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-gray-50" edges={['top', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
       
       {renderHeader()}
@@ -222,15 +236,14 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
         />
       )}
       
-      {/* TODO: Add ClothesFormModal component */}
-      {/* <ClothesFormModal
+      <ClothesFormModal
         visible={showFormModal}
         onClose={() => setShowFormModal(false)}
         onSubmit={handleFormSubmit}
         initialData={editingClothes}
         title={editingClothes ? "Edit Clothes" : "Add New Clothes"}
         submitText={editingClothes ? "Update" : "Create"}
-      /> */}
+      />
     </SafeAreaView>
   );
 };

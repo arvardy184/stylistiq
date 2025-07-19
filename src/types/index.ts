@@ -4,6 +4,16 @@ export type RootStackParamList = {
   PhotoAnalysis: { imageUri?: string };
   OutfitDetails: { outfitId: string };
   ClothesDetail: { clothesId: string; clothesName: string };
+  Schedule: { selectedDate?: string };
+  ScheduleForm: { 
+    selectedDate: string; 
+    schedule?: any; 
+    mode: "create" | "edit" 
+  };
+  ScheduleDetail: { 
+    scheduleId: string; 
+    scheduleName: string 
+  };
   Login: undefined;
   Register: undefined;
   Notification: undefined;

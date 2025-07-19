@@ -2,11 +2,12 @@ import React, { useState, useCallback } from "react";
 import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import dayjs, { Dayjs } from "dayjs";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useGetScheduleByDate } from "@/services/queries/home/getScheduleByDate";
 import { useAuthStore } from "@/store/auth/authStore";
 
 const CalenderHome = () => {
+  const navigation = useNavigation();
   const { token } = useAuthStore();
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
     const today = dayjs();
@@ -105,17 +106,14 @@ const CalenderHome = () => {
       </View>
 
       <TouchableOpacity
-        className={`mt-4 py-3 rounded-lg ${
-          outfitForSelectedDay ? "bg-primary/10" : "bg-slate-100"
-        }`}
-        disabled={!outfitForSelectedDay}
+        className="mt-4 py-3 rounded-lg bg-primary/10"
+        onPress={() => {
+          const formattedDate = selectedDate.format("YYYY-MM-DD");
+          navigation.navigate("Schedule", { selectedDate: formattedDate });
+        }}
       >
-        <Text
-          className={`font-bold text-center ${
-            outfitForSelectedDay ? "text-primary" : "text-slate-400"
-          }`}
-        >
-          View Outfit Details
+        <Text className="font-bold text-center text-primary">
+          {outfitForSelectedDay ? "View Outfit Details" : "Create Schedule"}
         </Text>
       </TouchableOpacity>
     </View>

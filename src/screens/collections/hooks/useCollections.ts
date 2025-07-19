@@ -69,11 +69,7 @@ export const useCollections = () => {
       setCollections(prev => prev.map(item => 
         item.id === id ? updatedCollection : item
       ));
-      Toast.show({
-        type: "success",
-        text1: "Collection Updated",
-        text2: `"${data.name}" has been updated successfully`,
-      });
+      console.log('🔄 [UPDATE] Collection updated:', updatedCollection);
     } catch (error) {
       console.error('Failed to update collection:', error);
       Toast.show({

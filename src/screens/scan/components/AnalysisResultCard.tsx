@@ -7,7 +7,7 @@ const DetailRow = ({ icon, label, value }) => (
   <View className="flex-row items-center mt-2">
     <Ionicons name={icon} size={14} color="#6B7280" className="mr-2" />
     <Text className="text-sm text-gray-600 w-20">{label}</Text>
-    <Text className="text-sm text-gray-800 font-semibold capitalize">{value}</Text>
+    <Text className="text-sm text-gray-800 font-semibold capitalize">{value || 'N/A'}</Text>
   </View>
 );
 
@@ -35,11 +35,16 @@ const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({ result, onSave 
           {success && detectedItem ? (
             <>
               <Text className="text-lg font-bold text-gray-900" numberOfLines={1}>
-                {detectedItem.name}
+                {detectedItem.itemType}
               </Text>
               <DetailRow icon="shirt-outline" label="Category" value={detectedItem.category} />
               <DetailRow icon="color-palette-outline" label="Color" value={detectedItem.color} />
-              <DetailRow icon="sunny-outline" label="Season" value={detectedItem.season} />
+              {detectedItem.season && (
+                <DetailRow icon="sunny-outline" label="Season" value={detectedItem.season} />
+              )}
+              {detectedItem.note && (
+                <DetailRow icon="document-text-outline" label="Note" value={detectedItem.note} />
+              )}
             </>
           ) : (
             <View className="justify-center flex-1">

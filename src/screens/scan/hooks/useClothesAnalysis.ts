@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import { useAuthStore } from '@/store/auth/authStore';
 import { analyzeClothes, createClothes } from '@/services/api/clothes';
-import { AnalysisResultItem, Clothes } from '../types';
+import { AnalysisResultItem } from '../types';
+import { Clothes } from '@/screens/collections/types'; 
 import { ClothesFormData } from '@/screens/clothes/types';
 import Toast from 'react-native-toast-message';
 
@@ -13,120 +14,141 @@ export const useClothesAnalysis = () => {
   const [error, setError] = useState<string | null>(null);
 
   const addImages = useCallback((uris: string[]) => {
+    console.log('📸 Adding images to analysis:', uris);
     // Avoid duplicates
     const newUris = uris.filter(uri => !selectedImages.includes(uri));
     setSelectedImages(prev => [...prev, ...newUris]);
+    console.log('📸 Total selected images:', selectedImages.length + newUris.length);
   }, [selectedImages]);
 
   const removeImage = useCallback((uri: string) => {
+    console.log('🗑️ Removing image from analysis:', uri);
     setSelectedImages(prev => prev.filter(item => item !== uri));
   }, []);
 
   const startAnalysis = useCallback(async () => {
-    if (!token || selectedImages.length === 0) {
-      Toast.show({ type: 'error', text1: 'No images selected.' });
+    if (!token) {
+      Toast.show({ type: 'error', text1: 'Authentication Error', text2: 'Please login first.' });
       return;
     }
 
+    if (selectedImages.length === 0) {
+      Toast.show({ type: 'error', text1: 'No Images', text2: 'Please select images to analyze.' });
+      return;
+    }
+
+    console.log('🚀 [ANALYSIS] Starting analysis for', selectedImages.length, 'images');
     setIsLoading(true);
     setError(null);
     setAnalysisResults([]);
 
     try {
-      console.log('🚀 Starting analysis...');
       const response = await analyzeClothes(token, selectedImages);
+      console.log('📊 [ANALYSIS] Raw response:', response);
       
-      if (response && response.clothes && Array.isArray(response.clothes)) {
-        // The API returns a flat list of clothes. We map them to AnalysisResultItem.
-        // This assumes that if one image is sent, all results belong to it.
-        const results: AnalysisResultItem[] = response.clothes.map((detected: any) => {
+      if (response && response.data && Array.isArray(response.data)) {
+        // Map API response to AnalysisResultItem format
+        const results: AnalysisResultItem[] = response.data.map((detected: any, index: number) => {
           const clothesItem: Clothes = {
-            id: detected.id,
-            name: detected.itemType || 'Untitled', // Map itemType to name
-            image: detected.image,
-            category: detected.category,
-            color: detected.color,
-            season: detected.season || 'All Season', // Default season if not provided
-            createdAt: detected.createdAt,
-            updatedAt: detected.updatedAt,
+            id: detected.id || `temp-${Date.now()}-${index}`,
+            itemType: detected.itemType || 'Unknown Item',
+            image: detected.image || selectedImages[index] || selectedImages[0],
+            category: detected.category || 'Uncategorized',
+            color: detected.color || 'Unknown',
+            season: detected.season || undefined, // Optional field
+            note: detected.note || undefined, // Optional field
+            createdAt: detected.createdAt || new Date().toISOString(),
+            updatedAt: detected.updatedAt || new Date().toISOString(),
           };
 
           return {
-            id: detected.id,
+            id: clothesItem.id,
             success: true,
-            message: 'Item detected successfully',
-            // Assumption: associate with the first image if multiple clothes are detected.
-            // This part may need refinement if the API supports linking results to specific images in a multi-image upload.
-            originalImageUri: selectedImages[0], 
+            message: `${detected.itemType || 'Item'} detected successfully`,
+            originalImageUri: selectedImages[index] || selectedImages[0],
             detectedItem: clothesItem,
           };
         });
         
         setAnalysisResults(results);
-        console.log('✅ Analysis complete (processed):', results);
+        console.log('✅ [ANALYSIS] Analysis complete:', results.length, 'items detected');
+        
+        Toast.show({
+          type: 'success',
+          text1: 'Analysis Complete!',
+          text2: `Found ${results.length} clothing items`,
+        });
       } else {
-        throw new Error('Invalid response from server. Expected a "clothes" array.');
+        throw new Error('Invalid response format from analysis API');
       }
     } catch (err: any) {
-      console.error('❌ Analysis failed:', err);
-      const errorMessage = err.message || err.response?.data?.message || 'An unexpected error occurred during analysis.';
+      console.error('❌ [ANALYSIS] Analysis failed:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Analysis failed unexpectedly';
       setError(errorMessage);
-      Toast.show({ type: 'error', text1: 'Analysis Failed', text2: errorMessage });
+      Toast.show({ 
+        type: 'error', 
+        text1: 'Analysis Failed', 
+        text2: errorMessage 
+      });
     } finally {
       setIsLoading(false);
     }
   }, [token, selectedImages]);
 
   const saveAnalyzedItem = useCallback(async (item: Clothes) => {
-    if (!token) return;
+    if (!token) {
+      Toast.show({ type: 'error', text1: 'Authentication Error', text2: 'Please login first.' });
+      return;
+    }
     
-    // Convert Clothes to ClothesFormData
-    const formData: ClothesFormData = {
-      name: item.name,
-      category: item.category,
-      color: item.color,
-      season: item.season,
-      image: item.image, // Assuming the analysis result gives a URL to the processed image
-    };
+    console.log('💾 [SAVE] Saving analyzed item:', item.itemType);
 
     try {
-      console.log(`🔄 Saving item: ${item.name}`);
-      // Since the backend already processed the image, we might not need to re-upload it.
-      // This depends on the API. Assuming `createClothes` can handle a URL or a new file upload.
-      // For now, let's just use the existing createClothes logic which expects a FormData.
-      const payload = new FormData();
-      payload.append('name', formData.name);
-      payload.append('category', formData.category);
-      payload.append('color', formData.color);
-      payload.append('season', formData.season);
-      if (formData.image) {
-          payload.append('image', {
-              uri: formData.image,
-              type: 'image/jpeg',
-              name: 'uploaded_image.jpg',
-          } as any);
+      // Create FormData with correct field mapping
+      const formData = new FormData();
+      formData.append('itemType', item.itemType);
+      formData.append('category', item.category);
+      formData.append('color', item.color);
+      
+      if (item.note) {
+        formData.append('note', item.note);
+      }
+
+      // Handle image - if it's a local file URI, upload it
+      if (item.image && item.image.startsWith('file:')) {
+        formData.append('image', {
+          uri: item.image,
+          type: 'image/jpeg',
+          name: `analyzed-${Date.now()}.jpg`,
+        } as any);
       }
       
-      await createClothes(token, payload);
+      console.log('💾 [SAVE] Sending FormData to API...');
+      const response = await createClothes(token, formData);
+      console.log('✅ [SAVE] Item saved successfully:', response);
       
       Toast.show({
         type: 'success',
         text1: 'Item Saved!',
-        text2: `${item.name} has been added to your wardrobe.`,
+        text2: `${item.itemType} added to your wardrobe`,
       });
       
       // Remove from results list to indicate it's been saved
       setAnalysisResults(prev => prev.filter(r => r.detectedItem?.id !== item.id));
 
     } catch (err: any) {
-      console.error(`❌ Failed to save item: ${item.name}`, err);
-      const errorMessage = err.response?.data?.message || 'Could not save item.';
-      Toast.show({ type: 'error', text1: 'Save Failed', text2: errorMessage });
+      console.error('❌ [SAVE] Failed to save item:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Could not save item';
+      Toast.show({ 
+        type: 'error', 
+        text1: 'Save Failed', 
+        text2: errorMessage 
+      });
     }
   }, [token]);
 
-
   const clearAll = useCallback(() => {
+    console.log('🧹 [CLEAR] Clearing all analysis data');
     setSelectedImages([]);
     setAnalysisResults([]);
     setIsLoading(false);

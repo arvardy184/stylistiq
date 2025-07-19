@@ -64,11 +64,11 @@ export interface ClothesFormModalProps {
 
 // Form Data types
 export interface ClothesFormData {
-  name: string;
+  itemType: string;
   category: string;
   color: string;
-  season: string;
   image?: string;
+  note?: string;
 }
 
 // Filter types
