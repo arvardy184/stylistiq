@@ -63,12 +63,12 @@ const AppNavigator = () => {
         <Stack.Screen name="Register" component={AuthScreen} />
         <Stack.Screen
           name="ResetPassword"
-          options={{ headerShown: true }}
+          options={{ headerShown: true, title: "Reset Password" }}
           component={ResetPasswordScreen}
         />
         <Stack.Screen
           name="ChangePassword"
-          options={{ headerShown: true }}
+          options={{ headerShown: true, title: "Change Password" }}
           component={ChangePasswordScreen}
         />
       </Stack.Navigator>

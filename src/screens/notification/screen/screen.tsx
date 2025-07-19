@@ -1,3 +1,4 @@
+import { StatusBar } from "react-native";
 import { View, Text, ScrollView } from "react-native";
 
 interface NotificationItem {
@@ -101,6 +102,7 @@ const NotificationScreen = () => {
   return (
     <View className="flex-1 bg-gray-50">
       <ScrollView contentContainerStyle={{ padding: 16 }}>
+        <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
         {Object.keys(groupedNotifications).length > 0 ? (
           Object.entries(groupedNotifications).map(([day, notifications]) => (
             <View key={day} className="mb-4">

@@ -111,8 +111,7 @@ const ProfileScreen = () => {
             <Text className="text-base text-white/80">{userProfile.email}</Text>
           </View>
 
-          {/* Stats Section */}
-          <View className="flex-row justify-around bg-white mx-4 -mt-6 p-4 rounded-xl shadow-md">
+          <View className="flex-row justify-around bg-white mx-4 -mt-6 p-4 rounded-xl shadow-2xl">
             <StatItem count={userProfile.clothesCount || 0} label="Outfits" />
             <StatItem
               count={userProfile.collectionsCount || 0}
@@ -125,7 +124,7 @@ const ProfileScreen = () => {
           </View>
 
           <View className="px-4">
-            <View className="mt-6 rounded-xl bg-white p-4 shadow-sm">
+            <View className="mt-6 rounded-xl bg-white p-4 border border-primary">
               {!isEditingInfo ? (
                 <>
                   <CardHeader
@@ -154,7 +153,6 @@ const ProfileScreen = () => {
                           : "Female"
                         : "Not set"
                     }
-                    isLast
                   />
                 </>
               ) : (
@@ -204,7 +202,7 @@ const ProfileScreen = () => {
                 </>
               )}
             </View>
-            <View className="mt-6 rounded-xl bg-white p-4 shadow-sm">
+            <View className="mt-6 rounded-xl bg-white p-4 border border-primary">
               {!isEditingBody ? (
                 <>
                   <CardHeader
@@ -347,18 +345,19 @@ const ProfileScreen = () => {
                 </>
               )}
             </View>
-            <View className="mt-6 rounded-xl bg-white shadow-sm">
+            <View className="mt-6 rounded-xl bg-white border border-primary shadow-sm">
               <ProfileActionRow
                 icon="lock"
                 label="Change Password"
                 onPress={handleChangePasswordPress}
               />
+            </View>
+            <View className="mt-6 rounded-xl bg-white border border-primary shadow-sm">
               <ProfileActionRow
                 icon="log-out"
                 label="Log Out"
                 color="text-red-500"
                 onPress={handleLogout}
-                isLast
               />
             </View>
           </View>

@@ -70,9 +70,8 @@ const ForgotPasswordModal = ({
             className="w-full rounded-xl py-4 bg-[#B2236F] shadow-md shadow-[#B2236F]/40 mt-6"
             textClassName="text-white text-lg font-bold"
           />
-
           <TouchableOpacity onPress={onClose} className="mt-4">
-            <Text className="text-center text-gray-500 font-medium">
+            <Text className="text-center text-black border border-primary rounded-xl py-4 font-medium">
               Cancel
             </Text>
           </TouchableOpacity>

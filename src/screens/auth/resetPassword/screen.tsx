@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, TextInput, SafeAreaView, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  SafeAreaView,
+  Pressable,
+  StatusBar,
+} from "react-native";
 import { Controller } from "react-hook-form";
 import { Feather } from "@expo/vector-icons";
 import Button from "@/components/ui/button";
@@ -20,10 +27,8 @@ const ResetPasswordScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
       <View className="flex-1 justify-center p-6">
-        <Text className="text-3xl font-bold text-gray-800 mb-2 text-center">
-          Reset Your Password
-        </Text>
         <Text className="text-center text-gray-500 mb-8">
           Create a new, secure password for your account.
         </Text>
