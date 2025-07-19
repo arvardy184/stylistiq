@@ -24,7 +24,7 @@ export interface ScheduleClothes {
 
 export interface Schedule {
   id: string;
-  date: string; // YYYY-MM-DD format
+  date: string; 
   note?: string;
   reminder?: string; // YYYY-MM-DDTHH:MM:SS.000Z format
   createdAt: string;

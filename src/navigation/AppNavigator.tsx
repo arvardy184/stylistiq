@@ -14,6 +14,8 @@ import ChangePasswordScreen from "@/screens/auth/changePassword/screen";
 import OnboardingScreen from "@/screens/onboarding/screen/screen";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
 import ScheduleScreen from "@/screens/schedule/screen/ScheduleScreen";
+import ScheduleDetailScreen from "@/screens/schedule/screen/ScheduleDetailScreen";
+import ScheduleFormScreen from "@/screens/schedule/screen/ScheduleFormScreen";
 
 const Stack = createStackNavigator();
 
@@ -70,6 +72,16 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Schedule"
           component={ScheduleScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ScheduleDetail"
+          component={ScheduleDetailScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ScheduleForm"
+          component={ScheduleFormScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Login" component={AuthScreen} />
