@@ -1,4 +1,6 @@
+
 import React from "react";
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
@@ -99,44 +101,44 @@ const MainTabNavigator = () => {
 };
 
 const styles = StyleSheet.create({
-    tabBar: {
-        height: 80,
-        backgroundColor: '#ffffff',
-        borderTopWidth: 1,
-        borderTopColor: '#f0f0f0',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    iconContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    iconLabel: {
-        fontSize: 11,
-        marginTop: 4,
-        fontWeight: '600',
-    },
-    scanButton: {
-        top: -30,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    scanButtonInner: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        backgroundColor: '#EC4899', // Changed from purple to pink
-        justifyContent: 'center',
-        alignItems: 'center',
-        shadowColor: "#EC4899", // Changed from purple to pink
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.4,
-        shadowRadius: 10,
-        elevation: 8,
-    },
+  tabBar: {
+    height: 80,
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconLabel: {
+    fontSize: 11,
+    marginTop: 4,
+    fontWeight: '600',
+  },
+  scanButton: {
+    top: -30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scanButtonInner: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#EC4899',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#EC4899",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    elevation: 8,
+  },
 });
 
 export default MainTabNavigator;
