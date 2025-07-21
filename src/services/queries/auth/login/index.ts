@@ -11,7 +11,11 @@ export const useLogin = () => {
   const navigation = useNavigation<any>();
 
   return useMutation({
-    mutationFn: (data: LoginFormData) => Login(data),
+    mutationFn: (data: LoginFormData) => {
+      console.log('🎯 useLogin mutation called');
+      console.log('📝 Form data:', JSON.stringify(data, null, 2));
+      return Login(data);
+    },
     onSuccess: (data) => {
       setToken(data.token);
       Toast.show({

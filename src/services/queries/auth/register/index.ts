@@ -8,7 +8,11 @@ import Toast from "react-native-toast-message";
 export const useRegister = () => {
   const navigation = useNavigation<any>();
   return useMutation({
-    mutationFn: (data: RegisterFormData) => Register(data),
+    mutationFn: (data: RegisterFormData) => {
+      console.log('🎯 useRegister mutation called');
+      console.log('📝 Form data:', JSON.stringify(data, null, 2));
+      return Register(data);
+    },
     onSuccess: () => {
       Toast.show({
         type: "success",

@@ -28,7 +28,7 @@ export const useMainTabNavigator = () => {
     if (isProfileIncomplete) {
       setModalVisible(true);
     } else {
-      navigation.navigate("Camera" as never);
+      navigation.navigate("Scan" as never);
     }
   };
 
