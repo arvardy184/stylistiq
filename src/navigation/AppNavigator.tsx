@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PhotoAnalysisScreen } from "../screens/photoAnalysis/screen/screen";
 import MainTabNavigator from "@/components/navbar/navbar";
 import AuthScreen from "@/screens/auth/screen/screen";
 import CollectionDetailScreen from "@/screens/collections/screen/CollectionDetailScreen";
@@ -39,7 +38,6 @@ const AppNavigator = () => {
   }, []);
 
   if (loading) return <LoadingContent />;
-  //if (loading) return null;
 
   return (
     <NavigationContainer>
@@ -52,19 +50,14 @@ const AppNavigator = () => {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Main" component={MainTabNavigator} />
         <Stack.Screen
-          name="PhotoAnalysis"
-          component={PhotoAnalysisScreen}
-          options={{ headerShown: true }}
-        />
-        <Stack.Screen
           name="CollectionDetail"
           component={CollectionDetailScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, title: "Collection Detail" }}
         />
         <Stack.Screen
           name="ClothesDetail"
           component={ClothesDetailScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, title: "Clothes Detail" }}
         />
         <Stack.Screen name="Login" component={AuthScreen} />
         <Stack.Screen
