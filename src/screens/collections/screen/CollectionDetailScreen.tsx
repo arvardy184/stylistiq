@@ -56,6 +56,7 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({ route }
     try {
       setLoading(true);
       const data = await getCollectionDetail(token!, collectionId);
+      console.log('Collection detail:', data);
       setCollection(data);
     } catch (error) {
       console.error('Failed to load collection:', error);
@@ -416,17 +417,29 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({ route }
       
       <FlatList
         data={collection?.clothes || []}
-        renderItem={({ item }) => (
-          <ClothesCard
-            item={item}
-            onPress={() => handleClothesPress(item)}
-            onEdit={() => handleClothesEdit(item)}
-            onDelete={() => handleClothesDelete(item.id)}
-            selectionMode={selectionMode}
-            isSelected={selectedClothes.includes(item.id)}
-            onSelect={() => toggleClothesSelection(item.id)}
-          />
-        )}
+        renderItem={({ item }) => {
+          console.log('Item:', item);   
+          return (
+            <ClothesCard
+              item={item}
+              onPress={() => handleClothesPress(item)}
+              onEdit={() => handleClothesEdit(item)}
+              onDelete={() => handleClothesDelete(item.id)}
+              selectionMode={selectionMode}
+              isSelected={selectedClothes.includes(item.id)}
+              onSelect={() => toggleClothesSelection(item.id)}
+            />
+          );
+          //   <ClothesCard
+          //   item={item}
+          //   onPress={() => handleClothesPress(item)}
+          //   onEdit={() => handleClothesEdit(item)}
+          //   onDelete={() => handleClothesDelete(item.id)}
+          //   selectionMode={selectionMode}
+          //   isSelected={selectedClothes.includes(item.id)}
+          //   onSelect={() => toggleClothesSelection(item.id)}
+          // />
+        }}
         keyExtractor={(item) => item.id}
         numColumns={2}
         ListHeaderComponent={renderListHeader}

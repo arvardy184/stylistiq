@@ -57,12 +57,12 @@ const AppNavigator = () => {
         <Stack.Screen
           name="CollectionDetail"
           component={CollectionDetailScreen}
-          options={{ headerShown: true, title: "Collection Detail" }}
+          options={{ headerShown: false, title: "Collection Detail" }}
         />
         <Stack.Screen
           name="ClothesDetail"
           component={ClothesDetailScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown:true, title: "Clothes Detail"}}
         />
         <Stack.Screen
           name="MatchResult"

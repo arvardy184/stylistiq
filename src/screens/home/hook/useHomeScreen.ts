@@ -40,7 +40,7 @@ export const useHomeScreen = () => {
   };
 
   const handleLogin = () => {
-    navigation.navigate("Auth");
+    navigation.navigate("Login");
   };
 
   const handleImageError = (error: string) => {

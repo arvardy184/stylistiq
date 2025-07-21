@@ -45,19 +45,14 @@ export const getCollectionDetail = async (
     console.log("📡 BASE_URL:", BASE_URL);
     console.log("🆔 Collection ID:", collectionId);
 
-    const response = await axios.get<CollectionsResponse>(
-      `${BASE_URL}/collection/${collectionId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.get<{ statusCode: number; message: string; data: CollectionItem }>(`${BASE_URL}/collection/${collectionId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     console.log("✅ getCollectionDetail successful");
     console.log("📊 Response:", JSON.stringify(response.data, null, 2));
 
-    return response.data.data[0];
+    return response.data.data;
   } catch (error) {
     console.error("❌ getCollectionDetail error:", error);
     console.error("🔍 Error details:", {

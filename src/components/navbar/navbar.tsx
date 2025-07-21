@@ -76,7 +76,7 @@ const MainTabNavigator = () => {
           component={ClothesScreen}
           listeners={protectedTabListener}
           options={{
-            headerShown: true,
+            headerShown: false,
             title: "Wardrobe",
             tabBarIcon: ({ focused }) => (
               <View style={styles.iconContainer}>
@@ -101,7 +101,7 @@ const MainTabNavigator = () => {
           name="Scan"
           component={ScanScreen}
           options={{
-            headerShown: true,
+            headerShown: false,
             title: "Analysis Complete",
             tabBarIcon: () => <Ionicons name="scan" size={32} color="#fff" />,
             tabBarButton: (props) => (

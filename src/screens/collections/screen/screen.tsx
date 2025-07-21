@@ -14,6 +14,8 @@ import EmptyState from "../components/EmptyState";
 import LoadingState from "../components/LoadingState";
 import CollectionFormModal from "../components/CollectionFormModal";
 import { useCollections } from "../hooks/useCollections";
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
   const {
@@ -38,6 +40,12 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
   const [isEditModalVisible, setIsEditModalVisible] = React.useState(false);
   const [editingCollection, setEditingCollection] = React.useState<any>(null);
 
+  useFocusEffect(
+    useCallback(() => {
+      loadCollections();
+    }, [])
+  );
+  
   const renderHeader = () => (
     <View className="px-6 py-4 bg-white">
       {isSelectionMode ? (

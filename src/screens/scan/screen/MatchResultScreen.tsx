@@ -138,8 +138,8 @@ const MatchResultScreen: React.FC = () => {
       setSelectedItems([]);
       setSelectionMode(false);
       
-      // Navigate to Collections tab in MainTabNavigator
-      navigation.navigate('Main', { screen: 'Collections' } as never);
+// Navigasi ke Collections tab dengan param refresh
+navigation.navigate('Main', { screen: 'Collections', params: { refresh: true } } as never); 
     } catch (error) {
       console.error('❌ [COLLECTION] Failed to create:', error);
       console.error('❌ [COLLECTION] Error details:', JSON.stringify(error, null, 2));
