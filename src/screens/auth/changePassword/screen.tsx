@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Pressable,
   ActivityIndicator,
+  StatusBar,
 } from "react-native";
 import { Controller } from "react-hook-form";
 import { Feather } from "@expo/vector-icons";
@@ -70,6 +71,7 @@ const ChangePasswordScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
+      <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
       <View className="flex-1 p-6">
         {renderPasswordInput({
           name: "oldPassword",

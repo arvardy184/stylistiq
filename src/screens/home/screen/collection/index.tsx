@@ -11,7 +11,7 @@ const ColletionBody = () => {
     data: collections,
     isLoading,
     isError,
-  } = useGetAllCollectionByToken(token || "");
+  } = useGetAllCollectionByToken(token);
 
   const SkeletonCard = () => (
     <View className="w-[48%] bg-white rounded-2xl shadow-md overflow-hidden">
