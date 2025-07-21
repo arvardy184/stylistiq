@@ -139,7 +139,7 @@ const MatchResultScreen: React.FC = () => {
       setSelectionMode(false);
       
       // Navigate to Collections tab in MainTabNavigator
-      navigation.navigate('Main' as never, { screen: 'Collections' } as never);
+      navigation.navigate('Main', { screen: 'Collections' } as never);
     } catch (error) {
       console.error('❌ [COLLECTION] Failed to create:', error);
       console.error('❌ [COLLECTION] Error details:', JSON.stringify(error, null, 2));
@@ -328,7 +328,7 @@ const MatchResultScreen: React.FC = () => {
         We couldn't find any clothes that match with your analyzed item. Try adding more items to your wardrobe!
       </Text>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Main' as never, { screen: 'Wardrobe' } as never)}
+        onPress={() => navigation.navigate('Main', { screen: 'Wardrobe' } as never)}
         className="bg-purple-500 px-6 py-3 rounded-full"
       >
         <Text className="text-white font-semibold">Go to Wardrobe</Text>
