@@ -15,7 +15,7 @@ const AnalysisResultList: React.FC<AnalysisResultListProps> = ({ results, onDone
 
   const handleGoToWardrobe = () => {
     // Navigate to the Wardrobe/Clothes tab
-    navigation.navigate('Wardrobe');
+    navigation.navigate('Clothes');
     // Call onDone to reset the scan screen state
     onDone();
   };

@@ -10,7 +10,7 @@ export const getAllClothes = async (token: string) => {
     const response = await axios.get(endpoint, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(`✅ [API][GET] Success: ${endpoint}`, { status: response.status, data: response.data });
+    console.log(`✅ [API][GET] Success: ${endpoint}`, { status: response.status, data: JSON.stringify(response.data, null, 2) });
     return response.data;
   } catch (error) {
     console.error(`❌ [API][GET] Error: ${endpoint}`, error.response?.data || error.message);
@@ -27,7 +27,7 @@ export const getClothesById = async (token: string, clothesId: string) => {
     const response = await axios.get(endpoint, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(`✅ [API][GET] Success: ${endpoint}`, { status: response.status, data: response.data });
+    console.log(`✅ [API][GET] Success: ${endpoint}`, { status: response.status, data: JSON.stringify(response.data, null, 2) });
     return response.data;
   } catch (error) {
     console.error(`❌ [API][GET] Error: ${endpoint}`, error.response?.data || error.message);
@@ -47,7 +47,7 @@ export const createClothes = async (token: string, data: FormData) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(`✅ [API][POST] Success: ${endpoint}`, { status: response.status, data: response.data });
+    console.log(`✅ [API][POST] Success: ${endpoint}`, { status: response.status, data: JSON.stringify(response.data, null, 2) });
     return response.data;
   } catch (error) {
     console.error(`❌ [API][POST] Error: ${endpoint}`, error.response?.data || error.message);
@@ -67,7 +67,7 @@ export const updateClothes = async (token: string, clothesId: string, data: Form
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(`✅ [API][PUT] Success: ${endpoint}`, { status: response.status, data: response.data });
+    console.log(`✅ [API][PUT] Success: ${endpoint}`, { status: response.status, data: JSON.stringify(response.data, null, 2) });
     return response.data;
   } catch (error) {
     console.error(`❌ [API][PUT] Error: ${endpoint}`, error.response?.data || error.message);
@@ -85,7 +85,7 @@ export const deleteClothes = async (token: string, clothesIds: string[]) => {
       headers: { Authorization: `Bearer ${token}` },
       data: { clothesIds },
     });
-    console.log(`✅ [API][DELETE] Success: ${endpoint}`, { status: response.status, data: response.data });
+    console.log(`✅ [API][DELETE] Success: ${endpoint}`, { status: response.status, data: JSON.stringify(response.data, null, 2) });
     return response.data;
   } catch (error) {
     console.error(`❌ [API][DELETE] Error: ${endpoint}`, error.response?.data || error.message);
@@ -115,7 +115,7 @@ export const analyzeClothes = async (token: string, images: string[]) => {
       },
     });
 
-    console.log(`✅ [API][POST] Success: ${endpoint}`, { status: response.status, data: response.data });
+    console.log(`✅ [API][POST] Success: ${endpoint}`, { status: response.status, data: JSON.stringify(response.data, null, 2) });
     return response.data;
   } catch (error) {
     console.error(`❌ [API][POST] Error: ${endpoint}`, error.response?.data || error.message);
@@ -132,7 +132,7 @@ export const updateClothesName = async (token: string, clothesId: string, newNam
     const response = await axios.patch(endpoint, { name: newName }, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    console.log(`✅ [API][PATCH] Success: ${endpoint}`, { status: response.status, data: response.data });
+    console.log(`✅ [API][PATCH] Success: ${endpoint}`, { status: response.status, data: JSON.stringify(response.data, null, 2) });
     return response.data;
   } catch (error) {
     console.error(`❌ [API][PATCH] Error: ${endpoint}`, error.response?.data || error.message);

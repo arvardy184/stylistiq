@@ -102,14 +102,14 @@ const ClothesCard: React.FC<ClothesCardProps> = ({
             {item.color}
           </Text>
         </View>
-        {item.season && (
+        {/* {item.season && (
           <View className="flex-row items-center mt-1">
             <Ionicons name="sunny-outline" size={12} color="#6B7280" />
             <Text className="text-gray-500 text-xs ml-1 capitalize">
               {item.season}
             </Text>
           </View>
-        )}
+        )} */}
         {item.note && (
           <View className="flex-row items-center mt-1">
             <Ionicons name="document-text-outline" size={12} color="#6B7280" />

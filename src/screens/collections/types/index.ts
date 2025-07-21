@@ -1,3 +1,5 @@
+import { ClothesStatus } from '@/common/enums/clothes';
+
 export interface User {
   id: string;
   email: string;
@@ -18,8 +20,8 @@ export interface Clothes {
   image: string;
   category: string;
   color: string;
-  season?: string;
   note?: string; 
+  status?: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -102,12 +102,12 @@ const ClothesCard: React.FC<ClothesCardProps> = ({
             </Text>
           </View>
           
-          <View className="flex-row items-center">
+          {/* <View className="flex-row items-center">
             <Ionicons name="sunny-outline" size={14} color="#6B7280" />
             <Text className="text-gray-600 text-xs ml-1 capitalize">
               {item.season}
             </Text>
-          </View>
+          </View> */}
         </View>
       </View>
     </TouchableOpacity>

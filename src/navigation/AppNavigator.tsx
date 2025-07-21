@@ -7,6 +7,7 @@ import AuthScreen from "@/screens/auth/screen/screen";
 import CollectionDetailScreen from "@/screens/collections/screen/CollectionDetailScreen";
 import ClothesDetailScreen from "@/screens/clothes/screen/ClothesDetailScreen";
 import MatchResultScreen from "@/screens/scan/screen/MatchResultScreen";
+import EditClothesScreen from "@/screens/scan/screen/EditClothesScreen";
 import { useAuthStore } from "@/store/auth/authStore";
 import NotificationScreen from "@/screens/notification/screen/screen";
 import ResetPasswordScreen from "@/screens/auth/resetPassword/screen";
@@ -61,11 +62,16 @@ const AppNavigator = () => {
         <Stack.Screen
           name="ClothesDetail"
           component={ClothesDetailScreen}
-          options={{ headerShown: true, title: "Clothes Detail" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="MatchResult"
           component={MatchResultScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EditClothes"
+          component={EditClothesScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

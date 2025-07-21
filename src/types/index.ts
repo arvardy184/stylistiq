@@ -5,6 +5,7 @@ export type RootStackParamList = {
   OutfitDetails: { outfitId: string };
   ClothesDetail: { clothesId: string; clothesName: string };
   MatchResult: { analyzedItem: any };
+  EditClothes: { analyzedItem: any };
   Schedule: { selectedDate?: string };
   ScheduleForm: { 
     selectedDate: string; 
@@ -25,7 +26,7 @@ export type RootStackParamList = {
 
 export type MainTabParamList = {
   Home: undefined;
-  Wardrobe: undefined;
+  Clothes: undefined;
   Scan: undefined;
   Collections: undefined;
   Profile: undefined;

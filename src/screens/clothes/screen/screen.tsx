@@ -6,6 +6,8 @@ import {
   TextInput,
   StatusBar,
   Alert,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -44,8 +46,7 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
     (item) =>
       (item.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       (item.category || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.color || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.season || "").toLowerCase().includes(searchQuery.toLowerCase())
+      (item.color || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Handle clothes press
@@ -211,17 +212,24 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
       {loading ? (
         <LoadingState />
       ) : filteredClothes.length === 0 ? (
-        <EmptyState
-          title={searchQuery ? "No clothes found" : "No clothes yet"}
-          subtitle={
-            searchQuery
-              ? "Try adjusting your search terms"
-              : "Start building your wardrobe by adding your first clothing item"
+        <ScrollView
+          contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={refreshClothes} />
           }
-          actionText={searchQuery ? "Clear Search" : "Add New Clothes"}
-          onAction={searchQuery ? () => setSearchQuery("") : handleCreateClothes}
-          icon={searchQuery ? "search" : "shirt-outline"}
-        />
+        >
+          <EmptyState
+            title={searchQuery ? "No clothes found" : "No clothes yet"}
+            subtitle={
+              searchQuery
+                ? "Try adjusting your search terms"
+                : "Start building your wardrobe by adding your first clothing item"
+            }
+            actionText={searchQuery ? "Clear Search" : "Add New Clothes"}
+            onAction={searchQuery ? () => setSearchQuery("") : handleCreateClothes}
+            icon={searchQuery ? "search" : "shirt-outline"}
+          />
+        </ScrollView>
       ) : (
         <ClothesGrid
           clothes={filteredClothes}

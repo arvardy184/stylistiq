@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { Gender } from "@/common/enums/gender";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
 import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
@@ -24,6 +25,7 @@ import ImagePickerActionSheet from "../components/ImagePickerActionSheet";
 import { useProfileScreen } from "../hook";
 
 const ProfileScreen = () => {
+  const navigation = useNavigation();
   const {
     userProfile,
     isLoading,
@@ -348,6 +350,10 @@ const ProfileScreen = () => {
             </View>
             <View className="mt-6 rounded-xl bg-white border border-primary shadow-sm">
               <ProfileActionRow
+                icon="calendar"
+                label="Schedule Management"
+                onPress={() => navigation.navigate("Schedule" as never)}
+              /><ProfileActionRow
                 icon="lock"
                 label="Change Password"
                 onPress={handleChangePasswordPress}

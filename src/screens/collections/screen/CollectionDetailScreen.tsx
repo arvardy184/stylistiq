@@ -15,9 +15,10 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useAuthStore } from "@/store/auth/authStore";
 import { CollectionDetailScreenProps, Clothes } from "../types";
 import ClothesCard from "../components/ClothesCard";
-import { getCollectionDetail, deleteCollection, removeClothesFromCollection } from "@/services/api/collections";
+import { getCollectionDetail, deleteCollection, removeClothesFromCollection, addClothesToCollection } from "@/services/api/collections";
 import { updateClothesName } from "@/services/api/clothes";
 import ClothesEditModal from "@/components/ui/modal/ClothesEditModal";
+import AddClothesToCollectionModal from '../components/AddClothesToCollectionModal';
 import { useNotification } from "@/hooks/useNotification";
 
 const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({ route }) => {
@@ -33,6 +34,8 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({ route }
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingClothes, setEditingClothes] = useState<Clothes | null>(null);
   const [editLoading, setEditLoading] = useState(false);
+  const [addClothesModalVisible, setAddClothesModalVisible] = useState(false);
+  const [isAddingClothes, setIsAddingClothes] = useState(false);
   
   const { showSuccess, showError, showInfo } = useNotification();
 
@@ -69,20 +72,21 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({ route }
   };
 
   const handleAddClothes = () => {
-    Alert.alert(
-      "Add Clothes",
-      "Add new clothes to this collection",
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Add", 
-          onPress: () => {
-            // TODO: Navigate to add clothes screen
-            showInfo("Coming Soon", "Add clothes functionality will be implemented soon");
-          }
-        }
-      ]
-    );
+    setAddClothesModalVisible(true);
+  };
+
+  const handleConfirmAddClothes = async (selectedIds: string[]) => {
+    setIsAddingClothes(true);
+    try {
+      const updatedCollection = await addClothesToCollection(token!, collectionId, selectedIds);
+      setCollection(updatedCollection);
+      showSuccess("Clothes Added", `${selectedIds.length} item(s) have been added to the collection.`);
+      setAddClothesModalVisible(false);
+    } catch (error) {
+      showError("Failed to add clothes", "Please try again later.");
+    } finally {
+      setIsAddingClothes(false);
+    }
   };
 
   const handleDeleteCollection = () => {
@@ -113,7 +117,7 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({ route }
     const details = [
       `Category: ${clothes.category}`,
       `Color: ${clothes.color}`,
-      clothes.season && `Season: ${clothes.season}`,
+     ,
       clothes.note && `Note: ${clothes.note}`
     ].filter(Boolean).join('\n');
     
@@ -376,6 +380,25 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({ route }
     </View>
   );
 
+  const renderListHeader = () => (
+    <>
+      {renderCollectionInfo()}
+      <View className="flex-row items-center justify-between px-6 mb-4 mt-4">
+        <Text className="text-lg font-semibold text-gray-800">
+          Clothes ({(collection?.clothes?.length || 0)})
+        </Text>
+        {!selectionMode && (
+          <TouchableOpacity
+            onPress={handleAddClothes}
+            className="bg-[#B2236F] px-4 py-2 rounded-full"
+          >
+            <Text className="text-white font-medium text-sm">Add</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </>
+  );
+
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-gray-50">
@@ -391,56 +414,31 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({ route }
     <SafeAreaView className="flex-1 bg-gray-50" edges={['top', 'left', 'right']}>
       {renderHeader()}
       
-      <ScrollView
+      <FlatList
+        data={collection?.clothes || []}
+        renderItem={({ item }) => (
+          <ClothesCard
+            item={item}
+            onPress={() => handleClothesPress(item)}
+            onEdit={() => handleClothesEdit(item)}
+            onDelete={() => handleClothesDelete(item.id)}
+            selectionMode={selectionMode}
+            isSelected={selectedClothes.includes(item.id)}
+            onSelect={() => toggleClothesSelection(item.id)}
+          />
+        )}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        ListHeaderComponent={renderListHeader}
+        ListEmptyComponent={renderEmptyState}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        showsVerticalScrollIndicator={false}
-      >
-        {renderCollectionInfo()}
-        
-        {(!collection?.clothes || collection.clothes.length === 0) ? (
-          renderEmptyState()
-        ) : (
-          <View className="mt-4">
-            <View className="flex-row items-center justify-between px-6 mb-4">
-              <Text className="text-lg font-semibold text-gray-800">
-                Clothes ({collection.clothes.length})
-              </Text>
-              {!selectionMode && (
-                <TouchableOpacity
-                  onPress={handleAddClothes}
-                  className="bg-[#B2236F] px-4 py-2 rounded-full"
-                >
-                  <Text className="text-white font-medium text-sm">Add</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-            
-            <FlatList
-              data={collection.clothes}
-              renderItem={({ item }) => (
-                <ClothesCard
-                  item={item}
-                  onPress={() => handleClothesPress(item)}
-                  onEdit={() => handleClothesEdit(item)}
-                  onDelete={() => handleClothesDelete(item.id)}
-                  selectionMode={selectionMode}
-                  isSelected={selectedClothes.includes(item.id)}
-                  onSelect={() => toggleClothesSelection(item.id)}
-                />
-              )}
-              keyExtractor={(item) => item.id}
-              numColumns={2}
-              scrollEnabled={false}
-              contentContainerStyle={{
-                paddingHorizontal: 16,
-                paddingBottom: 100,
-              }}
-            />
-          </View>
-        )}
-      </ScrollView>
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingBottom: 100,
+        }}
+      />
 
       {/* Floating Action Button */}
       {!selectionMode && (
@@ -462,6 +460,14 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({ route }
         onSave={handleSaveClothesName}
         clothesName={editingClothes?.name || editingClothes?.itemType || ""}
         loading={editLoading}
+      />
+
+      <AddClothesToCollectionModal 
+        visible={addClothesModalVisible}
+        onClose={() => setAddClothesModalVisible(false)}
+        onAdd={handleConfirmAddClothes}
+        existingClothesIds={collection?.clothes?.map((c: Clothes) => c.id) || []}
+        isLoading={isAddingClothes}
       />
     </SafeAreaView>
   );

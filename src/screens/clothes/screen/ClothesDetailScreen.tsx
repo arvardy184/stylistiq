@@ -191,12 +191,12 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
               color="#EC4899"
             />
             
-            <DetailItem
+            {/* <DetailItem
               icon="sunny-outline"
               label="Season"
               value={clothesDetail.season}
               color="#F59E0B"
-            />
+            /> */}
             
             <DetailItem
               icon="calendar-outline"

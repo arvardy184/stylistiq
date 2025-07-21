@@ -46,16 +46,16 @@ export const useClothesAnalysis = () => {
       const response = await analyzeClothes(token, selectedImages);
       console.log('📊 [ANALYSIS] Raw response:', response);
       
-      if (response && response.data && Array.isArray(response.data)) {
+      if (response && response.clothes && Array.isArray(response.clothes)) {
         // Map API response to AnalysisResultItem format
-        const results: AnalysisResultItem[] = response.data.map((detected: any, index: number) => {
+        const results: AnalysisResultItem[] = response.clothes.map((detected: any, index: number) => {
           const clothesItem: Clothes = {
             id: detected.id || `temp-${Date.now()}-${index}`,
             itemType: detected.itemType || 'Unknown Item',
             image: detected.image || selectedImages[index] || selectedImages[0],
             category: detected.category || 'Uncategorized',
             color: detected.color || 'Unknown',
-            season: detected.season || undefined, // Optional field
+            status: detected.status || 'Belum Dimiliki',
             note: detected.note || undefined, // Optional field
             createdAt: detected.createdAt || new Date().toISOString(),
             updatedAt: detected.updatedAt || new Date().toISOString(),
@@ -79,7 +79,7 @@ export const useClothesAnalysis = () => {
           text2: `Found ${results.length} clothing items`,
         });
       } else {
-        throw new Error('Invalid response format from analysis API');
+        throw new Error('Invalid response format from analysis API. Expected a "clothes" array.');
       }
     } catch (err: any) {
       console.error('❌ [ANALYSIS] Analysis failed:', err);

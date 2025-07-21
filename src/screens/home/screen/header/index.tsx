@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
@@ -20,12 +20,20 @@ const HeaderHome = ({ username, totalOutfits }: HeaderHomeProps) => {
     <View className="bg-primary rounded-b-3xl px-5 pb-8 pt-5 mb-6 shadow-lg shadow-slate-300">
       <View className="flex-row justify-between items-center">
         <Text className="text-white text-3xl font-bold">{getGreeting()}</Text>
-        <Ionicons
-          name="notifications-outline"
-          size={26}
-          color="white"
-          onPress={() => navigation.navigate("Notification")}
-        />
+        <View className="flex-row items-center space-x-3">
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Schedule" as never)}
+            className="p-2"
+          >
+            <Ionicons name="calendar-outline" size={24} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Notification" as never)}
+            className="p-2"
+          >
+            <Ionicons name="notifications-outline" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
       </View>
       <View className="mt-6">
         <Text className="text-white text-xl">
