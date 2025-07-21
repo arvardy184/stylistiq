@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PhotoAnalysisScreen } from "../screens/photoAnalysis/screen/screen";
 import MainTabNavigator from "@/components/navbar/navbar";
 import AuthScreen from "@/screens/auth/screen/screen";
 import CollectionDetailScreen from "@/screens/collections/screen/CollectionDetailScreen";
 import ClothesDetailScreen from "@/screens/clothes/screen/ClothesDetailScreen";
+import MatchResultScreen from "@/screens/scan/screen/MatchResultScreen";
 import { useAuthStore } from "@/store/auth/authStore";
 import NotificationScreen from "@/screens/notification/screen/screen";
 import ResetPasswordScreen from "@/screens/auth/resetPassword/screen";
@@ -42,7 +42,6 @@ const AppNavigator = () => {
   }, []);
 
   if (loading) return <LoadingContent />;
-  //if (loading) return null;
 
   return (
     <NavigationContainer>
@@ -55,18 +54,18 @@ const AppNavigator = () => {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Main" component={MainTabNavigator} />
         <Stack.Screen
-          name="PhotoAnalysis"
-          component={PhotoAnalysisScreen}
-          options={{ headerShown: true }}
-        />
-        <Stack.Screen
           name="CollectionDetail"
           component={CollectionDetailScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, title: "Collection Detail" }}
         />
         <Stack.Screen
           name="ClothesDetail"
           component={ClothesDetailScreen}
+          options={{ headerShown: true, title: "Clothes Detail" }}
+        />
+        <Stack.Screen
+          name="MatchResult"
+          component={MatchResultScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -93,12 +92,12 @@ const AppNavigator = () => {
         <Stack.Screen name="Register" component={AuthScreen} />
         <Stack.Screen
           name="ResetPassword"
-          options={{ headerShown: true }}
+          options={{ headerShown: true, title: "Reset Password" }}
           component={ResetPasswordScreen}
         />
         <Stack.Screen
           name="ChangePassword"
-          options={{ headerShown: true }}
+          options={{ headerShown: true, title: "Change Password" }}
           component={ChangePasswordScreen}
         />
       </Stack.Navigator>

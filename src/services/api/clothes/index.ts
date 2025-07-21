@@ -138,4 +138,24 @@ export const updateClothesName = async (token: string, clothesId: string, newNam
     console.error(`❌ [API][PATCH] Error: ${endpoint}`, error.response?.data || error.message);
     throw error;
   }
+};
+
+// --- MATCH CLOTHES ---
+export const matchClothes = async (token: string, clothesIds: string[]) => {
+  const endpoint = `${BASE_URL}/clothes/match`;
+  console.log(`🚀 [API][POST] Kicking off: ${endpoint}`, { clothesIds });
+
+  try {
+    const response = await axios.post(endpoint, { clothesIds }, {
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    console.log(`✅ [API][POST] Success: ${endpoint}`, { status: response.status, data: response.data });
+    return response.data;
+  } catch (error) {
+    console.error(`❌ [API][POST] Error: ${endpoint}`, error.response?.data || error.message);
+    throw error;
+  }
 }; 

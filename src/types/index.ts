@@ -4,6 +4,7 @@ export type RootStackParamList = {
   PhotoAnalysis: { imageUri?: string };
   OutfitDetails: { outfitId: string };
   ClothesDetail: { clothesId: string; clothesName: string };
+  MatchResult: { analyzedItem: any };
   Schedule: { selectedDate?: string };
   ScheduleForm: { 
     selectedDate: string; 

@@ -11,7 +11,7 @@ export const ProfileCompletionModal = ({
   isVisible,
   onClose,
   onCompleteProfile,
-}): ProfileCompletionModalProps => {
+}: ProfileCompletionModalProps) => {
   return (
     <Modal
       animationType="fade"
