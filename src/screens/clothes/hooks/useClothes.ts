@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuthStore } from "@/store/auth/authStore";
-import { getAllClothes, getClothesById, createClothes, updateClothes, deleteClothes } from "@/services/api/clothes";
+import { getAllClothes, getClothesById, createClothes, updateClothes, deleteClothes, searchClothes } from "@/services/api/clothes";
 import { Clothes, ClothesFormData } from "../types";
 import Toast from "react-native-toast-message";
 
@@ -10,6 +10,8 @@ export const useClothes = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
+  const [searchResults, setSearchResults] = useState<Clothes[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   
   const { token } = useAuthStore();
 
@@ -209,6 +211,27 @@ export const useClothes = () => {
     }
   }, [token]);
 
+  const searchClothesAPI = useCallback(async (query: string) => {
+    if (!token || !query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    setIsSearching(true);
+    try {
+      const results = await searchClothes(token, query);
+      setSearchResults(results || []);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to search clothes.",
+      });
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [token]);
+
   const toggleSelection = useCallback((id: string) => {
     setSelectedItems(prev => 
       prev.includes(id) 
@@ -237,6 +260,9 @@ export const useClothes = () => {
     refreshing,
     selectedItems,
     selectionMode,
+    searchResults,
+    isSearching,
+    searchClothesAPI,
     fetchClothes,
     refreshClothes,
     createClothesItem,

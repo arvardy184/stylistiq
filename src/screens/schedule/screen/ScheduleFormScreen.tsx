@@ -20,7 +20,7 @@ import {
   Schedule,
   ScheduleClothes,
 } from "@/types/schedule";
-import { CLOTHES_SEASONS } from "@/screens/clothes/types";
+import { CLOTHES_CATEGORIES, CLOTHES_SEASONS } from "@/screens/clothes/types";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
 
 const ScheduleFormScreen = () => {
@@ -38,7 +38,7 @@ const ScheduleFormScreen = () => {
     clothesIds: [],
   });
 
-  const [selectedSeason, setSelectedSeason] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
@@ -73,8 +73,8 @@ const ScheduleFormScreen = () => {
     navigation.goBack();
   };
 
-  const filteredClothes = selectedSeason
-    ? clothes.filter((c) => c.season === selectedSeason)
+  const filteredClothes = selectedCategory
+    ? clothes.filter((c) => c.category === selectedCategory)
     : clothes;
 
   const renderHeader = () => (
@@ -138,33 +138,33 @@ const ScheduleFormScreen = () => {
             {/* Season Filter */}
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <TouchableOpacity
-                onPress={() => setSelectedSeason(null)}
+                onPress={() => setSelectedCategory(null)}
                 className={`p-2 border rounded-full mr-2 ${
-                  !selectedSeason ? "bg-primary border-primary" : "border-gray-300"
+                  !selectedCategory ? "bg-primary border-primary" : "border-gray-300"
                 }`}
               >
                 <Text
-                  className={!selectedSeason ? "text-white" : "text-gray-600"}
+                  className={!selectedCategory ? "text-white" : "text-gray-600"}
                 >
                   All
                 </Text>
               </TouchableOpacity>
-              {CLOTHES_SEASONS.map((season) => (
+              {CLOTHES_CATEGORIES.map((category) => (
                 <TouchableOpacity
-                  key={season}
-                  onPress={() => setSelectedSeason(season)}
+                  key={category}
+                  onPress={() => setSelectedCategory(category)}
                   className={`p-2 border rounded-full mr-2 ${
-                    selectedSeason === season
+                    selectedCategory === category
                       ? "bg-primary border-primary"
                       : "border-gray-300"
                   }`}
                 >
                   <Text
                     className={
-                      selectedSeason === season ? "text-white" : "text-gray-600"
+                      selectedCategory === category ? "text-white" : "text-gray-600"
                     }
                   >
-                    {season}
+                    {category}
                   </Text>
                 </TouchableOpacity>
               ))}

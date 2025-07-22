@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Clothes } from '@/screens/collections/types';
 import { getAllClothes } from '@/services/api/clothes';
 import { useAuthStore } from '@/store/auth/authStore';
-import ClothesCard from '@/screens/collections/components/ClothesCard'; // Re-using the same card
+import ClothesCard from '@/screens/collections/components/ClothesCard'; 
 
 interface AddClothesToCollectionModalProps {
   visible: boolean;

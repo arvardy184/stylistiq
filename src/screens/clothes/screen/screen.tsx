@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { useRef } from "react";
 import {
   View,
   Text,
@@ -23,13 +24,16 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showFormModal, setShowFormModal] = useState(false);
   const [editingClothes, setEditingClothes] = useState<Clothes | null>(null);
-
+  const searchRef = useRef<NodeJS.Timeout | null>(null);
   const {
     clothes,
     loading,
     refreshing,
     selectedItems,
     selectionMode,
+    searchResults,
+    isSearching,
+    searchClothesAPI,
     refreshClothes,
     deleteClothesItem,
     bulkDeleteClothes,
@@ -49,6 +53,18 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
       (item.color || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleSearchChange = (text: string) => {
+    setSearchQuery(text);
+    if (searchRef.current) clearTimeout(searchRef.current);
+    if (text.trim() === "") {
+      // Kosongin hasil search, biar balik ke list utama
+      searchClothesAPI(""); // atau setSearchResults([]) di hook
+      return;
+    }
+    searchRef.current = setTimeout(() => {
+      searchClothesAPI(text);
+    }, 400); // debounce 400ms
+  };
   // Handle clothes press
   const handleClothesPress = (item: Clothes) => {
     navigation.navigate("ClothesDetail", {
@@ -62,6 +78,10 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
     setEditingClothes(item);
     setShowFormModal(true);
   };
+
+  const displayClothes = searchQuery.trim()
+  ? searchResults
+  : clothes;
 
   // Handle delete clothes
   const handleDeleteClothes = (item: Clothes) => {
@@ -162,7 +182,7 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
           <View>
             <Text className="text-2xl font-bold text-gray-900">My Wardrobe</Text>
             <Text className="text-gray-600 mt-1">
-              {filteredClothes.length} {filteredClothes.length === 1 ? "item" : "items"}
+              {displayClothes.length} {displayClothes.length === 1 ? "item" : "items"}
             </Text>
           </View>
           
@@ -194,7 +214,7 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
           <TextInput
             placeholder="Search clothes..."
             value={searchQuery}
-            onChangeText={setSearchQuery}
+            onChangeText={handleSearchChange}
             className="bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-gray-900"
             placeholderTextColor="#9CA3AF"
           />
@@ -208,10 +228,44 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
       
       {renderHeader()}
-      
+      {loading || isSearching ? (
+  <LoadingState />
+) : displayClothes.length === 0 ? (
+  <ScrollView
+    contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={refreshClothes} />
+    }
+  >
+    <EmptyState
+      title={searchQuery ? "No clothes found" : "No clothes yet"}
+      subtitle={
+        searchQuery
+          ? "Try adjusting your search terms"
+          : "Start building your wardrobe by adding your first clothing item"
+      }
+      actionText={searchQuery ? "Clear Search" : "Add New Clothes"}
+      onAction={searchQuery ? () => setSearchQuery("") : handleCreateClothes}
+      icon={searchQuery ? "search" : "shirt-outline"}
+    />
+  </ScrollView>
+) : (
+  <ClothesGrid
+    clothes={displayClothes}
+    onClothesPress={handleClothesPress}
+    onClothesEdit={handleEditClothes}
+    onClothesDelete={handleDeleteClothes}
+    selectionMode={selectionMode}
+    selectedItems={selectedItems}
+    onItemSelect={toggleSelection}
+    refreshing={refreshing}
+    onRefresh={refreshClothes}
+  />
+)}
+{/*       
       {loading ? (
         <LoadingState />
-      ) : filteredClothes.length === 0 ? (
+      ) : displayClothes.length === 0 ? (
         <ScrollView
           contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
           refreshControl={
@@ -232,7 +286,7 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
         </ScrollView>
       ) : (
         <ClothesGrid
-          clothes={filteredClothes}
+          clothes={displayClothes}
           onClothesPress={handleClothesPress}
           onClothesEdit={handleEditClothes}
           onClothesDelete={handleDeleteClothes}
@@ -242,7 +296,7 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
           refreshing={refreshing}
           onRefresh={refreshClothes}
         />
-      )}
+      )} */}
       
       <ClothesFormModal
         visible={showFormModal}

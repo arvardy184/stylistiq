@@ -159,3 +159,21 @@ export const matchClothes = async (token: string, clothesIds: string[]) => {
     throw error;
   }
 }; 
+
+//SEARCH CLOTHES
+  export const searchClothes = async (token: string, q: string) => {
+  const endpoint = `${BASE_URL}/clothes/search/all?q=${encodeURIComponent(q)}`;
+  console.log(`🚀 [API][GET] Kicking off: ${endpoint}`);
+
+  try {
+    const response = await axios.get(endpoint, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log("✅ [API][GET] Search Clothes:", JSON.stringify(response.data, null, 2));
+    return response.data; 
+  }
+  catch (error) {
+    console.error(`❌ [API][GET] Error: ${endpoint}`, error.response?.data || error.message);
+    throw error;
+  }
+}

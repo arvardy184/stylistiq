@@ -114,8 +114,7 @@ const MainTabNavigator = () => {
           component={CollectionsScreen}
           listeners={protectedTabListener}
           options={{
-            headerShown: true,
-            title: "Collections",
+            headerShown: false,
             tabBarIcon: ({ focused }) => (
               <View style={styles.iconContainer}>
                 <Ionicons
