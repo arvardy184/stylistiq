@@ -91,7 +91,7 @@ const PhotoPicker = ({ onImageSelected, onError }: PhotoPickerProps) => {
             <Button
               title="Cancel"
               onPress={() => setModalVisible(false)}
-              variant="outline"
+           //   variant="outline"
             />
           </View>
         </View>

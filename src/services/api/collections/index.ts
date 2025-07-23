@@ -2,6 +2,7 @@ import { BASE_URL } from "@/config";
 import {
   CollectionItem,
   CollectionsResponse,
+  CreateCollectionResponse
 } from "@/screens/collections/types";
 import axios from "axios";
 
@@ -73,9 +74,9 @@ export const createCollection = async (
   try {
     console.log("🚀 createCollection API called");
     console.log("📡 BASE_URL:", BASE_URL);
-    console.log("📝 Collection data:", { name, image, clothesIds });
+    // console.log("📝 Collection data:", { name, image, clothesIds });
 
-    const response = await axios.post<CollectionsResponse>(
+    const response = await axios.post<CreateCollectionResponse>(
       `${BASE_URL}/collection`,
       {
         name,
@@ -93,7 +94,7 @@ export const createCollection = async (
     console.log("✅ createCollection successful");
     console.log("📊 Response:", JSON.stringify(response.data, null, 2));
 
-    return response.data.data[0];
+    return response.data.data;
   } catch (error) {
     console.error("❌ createCollection error:", error);
     console.error("🔍 Error details:", {

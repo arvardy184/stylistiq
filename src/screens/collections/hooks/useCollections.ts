@@ -46,7 +46,7 @@ export const useCollections = () => {
   const handleCreateCollection = async (data: CreateCollectionData) => {
     try {
       const newCollection = await createCollection(token!, data.name, data.image);
-      setCollections(prev => [newCollection, ...prev]);
+     setCollections(prev => [newCollection, ...prev]);
       Toast.show({
         type: "success",
         text1: "Collection Created",

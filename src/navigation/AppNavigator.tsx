@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,6 +17,7 @@ import LoadingContent from "@/components/ui/loading/LoadingContent";
 import ScheduleScreen from "@/screens/schedule/screen/ScheduleScreen";
 import ScheduleDetailScreen from "@/screens/schedule/screen/ScheduleDetailScreen";
 import ScheduleFormScreen from "@/screens/schedule/screen/ScheduleFormScreen";
+import { notificationService } from "@/services/notifications";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ const AppNavigator = () => {
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(
     null
   );
+  const navigationRef = useRef<any>(null);
 
   useEffect(() => {
     const checkOnboardingStatus = async () => {
@@ -42,10 +44,29 @@ const AppNavigator = () => {
     checkOnboardingStatus();
   }, []);
 
+  // Setup notification handlers
+  useEffect(() => {
+    if (!token) return;
+
+    const navigateToSchedule = (scheduleId: string) => {
+      console.log('🔔 [NOTIFICATION] Navigating to schedule:', scheduleId);
+      if (navigationRef.current) {
+        navigationRef.current.navigate('ScheduleDetail', { scheduleId });
+      }
+    };
+
+    const subscriptions = notificationService.setupNotificationHandlers(navigateToSchedule);
+
+    return () => {
+      subscriptions.foregroundSubscription.remove();
+      subscriptions.backgroundSubscription.remove();
+    };
+  }, [token]);
+
   if (loading) return <LoadingContent />;
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName={
           hasSeenOnboarding === false ? "Onboarding" : token ? "Main" : "Login"

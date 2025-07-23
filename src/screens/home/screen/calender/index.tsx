@@ -36,13 +36,15 @@ const CalenderHome = () => {
     }, [refetchSchedule])
   );
 
-  const handleCreateSchedule = async (clothesIds: string[]) => {
+  const handleCreateSchedule = async (clothesIds: string[], reminderTime?: string, note?: string) => {
     if (!token) return;
     
     setIsCreatingSchedule(true);
     const payload: CreateSchedulePayload = {
       date: selectedDate.format("YYYY-MM-DD"),
       clothesIds,
+      reminder: reminderTime,
+      note,
     };
     
     try {
@@ -142,6 +144,7 @@ const CalenderHome = () => {
         onClose={() => setIsModalVisible(false)}
         onSchedule={handleCreateSchedule}
         isLoading={isCreatingSchedule}
+        selectedDate={selectedDate}
       />
     </>
   );

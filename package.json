@@ -28,7 +28,7 @@
     "dayjs": "^1.11.13",
     "expo": "~53.0.0",
     "expo-camera": "~16.1.8",
-    "expo-constants": "~17.1.6",
+    "expo-constants": "~17.1.7",
     "expo-file-system": "~18.1.10",
     "expo-font": "~13.3.1",
     "expo-image-manipulator": "^13.1.7",
@@ -41,7 +41,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-hook-form": "^7.60.0",
-    "react-native": "0.79.4",
+    "react-native": "0.79.5",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-reanimated": "~3.17.4",
@@ -52,7 +52,9 @@
     "react-native-web": "^0.20.0",
     "tailwindcss-react-native": "^1.7.10",
     "yup": "^1.6.1",
-    "zustand": "^4.4.7"
+    "zustand": "^4.4.7",
+    "expo-notifications": "~0.31.4",
+    "expo-device": "~7.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

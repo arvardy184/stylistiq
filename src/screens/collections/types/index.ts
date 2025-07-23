@@ -53,7 +53,13 @@ export interface CollectionDetailScreenProps {
 export interface CollectionsResponse {
   statusCode: number;
   message: string;
-  data: CollectionItem[];
+  data: CollectionItem[]; 
+}
+
+export interface CreateCollectionResponse {
+  statusCode: number;
+  message: string;
+  data: CollectionItem; 
 }
 
 export interface CreateCollectionData {
