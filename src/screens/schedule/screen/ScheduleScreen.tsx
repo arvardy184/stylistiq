@@ -6,6 +6,7 @@ import {
   ScrollView,
   RefreshControl,
   Alert,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -283,6 +284,7 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={['top', 'left', 'right']}>
+      <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
       {renderHeader()}
       {renderCalendar()}
       <View className="flex-1 mt-4">

@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import { useSchedule } from "@/hooks/useSchedule";
 import { Schedule } from "@/types/schedule";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
+import { StatusBar } from "react-native";
 
 const ScheduleDetailScreen = () => {
   const navigation = useNavigation();
@@ -86,6 +87,7 @@ const ScheduleDetailScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50" edges={["top", "left", "right"]}>
+      <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
       {/* Header */}
       <View className="flex-row items-center justify-between p-4 bg-white border-b border-gray-200">
         <TouchableOpacity onPress={handleGoBack} className="p-2">
