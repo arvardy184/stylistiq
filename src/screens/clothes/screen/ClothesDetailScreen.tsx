@@ -12,8 +12,10 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useClothesDetail } from "../hooks/useClothes";
-import { ClothesDetailScreenProps } from "../types";
+import { Clothes, ClothesDetailScreenProps, ClothesFormData } from "../types";
 import LoadingState from "../components/LoadingState";
+import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
+import ClothesFormModal from "../components/ClothesFormModal";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -22,39 +24,81 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   route,
 }) => {
   const { clothesId, clothesName } = route.params;
-  const { clothesDetail, loading } = useClothesDetail(clothesId);
+  const { clothesDetail, loading, deleteClothesItem, bulkDeleteClothes,createClothesItem,updateClothesItem } = useClothesDetail(clothesId);   
+  const [editingClothes, setEditingClothes] = useState<Clothes | null>(null);
+  const [showFormModal, setShowFormModal] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [deleteContext, setDeleteContext] = useState<
+    "single" | "bulk" | "none"
+  >("none");
+  const [itemToDelete, setItemToDelete] = useState<Clothes | null>(null);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);  
+  const closeDeleteModal = () => {
+    setIsModalVisible(false);
+    setDeleteContext("none");
+    setItemToDelete(null);
+  };
   const handleGoBack = () => {
     navigation.goBack();
   };
 
   const handleEdit = () => {
     // Navigate to edit screen or show modal
-    Alert.alert("Edit", "Edit functionality coming soon!");
+    <ClothesFormModal
+        visible={showFormModal}
+        onClose={() => setShowFormModal(false)}
+        onSubmit={handleFormSubmit}
+        initialData={editingClothes}
+        title={editingClothes ? "Edit Clothes" : "Add New Clothes"}
+        submitText={editingClothes ? "Update" : "Create"}
+      />
+  };
+
+  
+
+  const handleFormSubmit = (data: ClothesFormData) => {
+    console.log('Form Submitted...');
+    if (editingClothes) {
+      updateClothesItem(editingClothes.id, data);
+    } else {
+      createClothesItem(data);
+    }
+    setShowFormModal(false);
+    setEditingClothes(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteContext === "single" && itemToDelete) {
+      deleteClothesItem(itemToDelete.id);
+    } else if (deleteContext === "bulk") {
+      bulkDeleteClothes(selectedItems);
+    }
+    closeDeleteModal();
+  };
+  const getModalMessage = () => {
+    if (deleteContext === "single" && itemToDelete) {
+      return `This action cannot be undone. Are you sure you want to delete "${itemToDelete.name}"?`;
+    }
+    if (deleteContext === "bulk") {
+      return `This action cannot be undone. You are about to delete ${selectedItems.length} items.`;
+    }
+    return "";
   };
 
   const handleDelete = () => {
-    Alert.alert(
-      "Delete Clothes",
-      `Are you sure you want to delete "${clothesDetail?.name}"?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => {
-            // Handle delete and navigate back
-            navigation.goBack();
-          },
-        },
-      ]
-    );
+    <ConfirmationModal
+    visible={isModalVisible}
+    onClose={closeDeleteModal}
+    onConfirm={handleConfirmDelete}
+    title="Are you sure?"
+    message={getModalMessage()}
+    icon="trash-2"
+    confirmText="Delete"
+    confirmButtonVariant="destructive"
+  />
   };
 
-  const handleShare = () => {
-    Alert.alert("Share", "Share functionality coming soon!");
-  };
 
   const DetailItem = ({ icon, label, value, color = "#6B7280" }) => (
     <View className="flex-row items-center py-3 border-b border-gray-100">

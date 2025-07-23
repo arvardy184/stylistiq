@@ -21,7 +21,7 @@ export const useClothes = () => {
       fetchClothes();
     }
   }, [token]);
-  
+
   const fetchClothes = useCallback(async () => {
     if (!token) return;
     
@@ -283,26 +283,19 @@ export const useClothes = () => {
   };
 };
 
+
 export const useClothesDetail = (clothesId: string) => {
   const [clothesDetail, setClothesDetail] = useState<Clothes | null>(null);
   const [loading, setLoading] = useState(true);
-  
   const { token } = useAuthStore();
 
   const fetchClothesDetail = useCallback(async () => {
     if (!token || !clothesId) return;
-    
     try {
       setLoading(true);
-      console.log("🔄 Fetching clothes detail:", clothesId);
-      
       const response = await getClothesById(token, clothesId);
-      const clothesData = response.data;
-      
-      setClothesDetail(clothesData);
-      console.log("✅ Clothes detail fetched successfully");
+      setClothesDetail(response.data);
     } catch (error) {
-      console.error("❌ Error fetching clothes detail:", error);
       Toast.show({
         type: "error",
         text1: "Error",
@@ -317,9 +310,116 @@ export const useClothesDetail = (clothesId: string) => {
     fetchClothesDetail();
   }, [fetchClothesDetail]);
 
+  // Delete single clothes
+  const deleteClothesItem = useCallback(async (id: string) => {
+    if (!token) return;
+    try {
+      await deleteClothes(token, [id]);
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Clothes item deleted successfully!",
+      });
+    
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to delete clothes item. Please try again.",
+      });
+    }
+  }, [token]);
+
+  // Bulk delete clothes
+  const bulkDeleteClothes = useCallback(async (ids: string[]) => {
+    if (!token || ids.length === 0) return;
+    try {
+      await deleteClothes(token, ids);
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: `${ids.length} clothes items deleted successfully!`,
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to delete some clothes items. Please try again.",
+      });
+    }
+  }, [token]);
+
+  // Update clothes detail
+  const updateClothesItem = useCallback(async (id: string, data: ClothesFormData) => {
+    if (!token) return;
+    try {
+      const formData = new FormData();
+      formData.append("itemType", data.itemType);
+      formData.append("category", data.category);
+      formData.append("color", data.color);
+      if (data.note) formData.append("note", data.note);
+      if (data.image && data.image.startsWith('file:')) {
+        formData.append("image", {
+          uri: data.image,
+          type: "image/jpeg",
+          name: `clothes-image-${Date.now()}.jpg`,
+        } as any);
+      }
+      const response = await updateClothes(token, id, formData);
+      const updatedClothes = response.data;
+      setClothesDetail(updatedClothes); // update detail dengan object baru
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Clothes item updated successfully!",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to update clothes item. Please try again.",
+      });
+    }
+  }, [token]);
+
+  // Create clothes item (opsional, biasanya tidak dipakai di detail)
+  const createClothesItem = useCallback(async (data: ClothesFormData) => {
+    if (!token) return;
+    try {
+      const formData = new FormData();
+      formData.append("category", data.category);
+      formData.append("color", data.color);
+      if (data.image) {
+        formData.append("image", {
+          uri: data.image,
+          type: "image/jpeg",
+          name: "clothes-image.jpg",
+        } as any);
+      }
+      const response = await createClothes(token, formData);
+      const newClothes = response.data;
+      setClothesDetail(newClothes); // update detail dengan object baru
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Clothes item created successfully!",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to create clothes item. Please try again.",
+      });
+    }
+  }, [token]);
+
   return {
     clothesDetail,
     loading,
+    deleteClothesItem,
+    bulkDeleteClothes,
     fetchClothesDetail,
+    createClothesItem,
+    updateClothesItem,
   };
-}; 
+};

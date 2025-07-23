@@ -42,6 +42,8 @@ export const createSchedule = async (token: string, payload: CreateSchedulePaylo
     
     // Schedule local notification jika ada reminder
     const scheduleData = response.data.data;
+    console.log(scheduleData)
+    console.log('payload reminder', payload.reminder)
     if (scheduleData && payload.reminder) {
       try {
         console.log('🔔 [NOTIFICATION] Scheduling notification for new schedule:', scheduleData.id);

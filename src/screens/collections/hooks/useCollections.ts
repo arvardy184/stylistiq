@@ -66,9 +66,9 @@ export const useCollections = () => {
   const handleUpdateCollection = async (id: string, data: UpdateCollectionData) => {
     try {
       const updatedCollection = await updateCollection(token!, id, data.name, data.image);
-      setCollections(prev => prev.map(item => 
-        item.id === id ? updatedCollection : item
-      ));
+  setCollections(prev => prev.map(item => 
+    item.id === id ? updatedCollection : item
+  ));
       console.log('🔄 [UPDATE] Collection updated:', updatedCollection);
     } catch (error) {
       console.error('Failed to update collection:', error);

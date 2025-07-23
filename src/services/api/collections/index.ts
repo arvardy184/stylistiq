@@ -118,7 +118,7 @@ export const addClothesToCollection = async (
     console.log("👔 Clothes IDs to add:", clothesIds);
 
     const response = await axios.post<CollectionsResponse>(
-      `${BASE_URL}/collection/${collectionId}/clothes`,
+      `${BASE_URL}/collection/${collectionId}/add`,
       {
         clothesIds,
       },
@@ -157,7 +157,7 @@ export const updateCollection = async (
     console.log("🆔 Collection ID:", collectionId);
     console.log("📝 Update data:", { name, image });
 
-    const response = await axios.put<CollectionsResponse>(
+    const response = await axios.put<CreateCollectionResponse>(
       `${BASE_URL}/collection/${collectionId}`,
       {
         name,
@@ -170,7 +170,7 @@ export const updateCollection = async (
         },
       }
     );
-    return response.data.data[0];
+    return response.data.data;
   } catch (error) {
     console.error("❌ updateCollection error:", error);
     console.error("🔍 Error details:", {

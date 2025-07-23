@@ -165,7 +165,7 @@ export const useSchedule = () => {
       setLoading(true);
       console.log("🔄 Deleting multiple schedules...", scheduleIds);
       
-      await deleteSchedules(token, { scheduleIds });
+      await deleteSchedules(token, {scheduleIds});
       
       // Remove from local state
       setSchedules(prev => prev.filter(schedule => !scheduleIds.includes(schedule.id)));
