@@ -13,8 +13,6 @@ interface EmptyStateProps {
 const EmptyState: React.FC<EmptyStateProps> = ({
   title = "No Clothes Yet",
   subtitle = "Start building your wardrobe by adding your first clothing item",
-  actionText = "Add New Clothes",
-  onAction,
   icon = "shirt-outline",
 }) => {
   return (
@@ -22,27 +20,16 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       <View className="bg-gradient-to-br from-purple-100 to-pink-100 w-32 h-32 rounded-full justify-center items-center mb-6">
         <Ionicons name={icon} size={64} color="#8B5CF6" />
       </View>
-      
+
       <Text className="text-xl font-bold text-gray-900 text-center mb-2">
         {title}
       </Text>
-      
+
       <Text className="text-gray-600 text-center mb-8 leading-6">
         {subtitle}
       </Text>
-      
-      {onAction && (
-        <TouchableOpacity
-          onPress={onAction}
-          className="bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full shadow-lg shadow-purple-500/25"
-        >
-          <Text className="text-white font-semibold text-base">
-            {actionText}
-          </Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 };
 
-export default EmptyState; 
+export default EmptyState;

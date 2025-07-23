@@ -96,10 +96,10 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
       <View className="flex-1">{renderContent()}</View>
 
       {showAnalyzeButton && (
-        <View className="absolute bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-sm border-t border-gray-200">
+        <View className="absolute bottom-0 left-0 right-0 p-10 bg-white/80 backdrop-blur-sm border-t border-gray-200">
           <TouchableOpacity
             onPress={startAnalysis}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 py-4 rounded-full flex-row items-center justify-center shadow-lg"
+            className="bg-primary py-4 rounded-full flex-row items-center justify-center shadow-lg"
             disabled={isLoading}
           >
             <Ionicons name="scan" size={22} color="white" />

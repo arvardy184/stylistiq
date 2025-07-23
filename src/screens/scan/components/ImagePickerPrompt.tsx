@@ -1,12 +1,14 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface ImagePickerPromptProps {
   onAddImages: () => void;
 }
 
-const ImagePickerPrompt: React.FC<ImagePickerPromptProps> = ({ onAddImages }) => {
+const ImagePickerPrompt: React.FC<ImagePickerPromptProps> = ({
+  onAddImages,
+}) => {
   return (
     <View className="flex-1 justify-center items-center p-8 bg-gray-50 rounded-3xl m-4">
       <View className="border-2 border-dashed border-gray-300 rounded-2xl w-full items-center justify-center p-10">
@@ -21,13 +23,13 @@ const ImagePickerPrompt: React.FC<ImagePickerPromptProps> = ({ onAddImages }) =>
         </Text>
         <TouchableOpacity
           onPress={onAddImages}
-          className="bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full shadow-lg shadow-purple-500/25"
+          className="bg-primary px-8 py-4 rounded-full"
         >
-          <Text className="text-white font-semibold text-base">Select Images</Text>
+          <Text className="text-white text-base">Select Images</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default ImagePickerPrompt; 
+export default ImagePickerPrompt;

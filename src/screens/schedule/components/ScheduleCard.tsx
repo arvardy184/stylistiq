@@ -11,28 +11,32 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
   onDelete,
 }) => {
   const { date, note, reminder, clothes } = schedule;
-  
+
   const formattedDate = dayjs(date).format("DD MMM YYYY");
-  const formattedReminder = reminder ? dayjs(reminder).format("DD MMM, HH:mm") : null;
+  const formattedReminder = reminder
+    ? dayjs(reminder).format("DD MMM, HH:mm")
+    : null;
   const clothesCount = clothes.length;
 
   return (
     <TouchableOpacity
       onPress={() => onPress(schedule)}
-      className="bg-white rounded-2xl shadow-lg shadow-black/5 mx-4 mb-4 overflow-hidden"
+      className="bg-white border border-gray-300 rounded-2xl shadow-lg shadow-black/5 mx-4 mb-4 overflow-hidden"
     >
       {/* Header */}
-      <View className="bg-gradient-to-r from-[#B2236F] to-[#EC4899] px-6 py-4">
+      <View className="bg-primary px-6 py-4">
         <View className="flex-row items-center justify-between">
           <View className="flex-1">
-            <Text className="text-white font-bold text-lg">{formattedDate}</Text>
+            <Text className="text-white font-bold text-lg">
+              {formattedDate}
+            </Text>
             {note && (
               <Text className="text-white/90 text-sm mt-1" numberOfLines={2}>
                 {note}
               </Text>
             )}
           </View>
-          
+
           <View className="flex-row">
             {onEdit && (
               <TouchableOpacity
@@ -69,7 +73,9 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
               <Ionicons name="alarm-outline" size={16} color="#F59E0B" />
             </View>
             <View>
-              <Text className="text-gray-800 font-medium text-sm">Reminder</Text>
+              <Text className="text-gray-800 font-medium text-sm">
+                Reminder
+              </Text>
               <Text className="text-gray-600 text-xs">{formattedReminder}</Text>
             </View>
           </View>
@@ -78,7 +84,7 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
         {/* Clothes Section */}
         <View className="flex-row items-center justify-between mb-3">
           <Text className="text-gray-800 font-semibold text-base">
-            Outfit ({clothesCount} {clothesCount === 1 ? 'item' : 'items'})
+            Outfit ({clothesCount} {clothesCount === 1 ? "item" : "items"})
           </Text>
           <View className="flex-row items-center">
             <Ionicons name="shirt-outline" size={16} color="#6B7280" />
@@ -103,29 +109,38 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
                   />
                 </View>
               ))}
-              
+
               {clothesCount > 3 && (
                 <View className="w-12 h-12 bg-gray-200 rounded-lg justify-center items-center ml-2">
-                  <Text className="text-gray-600 text-xs font-bold">+{clothesCount - 3}</Text>
+                  <Text className="text-gray-600 text-xs font-bold">
+                    +{clothesCount - 3}
+                  </Text>
                 </View>
               )}
             </View>
 
             {/* Clothes categories */}
             <View className="flex-row flex-wrap">
-              {Array.from(new Set(clothes.map(c => c.category))).slice(0, 3).map((category, index) => (
-                <View key={index} className="bg-gray-100 px-3 py-1 rounded-full mr-2 mb-1">
-                  <Text className="text-gray-700 text-xs font-medium capitalize">
-                    {category}
-                  </Text>
-                </View>
-              ))}
+              {Array.from(new Set(clothes.map((c) => c.category)))
+                .slice(0, 3)
+                .map((category, index) => (
+                  <View
+                    key={index}
+                    className="bg-gray-100 px-3 py-1 rounded-full mr-2 mb-1"
+                  >
+                    <Text className="text-gray-700 text-xs font-medium capitalize">
+                      {category}
+                    </Text>
+                  </View>
+                ))}
             </View>
           </View>
         ) : (
           <View className="bg-gray-50 rounded-lg p-4 items-center justify-center">
             <Ionicons name="shirt-outline" size={24} color="#9CA3AF" />
-            <Text className="text-gray-500 text-sm mt-2">No clothes selected</Text>
+            <Text className="text-gray-500 text-sm mt-2">
+              No clothes selected
+            </Text>
           </View>
         )}
       </View>
@@ -139,12 +154,14 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
               Created {dayjs(schedule.createdAt).format("DD MMM")}
             </Text>
           </View>
-          
+
           <TouchableOpacity
             onPress={() => onPress(schedule)}
             className="flex-row items-center"
           >
-            <Text className="text-[#B2236F] text-sm font-medium mr-1">View Details</Text>
+            <Text className="text-[#B2236F] text-sm font-medium mr-1">
+              View Details
+            </Text>
             <Ionicons name="chevron-forward" size={14} color="#B2236F" />
           </TouchableOpacity>
         </View>
@@ -153,4 +170,4 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
   );
 };
 
-export default ScheduleCard; 
+export default ScheduleCard;

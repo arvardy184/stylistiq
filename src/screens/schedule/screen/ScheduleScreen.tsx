@@ -21,18 +21,18 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
   const navigation = useNavigation();
   const { showError } = useNotification();
   const { selectedDate: routeSelectedDate } = route?.params || {};
-  
+
   // Initialize with passed date or current date
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
     const initialDate = routeSelectedDate ? dayjs(routeSelectedDate) : dayjs();
     const dayOfWeek = initialDate.day();
     return initialDate.subtract(dayOfWeek === 0 ? 6 : dayOfWeek - 1, "day");
   });
-  
-  const [selectedDate, setSelectedDate] = useState<Dayjs>(() => 
+
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(() =>
     routeSelectedDate ? dayjs(routeSelectedDate) : dayjs()
   );
-  
+
   const {
     schedules,
     loading,
@@ -42,7 +42,9 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
     refreshSchedules,
   } = useSchedule();
 
-  const [currentDateSchedules, setCurrentDateSchedules] = useState<Schedule[]>([]);
+  const [currentDateSchedules, setCurrentDateSchedules] = useState<Schedule[]>(
+    []
+  );
 
   // Load schedules when selected date changes
   useEffect(() => {
@@ -72,24 +74,26 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
 
   const handleCreateSchedule = () => {
     const formattedDate = selectedDate.format("YYYY-MM-DD");
-    navigation.navigate("ScheduleForm", { 
+    navigation.navigate("ScheduleForm", {
       selectedDate: formattedDate,
-      mode: "create"
+      mode: "create",
     });
   };
 
   const handleSchedulePress = (schedule: Schedule) => {
-    navigation.navigate("ScheduleDetail", { 
+    navigation.navigate("ScheduleDetail", {
       scheduleId: schedule.id,
-      scheduleName: `Schedule for ${dayjs(schedule.date).format("DD MMM YYYY")}`
+      scheduleName: `Schedule for ${dayjs(schedule.date).format(
+        "DD MMM YYYY"
+      )}`,
     });
   };
 
   const handleEditSchedule = (schedule: Schedule) => {
-    navigation.navigate("ScheduleForm", { 
+    navigation.navigate("ScheduleForm", {
       selectedDate: schedule.date,
       schedule: schedule,
-      mode: "edit"
+      mode: "edit",
     });
   };
 
@@ -107,7 +111,9 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
             const success = await deleteSingleSchedule(schedule.id);
             if (success) {
               // Remove from current view
-              setCurrentDateSchedules(prev => prev.filter(s => s.id !== schedule.id));
+              setCurrentDateSchedules((prev) =>
+                prev.filter((s) => s.id !== schedule.id)
+              );
             }
           },
         },
@@ -131,11 +137,11 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
       <View className="flex-row items-center justify-between">
         <TouchableOpacity
           onPress={handleGoBack}
-          className="w-10 h-10 rounded-full bg-gray-100 justify-center items-center"
+          className="w-10 h-10 justify-center items-center"
         >
           <Ionicons name="arrow-back" size={20} color="#374151" />
         </TouchableOpacity>
-        
+
         <View className="flex-1 mx-4">
           <Text className="text-xl font-bold text-gray-800 text-center">
             Outfit Schedule
@@ -144,7 +150,7 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
             {selectedDate.format("DD MMMM YYYY")}
           </Text>
         </View>
-        
+
         <TouchableOpacity
           onPress={handleCreateSchedule}
           className="w-10 h-10 rounded-full bg-[#B2236F] justify-center items-center"
@@ -175,7 +181,7 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
         {dates.map((dateObj, index) => {
           const isSelected = dateObj.isSame(selectedDate, "day");
           const isToday = dateObj.isSame(dayjs(), "day");
-          const hasSchedule = currentDateSchedules.some(s => 
+          const hasSchedule = currentDateSchedules.some((s) =>
             dayjs(s.date).isSame(dateObj, "day")
           );
 
@@ -190,25 +196,25 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
               </Text>
               <View
                 className={`w-12 h-12 rounded-full justify-center items-center relative ${
-                  isSelected 
-                    ? "bg-[#B2236F]" 
-                    : isToday 
-                    ? "bg-[#B2236F]/20" 
+                  isSelected
+                    ? "bg-[#B2236F]"
+                    : isToday
+                    ? "bg-[#B2236F]/20"
                     : "bg-transparent"
                 }`}
               >
                 <Text
                   className={`text-base font-bold ${
-                    isSelected 
-                      ? "text-white" 
-                      : isToday 
-                      ? "text-[#B2236F]" 
+                    isSelected
+                      ? "text-white"
+                      : isToday
+                      ? "text-[#B2236F]"
                       : "text-gray-800"
                   }`}
                 >
                   {dateObj.date()}
                 </Text>
-                
+
                 {/* Schedule indicator */}
                 {hasSchedule && !isSelected && (
                   <View className="absolute bottom-1 w-1.5 h-1.5 bg-[#B2236F] rounded-full" />
@@ -247,7 +253,9 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
             className="bg-[#B2236F] px-6 py-3 rounded-full flex-row items-center"
           >
             <Ionicons name="add" size={20} color="white" />
-            <Text className="text-white font-semibold ml-2">Create Schedule</Text>
+            <Text className="text-white font-semibold ml-2">
+              Create Schedule
+            </Text>
           </TouchableOpacity>
         </View>
       );
@@ -283,15 +291,16 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50" edges={['top', 'left', 'right']}>
+    <SafeAreaView
+      className="flex-1 bg-gray-50"
+      edges={["top", "left", "right"]}
+    >
       <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
       {renderHeader()}
       {renderCalendar()}
-      <View className="flex-1 mt-4">
-        {renderScheduleList()}
-      </View>
+      <View className="flex-1 mt-4">{renderScheduleList()}</View>
     </SafeAreaView>
   );
 };
 
-export default ScheduleScreen; 
+export default ScheduleScreen;
