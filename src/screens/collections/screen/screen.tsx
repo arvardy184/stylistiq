@@ -8,14 +8,18 @@ import {
   RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { CollectionScreenProps, CreateCollectionData, UpdateCollectionData } from "../types";
+import {
+  CollectionScreenProps,
+  CreateCollectionData,
+  UpdateCollectionData,
+} from "../types";
 import CollectionCard from "../components/CollectionCard";
 import EmptyState from "../components/EmptyState";
 import LoadingState from "../components/LoadingState";
 import CollectionFormModal from "../components/CollectionFormModal";
 import { useCollections } from "../hooks/useCollections";
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 
 const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
   const {
@@ -45,7 +49,7 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
       loadCollections();
     }, [])
   );
-  
+
   const renderHeader = () => (
     <View className="px-6 py-4 bg-white">
       {isSelectionMode ? (
@@ -59,7 +63,7 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
               {selectedCollections.length} selected
             </Text>
           </TouchableOpacity>
-          
+
           <View className="flex-row">
             {selectedCollections.length > 0 && (
               <TouchableOpacity
@@ -72,20 +76,20 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
           </View>
         </View>
       ) : (
-        <View className="flex-row items-center justify-between">
-          <View className="flex-1">
-            <Text className="text-2xl font-bold text-gray-800">Collections</Text>
-            <Text className="text-gray-600 mt-1">
-              Organize your outfits by style or occasion
-            </Text>
-          </View>
-          
+        <View className="flex-row items-center justify-center">
+          <Text className="text-gray-600 mt-1">
+            Organize your outfits by style or occasion
+          </Text>
           {collections.length > 0 && (
             <TouchableOpacity
               onPress={enterSelectionMode}
               className="bg-gray-100 p-2 rounded-full"
             >
-              <Ionicons name="checkmark-circle-outline" size={24} color="#6B7280" />
+              <Ionicons
+                name="checkmark-circle-outline"
+                size={24}
+                color="#6B7280"
+              />
             </TouchableOpacity>
           )}
         </View>
@@ -131,7 +135,7 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       {renderHeader()}
-      
+
       {collections.length === 0 ? (
         renderEmptyState()
       ) : (
@@ -193,10 +197,14 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
           setEditingCollection(null);
         }}
         onSubmit={handleEditSubmit}
-        initialData={editingCollection ? {
-          name: editingCollection.name,
-          image: editingCollection.image,
-        } : undefined}
+        initialData={
+          editingCollection
+            ? {
+                name: editingCollection.name,
+                image: editingCollection.image,
+              }
+            : undefined
+        }
         title="Edit Collection"
         submitText="Update"
       />
