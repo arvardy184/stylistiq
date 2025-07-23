@@ -1,4 +1,3 @@
-
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
@@ -76,7 +75,7 @@ const MainTabNavigator = () => {
           component={ClothesScreen}
           listeners={protectedTabListener}
           options={{
-            headerShown: false,
+            headerShown: true,
             title: "Wardrobe",
             tabBarIcon: ({ focused }) => (
               <View style={styles.iconContainer}>
@@ -88,7 +87,7 @@ const MainTabNavigator = () => {
                 <Text
                   style={[
                     styles.iconLabel,
-                    { color: focused ? "083D57" : "#748c94" },
+                    { color: focused ? "#083D57" : "#748c94" },
                   ]}
                 >
                   Wardrobe
@@ -114,7 +113,7 @@ const MainTabNavigator = () => {
           component={CollectionsScreen}
           listeners={protectedTabListener}
           options={{
-            headerShown: false,
+            headerShown: true,
             tabBarIcon: ({ focused }) => (
               <View style={styles.iconContainer}>
                 <Ionicons

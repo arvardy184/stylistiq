@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, StatusBar, StyleSheet, Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useClothesAnalysis } from '../hooks/useClothesAnalysis';
-import { ScanScreenProps } from '../types';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  StatusBar,
+  StyleSheet,
+  Platform,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useClothesAnalysis } from "../hooks/useClothesAnalysis";
+import { ScanScreenProps } from "../types";
 
-import ImagePickerPrompt from '../components/ImagePickerPrompt';
-import ImageGrid from '../components/ImageGrid';
-import AnalysisLoading from '../components/AnalysisLoading';
-import AnalysisResultList from '../components/AnalysisResultList';
-import ImageSelectionModal from '../components/ImageSelectionModal';
-
+import ImagePickerPrompt from "../components/ImagePickerPrompt";
+import ImageGrid from "../components/ImageGrid";
+import AnalysisLoading from "../components/AnalysisLoading";
+import AnalysisResultList from "../components/AnalysisResultList";
+import ImageSelectionModal from "../components/ImageSelectionModal";
 
 const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -28,7 +35,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   const handleImagesSelected = (uris: string[]) => {
     addImages(uris);
     setModalVisible(false);
-  }
+  };
 
   const renderContent = () => {
     if (isLoading) {
@@ -44,11 +51,11 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
         />
       );
     }
-    
+
     if (selectedImages.length > 0) {
       return (
-        <ImageGrid 
-          images={selectedImages} 
+        <ImageGrid
+          images={selectedImages}
           onAddImages={() => setModalVisible(true)}
           onRemoveImage={removeImage}
         />
@@ -59,15 +66,18 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   };
 
   const showHeader = analysisResults.length === 0 && !isLoading;
-  const showAnalyzeButton = selectedImages.length > 0 && analysisResults.length === 0 && !isLoading;
+  const showAnalyzeButton =
+    selectedImages.length > 0 && analysisResults.length === 0 && !isLoading;
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      
+      <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
+
       {showHeader && (
         <View className="flex-row items-center justify-between p-4 border-b border-gray-100">
-          <Text className="text-2xl font-bold text-gray-900">Image Analysis</Text>
+          <Text className="text-2xl font-bold text-gray-900">
+            Image Analysis
+          </Text>
           {selectedImages.length > 0 && (
             <TouchableOpacity onPress={clearAll} className="p-2">
               <Ionicons name="trash-outline" size={24} color="#EF4444" />
@@ -82,23 +92,22 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           <Text className="text-red-600 mt-1">{error}</Text>
         </View>
       )}
-      
-      <View className="flex-1">
-        {renderContent()}
-      </View>
+
+      <View className="flex-1">{renderContent()}</View>
 
       {showAnalyzeButton && (
         <View className="absolute bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-sm border-t border-gray-200">
-            <TouchableOpacity
+          <TouchableOpacity
             onPress={startAnalysis}
             className="bg-gradient-to-r from-purple-500 to-pink-500 py-4 rounded-full flex-row items-center justify-center shadow-lg"
             disabled={isLoading}
-            >
+          >
             <Ionicons name="scan" size={22} color="white" />
             <Text className="text-white font-bold text-lg ml-2">
-                Analyze {selectedImages.length} {selectedImages.length > 1 ? 'Images' : 'Image'}
+              Analyze {selectedImages.length}{" "}
+              {selectedImages.length > 1 ? "Images" : "Image"}
             </Text>
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       )}
 
@@ -114,9 +123,9 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: "white",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
 });
 
-export default ScanScreen; 
+export default ScanScreen;
