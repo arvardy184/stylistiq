@@ -33,6 +33,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   } = useClothesAnalysis();
 
   const handleImagesSelected = (uris: string[]) => {
+    console.log('Images Selected...');
     addImages(uris);
     setModalVisible(false);
   };

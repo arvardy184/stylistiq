@@ -19,6 +19,7 @@ const AnalysisResultList: React.FC<AnalysisResultListProps> = ({
   ).length;
   const failedItems = results.length - successfulItems;
 
+
   const handleGoToWardrobe = () => {
     // Navigate to the Wardrobe/Clothes tab
     navigation.navigate("Wardrobe" as never);
