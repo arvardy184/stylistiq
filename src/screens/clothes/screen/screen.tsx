@@ -193,7 +193,8 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
     useCallback(() => {
       setSearchQuery("");
       clearSelection();
-    }, [clearSelection])
+      refreshClothes(); 
+    }, [clearSelection, refreshClothes])
   );
 
   const getModalMessage = () => {

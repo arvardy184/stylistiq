@@ -6,15 +6,15 @@ import {
   TouchableOpacity,
   Image,
   RefreshControl,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useSchedule } from "@/hooks/useSchedule";
 import { Schedule } from "@/types/schedule";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
+import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
 import { StatusBar } from "react-native";
 
 const ScheduleDetailScreen = () => {
@@ -25,6 +25,9 @@ const ScheduleDetailScreen = () => {
   const { fetchScheduleById, deleteSingleSchedule, loading } = useSchedule();
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  
+  // Confirmation modal states
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const loadScheduleDetail = async () => {
     const data = await fetchScheduleById(scheduleId);
@@ -35,6 +38,13 @@ const ScheduleDetailScreen = () => {
     loadScheduleDetail();
   }, [scheduleId]);
 
+  // Auto-refresh when screen gains focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadScheduleDetail();
+    }, [])
+  );
+
   const onRefresh = async () => {
     setRefreshing(true);
     await loadScheduleDetail();
@@ -42,6 +52,7 @@ const ScheduleDetailScreen = () => {
   };
 
   const handleGoBack = () => navigation.goBack();
+  
   const handleEdit = () => {
     navigation.navigate("ScheduleForm", {
       schedule: schedule,
@@ -51,23 +62,19 @@ const ScheduleDetailScreen = () => {
   };
 
   const handleDelete = () => {
-    Alert.alert(
-      "Delete Schedule",
-      `Are you sure you want to delete this schedule?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            const success = await deleteSingleSchedule(scheduleId);
-            if (success) {
-              navigation.goBack();
-            }
-          },
-        },
-      ]
-    );
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    const success = await deleteSingleSchedule(scheduleId);
+    if (success) {
+      navigation.navigate("Schedule" as never);
+    }
+    setIsDeleteModalVisible(false);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalVisible(false);
   };
 
   if (loading && !schedule) {
@@ -155,6 +162,18 @@ const ScheduleDetailScreen = () => {
           </View>
         </View>
       </ScrollView>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        visible={isDeleteModalVisible}
+        onClose={closeDeleteModal}
+        onConfirm={handleConfirmDelete}
+        title="Delete Schedule"
+        message="Are you sure you want to delete this schedule? This action cannot be undone."
+        icon="trash-2"
+        confirmText="Delete"
+        confirmButtonVariant="destructive"
+      />
     </SafeAreaView>
   );
 };

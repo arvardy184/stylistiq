@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   ScrollView,
   RefreshControl,
-  Alert,
   StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +14,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { ScheduleScreenProps, Schedule } from "@/types/schedule";
 import { useSchedule } from "@/hooks/useSchedule";
 import ScheduleCard from "../components/ScheduleCard";
+import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
 import { useNotification } from "@/hooks/useNotification";
 
 const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
@@ -46,6 +46,10 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
     []
   );
 
+  // Confirmation modal states
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [scheduleToDelete, setScheduleToDelete] = useState<Schedule | null>(null);
+
   // Load schedules when selected date changes
   useEffect(() => {
     loadSchedulesForDate();
@@ -57,7 +61,7 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
     setCurrentDateSchedules(scheduleData);
   };
 
-  // Refresh when screen gains focus
+  // Auto-refresh when screen gains focus
   useFocusEffect(
     React.useCallback(() => {
       loadSchedulesForDate();
@@ -98,27 +102,27 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
   };
 
   const handleDeleteSchedule = (schedule: Schedule) => {
-    const formattedDate = dayjs(schedule.date).format("DD MMM YYYY");
-    Alert.alert(
-      "Delete Schedule",
-      `Are you sure you want to delete the schedule for ${formattedDate}?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            const success = await deleteSingleSchedule(schedule.id);
-            if (success) {
-              // Remove from current view
-              setCurrentDateSchedules((prev) =>
-                prev.filter((s) => s.id !== schedule.id)
-              );
-            }
-          },
-        },
-      ]
-    );
+    setScheduleToDelete(schedule);
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (scheduleToDelete) {
+      const success = await deleteSingleSchedule(scheduleToDelete.id);
+      if (success) {
+        // Remove from current view
+        setCurrentDateSchedules((prev) =>
+          prev.filter((s) => s.id !== scheduleToDelete.id)
+        );
+      }
+    }
+    setIsDeleteModalVisible(false);
+    setScheduleToDelete(null);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalVisible(false);
+    setScheduleToDelete(null);
   };
 
   // Calendar navigation
@@ -129,96 +133,69 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
 
   const handlePrevWeek = () =>
     setCurrentWeekStart(currentWeekStart.subtract(7, "day"));
+
   const handleNextWeek = () =>
     setCurrentWeekStart(currentWeekStart.add(7, "day"));
 
   const renderHeader = () => (
-    <View className="bg-white px-6 py-4 border-b border-gray-100">
-      <View className="flex-row items-center justify-between">
-        <TouchableOpacity
-          onPress={handleGoBack}
-          className="w-10 h-10 justify-center items-center"
-        >
-          <Ionicons name="arrow-back" size={20} color="#374151" />
-        </TouchableOpacity>
-
-        <View className="flex-1 mx-4">
-          <Text className="text-xl font-bold text-gray-800 text-center">
-            Outfit Schedule
-          </Text>
-          <Text className="text-gray-500 text-sm text-center">
-            {selectedDate.format("DD MMMM YYYY")}
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          onPress={handleCreateSchedule}
-          className="w-10 h-10 rounded-full bg-[#B2236F] justify-center items-center"
-        >
-          <Ionicons name="add" size={20} color="white" />
-        </TouchableOpacity>
-      </View>
+    <View className="flex-row items-center justify-between p-4 bg-white border-b border-gray-200">
+      <TouchableOpacity onPress={handleGoBack} className="p-2">
+        <Ionicons name="arrow-back" size={24} />
+      </TouchableOpacity>
+      <Text className="text-lg font-bold">Schedule</Text>
+      <TouchableOpacity onPress={handleCreateSchedule} className="p-2">
+        <Ionicons name="add" size={24} color="#3B82F6" />
+      </TouchableOpacity>
     </View>
   );
 
   const renderCalendar = () => (
-    <View className="bg-white mx-4 mt-4 rounded-2xl shadow-lg shadow-black/5 p-5">
-      {/* Month Navigation */}
+    <View className="bg-white mx-4 mt-4 rounded-xl p-4 shadow-sm">
       <View className="flex-row justify-between items-center mb-4">
         <TouchableOpacity onPress={handlePrevWeek} className="p-2">
-          <Ionicons name="chevron-back" size={24} color="#B2236F" />
+          <Ionicons name="chevron-back" size={20} color="#B2236F" />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-gray-800">
+        <Text className="text-lg font-bold">
           {currentWeekStart.format("MMMM YYYY")}
         </Text>
         <TouchableOpacity onPress={handleNextWeek} className="p-2">
-          <Ionicons name="chevron-forward" size={24} color="#B2236F" />
+          <Ionicons name="chevron-forward" size={20} color="#B2236F" />
         </TouchableOpacity>
       </View>
 
-      {/* Week Days */}
       <View className="flex-row justify-around">
-        {dates.map((dateObj, index) => {
-          const isSelected = dateObj.isSame(selectedDate, "day");
-          const isToday = dateObj.isSame(dayjs(), "day");
-          const hasSchedule = currentDateSchedules.some((s) =>
-            dayjs(s.date).isSame(dateObj, "day")
-          );
-
+        {dates.map((date, index) => {
+          const isSelected = date.isSame(selectedDate, "day");
+          const isToday = date.isSame(dayjs(), "day");
           return (
             <TouchableOpacity
               key={index}
-              onPress={() => setSelectedDate(dateObj)}
-              className="items-center gap-2"
+              onPress={() => setSelectedDate(date)}
+              className="items-center"
             >
-              <Text className="font-semibold text-gray-500">
+              <Text className="text-gray-500 text-sm mb-2">
                 {weekdays[index]}
               </Text>
               <View
-                className={`w-12 h-12 rounded-full justify-center items-center relative ${
+                className={`w-10 h-10 rounded-full justify-center items-center ${
                   isSelected
-                    ? "bg-[#B2236F]"
+                    ? "bg-primary"
                     : isToday
-                    ? "bg-[#B2236F]/20"
+                    ? "bg-blue-100"
                     : "bg-transparent"
                 }`}
               >
                 <Text
-                  className={`text-base font-bold ${
+                  className={`font-bold ${
                     isSelected
                       ? "text-white"
                       : isToday
-                      ? "text-[#B2236F]"
+                      ? "text-blue-600"
                       : "text-gray-800"
                   }`}
                 >
-                  {dateObj.date()}
+                  {date.date()}
                 </Text>
-
-                {/* Schedule indicator */}
-                {hasSchedule && !isSelected && (
-                  <View className="absolute bottom-1 w-1.5 h-1.5 bg-[#B2236F] rounded-full" />
-                )}
               </View>
             </TouchableOpacity>
           );
@@ -227,78 +204,78 @@ const ScheduleScreen: React.FC<ScheduleScreenProps> = ({ route }) => {
     </View>
   );
 
-  const renderScheduleList = () => {
-    if (loading) {
-      return (
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-gray-500">Loading schedules...</Text>
-        </View>
-      );
-    }
+  const renderScheduleList = () => (
+    <View className="flex-1 px-4 mt-4">
+      <View className="flex-row items-center justify-between mb-4">
+        <Text className="text-lg font-bold">
+          {selectedDate.format("DD MMMM YYYY")}
+        </Text>
+        <Text className="text-gray-500">
+          {currentDateSchedules.length} schedule(s)
+        </Text>
+      </View>
 
-    if (currentDateSchedules.length === 0) {
-      return (
-        <View className="flex-1 justify-center items-center px-6">
-          <View className="bg-gray-100 rounded-full p-6 mb-4">
-            <Ionicons name="calendar-outline" size={48} color="#9CA3AF" />
-          </View>
-          <Text className="text-xl font-semibold text-gray-800 mb-2">
-            No Schedule Yet
+      {currentDateSchedules.length === 0 ? (
+        <View className="flex-1 justify-center items-center py-12">
+          <Ionicons name="calendar-outline" size={64} color="#9CA3AF" />
+          <Text className="text-xl font-semibold text-gray-900 mt-4">
+            No schedules for this day
           </Text>
-          <Text className="text-gray-600 text-center mb-6">
-            Create an outfit schedule for {selectedDate.format("DD MMMM YYYY")}
+          <Text className="text-gray-600 text-center mt-2">
+            Create a new schedule to plan your outfit
           </Text>
           <TouchableOpacity
             onPress={handleCreateSchedule}
-            className="bg-[#B2236F] px-6 py-3 rounded-full flex-row items-center"
+            className="mt-6 bg-primary px-6 py-3 rounded-lg"
           >
-            <Ionicons name="add" size={20} color="white" />
-            <Text className="text-white font-semibold ml-2">
-              Create Schedule
-            </Text>
+            <Text className="text-white font-semibold">Create Schedule</Text>
           </TouchableOpacity>
         </View>
-      );
-    }
-
-    return (
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        contentContainerStyle={{ paddingBottom: 100 }}
-      >
-        <View className="mt-4">
-          <View className="flex-row items-center justify-between px-6 mb-4">
-            <Text className="text-lg font-semibold text-gray-800">
-              Schedules ({currentDateSchedules.length})
-            </Text>
-          </View>
-
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           {currentDateSchedules.map((schedule) => (
             <ScheduleCard
               key={schedule.id}
               schedule={schedule}
-              onPress={handleSchedulePress}
-              onEdit={handleEditSchedule}
-              onDelete={handleDeleteSchedule}
+              onPress={() => handleSchedulePress(schedule)}
+              onEdit={() => handleEditSchedule(schedule)}
+              onDelete={() => handleDeleteSchedule(schedule)}
             />
           ))}
-        </View>
-      </ScrollView>
-    );
-  };
+        </ScrollView>
+      )}
+    </View>
+  );
 
   return (
-    <SafeAreaView
-      className="flex-1 bg-gray-50"
-      edges={["top", "left", "right"]}
-    >
+    <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
       {renderHeader()}
       {renderCalendar()}
-      <View className="flex-1 mt-4">{renderScheduleList()}</View>
+      {renderScheduleList()}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        visible={isDeleteModalVisible}
+        onClose={closeDeleteModal}
+        onConfirm={handleConfirmDelete}
+        title="Delete Schedule"
+        message={
+          scheduleToDelete
+            ? `Are you sure you want to delete the schedule for ${dayjs(
+                scheduleToDelete.date
+              ).format("DD MMM YYYY")}? This action cannot be undone.`
+            : ""
+        }
+        icon="trash-2"
+        confirmText="Delete"
+        confirmButtonVariant="destructive"
+      />
     </SafeAreaView>
   );
 };

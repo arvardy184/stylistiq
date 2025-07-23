@@ -18,6 +18,7 @@ import CollectionCard from "../components/CollectionCard";
 import EmptyState from "../components/EmptyState";
 import LoadingState from "../components/LoadingState";
 import CollectionFormModal from "../components/CollectionFormModal";
+import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
 import { useCollections } from "../hooks/useCollections";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
@@ -31,8 +32,8 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
     isSelectionMode,
     handleCreateCollection,
     handleUpdateCollection,
-    handleDeleteCollection,
-    handleBulkDeleteCollections,
+    deleteCollection,
+    bulkDeleteCollections,
     toggleCollectionSelection,
     enterSelectionMode,
     exitSelectionMode,
@@ -43,6 +44,11 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
   const [isCreateModalVisible, setIsCreateModalVisible] = React.useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = React.useState(false);
   const [editingCollection, setEditingCollection] = React.useState<any>(null);
+  
+  // Confirmation modal states
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = React.useState(false);
+  const [deleteContext, setDeleteContext] = React.useState<"single" | "bulk">("single");
+  const [collectionToDelete, setCollectionToDelete] = React.useState<{id: string, name: string} | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -50,55 +56,50 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
     }, [])
   );
 
-  const renderHeader = () => (
-    <View className="px-6 py-4 bg-white">
-      {isSelectionMode ? (
-        <View className="flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={exitSelectionMode}
-            className="flex-row items-center"
-          >
-            <Ionicons name="arrow-back" size={24} color="#374151" />
-            <Text className="text-lg font-semibold text-gray-800 ml-2">
-              {selectedCollections.length} selected
-            </Text>
+  const renderHeader = () => {
+    if (isSelectionMode) {
+      return (
+        <View className="flex-row items-center justify-between p-4 bg-white border-b border-gray-200">
+          <TouchableOpacity onPress={exitSelectionMode}>
+            <Ionicons name="close" size={24} color="#374151" />
           </TouchableOpacity>
-
-          <View className="flex-row">
-            {selectedCollections.length > 0 && (
-              <TouchableOpacity
-                onPress={() => handleBulkDeleteCollections(selectedCollections)}
-                className="bg-red-500 px-4 py-2 rounded-full mr-2"
-              >
-                <Text className="text-white font-semibold">Delete</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      ) : (
-        <View className="flex-row items-center justify-center">
-          <Text className="text-gray-600 mt-1">
-            Organize your outfits by style or occasion
+          <Text className="text-lg font-bold">
+            {selectedCollections.length} selected
           </Text>
-          {collections.length > 0 && (
-            <TouchableOpacity
-              onPress={enterSelectionMode}
-              className="bg-gray-100 p-2 rounded-full"
-            >
-              <Ionicons
-                name="checkmark-circle-outline"
-                size={24}
-                color="#6B7280"
-              />
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            onPress={handleBulkDeletePress}
+            disabled={selectedCollections.length === 0}
+            className="p-2 bg-red-100 rounded-lg"
+          >
+            <Ionicons
+              name="trash-outline"
+              size={20}
+              color={selectedCollections.length === 0 ? "#9CA3AF" : "#DC2626"}
+            />
+          </TouchableOpacity>
         </View>
-      )}
-    </View>
-  );
+      );
+    }
 
-  const handleCreateCollectionPress = () => {
-    setIsCreateModalVisible(true);
+    return (
+      <View className="flex-row items-center justify-between p-4 bg-white border-b border-gray-200">
+        <Text className="text-xl font-bold">Collections</Text>
+        <View className="flex-row gap-2">
+          <TouchableOpacity
+            onPress={enterSelectionMode}
+            className="p-2 bg-gray-100 rounded-lg"
+          >
+            <Ionicons name="checkmark-circle-outline" size={24} color="#6B7280" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setIsCreateModalVisible(true)}
+            className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg"
+          >
+            <Ionicons name="add" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
   };
 
   const handleEditCollectionPress = (collection: any) => {
@@ -117,6 +118,47 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
       setIsEditModalVisible(false);
       setEditingCollection(null);
     }
+  };
+
+  // Delete handlers with modal
+  const handleDeleteCollectionPress = (id: string, name: string) => {
+    setCollectionToDelete({ id, name });
+    setDeleteContext("single");
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleBulkDeletePress = () => {
+    if (selectedCollections.length === 0) return;
+    setDeleteContext("bulk");
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    let success = false;
+    
+    if (deleteContext === "single" && collectionToDelete) {
+      success = await deleteCollection(collectionToDelete.id);
+    } else if (deleteContext === "bulk") {
+      success = await bulkDeleteCollections(selectedCollections);
+    }
+    
+    setIsDeleteModalVisible(false);
+    setCollectionToDelete(null);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalVisible(false);
+    setCollectionToDelete(null);
+  };
+
+  const getDeleteModalMessage = () => {
+    if (deleteContext === "single" && collectionToDelete) {
+      return `Are you sure you want to delete "${collectionToDelete.name}"? This action cannot be undone.`;
+    }
+    if (deleteContext === "bulk") {
+      return `Are you sure you want to delete ${selectedCollections.length} collection(s)? This action cannot be undone.`;
+    }
+    return "";
   };
 
   const renderEmptyState = () => <EmptyState />;
@@ -150,7 +192,7 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
                 });
               }}
               onEdit={() => handleEditCollectionPress(item)}
-              onDelete={() => handleDeleteCollection(item.id, item.name)}
+              onDelete={() => handleDeleteCollectionPress(item.id, item.name)}
               isSelected={selectedCollections.includes(item.id)}
               onToggleSelect={() => toggleCollectionSelection(item.id)}
               isSelectionMode={isSelectionMode}
@@ -169,18 +211,7 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
         />
       )}
 
-      {/* Floating Action Button */}
-      <TouchableOpacity
-        onPress={handleCreateCollectionPress}
-        className="absolute bottom-20 right-6 bg-[#B2236F] w-14 h-14 rounded-full justify-center items-center shadow-lg shadow-[#B2236F]/40"
-        style={{
-          elevation: 8,
-        }}
-      >
-        <Ionicons name="add" size={28} color="white" />
-      </TouchableOpacity>
-
-      {/* Modals */}
+      {/* Create Modal */}
       <CollectionFormModal
         visible={isCreateModalVisible}
         onClose={() => setIsCreateModalVisible(false)}
@@ -189,6 +220,7 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
         submitText="Create"
       />
 
+      {/* Edit Modal */}
       <CollectionFormModal
         visible={isEditModalVisible}
         onClose={() => {
@@ -196,16 +228,21 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
           setEditingCollection(null);
         }}
         onSubmit={handleEditSubmit}
-        initialData={
-          editingCollection
-            ? {
-                name: editingCollection.name,
-                image: editingCollection.image,
-              }
-            : undefined
-        }
+        initialData={editingCollection}
         title="Edit Collection"
         submitText="Update"
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        visible={isDeleteModalVisible}
+        onClose={closeDeleteModal}
+        onConfirm={handleConfirmDelete}
+        title="Delete Collection"
+        message={getDeleteModalMessage()}
+        icon="trash-2"
+        confirmText="Delete"
+        confirmButtonVariant="destructive"
       />
     </SafeAreaView>
   );

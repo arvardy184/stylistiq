@@ -44,15 +44,10 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   };
 
   const handleEdit = () => {
-    // Navigate to edit screen or show modal
-    <ClothesFormModal
-        visible={showFormModal}
-        onClose={() => setShowFormModal(false)}
-        onSubmit={handleFormSubmit}
-        initialData={editingClothes}
-        title={editingClothes ? "Edit Clothes" : "Add New Clothes"}
-        submitText={editingClothes ? "Update" : "Create"}
-      />
+    setEditingClothes(clothesDetail); 
+    setShowFormModal(true);
+    console.log("tes edit");
+   
   };
 
   
@@ -68,11 +63,12 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
     setEditingClothes(null);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteContext === "single" && itemToDelete) {
-      deleteClothesItem(itemToDelete.id);
+     await deleteClothesItem(itemToDelete.id);
+      navigation.navigate("Wardrobe");
     } else if (deleteContext === "bulk") {
-      bulkDeleteClothes(selectedItems);
+      await bulkDeleteClothes(selectedItems);
     }
     closeDeleteModal();
   };
@@ -87,16 +83,10 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   };
 
   const handleDelete = () => {
-    <ConfirmationModal
-    visible={isModalVisible}
-    onClose={closeDeleteModal}
-    onConfirm={handleConfirmDelete}
-    title="Are you sure?"
-    message={getModalMessage()}
-    icon="trash-2"
-    confirmText="Delete"
-    confirmButtonVariant="destructive"
-  />
+    setIsModalVisible(true);
+    setDeleteContext("single");
+    setItemToDelete(clothesDetail);
+    console.log("tes delete");
   };
 
 
@@ -145,6 +135,7 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   }
 
   return (
+
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       
@@ -251,7 +242,30 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
           </View>
         </View>
       </ScrollView>
+      <ClothesFormModal
+  visible={showFormModal}
+  onClose={() => {
+    setShowFormModal(false);
+    setEditingClothes(null);
+  }}
+  onSubmit={handleFormSubmit}
+  initialData={editingClothes}
+  title={editingClothes ? "Edit Clothes" : "Add New Clothes"}
+  submitText={editingClothes ? "Update" : "Create"}
+/>
+<ConfirmationModal
+  visible={isModalVisible}
+  onClose={closeDeleteModal}
+  onConfirm={handleConfirmDelete}
+  title="Are you sure?"
+  message={getModalMessage()}
+  icon="trash-2"
+  confirmText="Delete"
+  confirmButtonVariant="destructive"
+/>
+
     </SafeAreaView>
+    
   );
 };
 

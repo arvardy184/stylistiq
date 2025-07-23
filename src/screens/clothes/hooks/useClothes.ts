@@ -320,6 +320,7 @@ export const useClothesDetail = (clothesId: string) => {
         text1: "Success",
         text2: "Clothes item deleted successfully!",
       });
+      // navigation.navigate("Clothes");
     
     } catch (error) {
       Toast.show({

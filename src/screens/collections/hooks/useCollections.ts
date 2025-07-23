@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Alert } from "react-native";
 import { CollectionItem, CreateCollectionData, UpdateCollectionData } from "../types";
 import { getCollections, createCollection, updateCollection, deleteCollections } from "@/services/api/collections";
 import { useAuthStore } from "@/store/auth/authStore";
@@ -66,10 +65,15 @@ export const useCollections = () => {
   const handleUpdateCollection = async (id: string, data: UpdateCollectionData) => {
     try {
       const updatedCollection = await updateCollection(token!, id, data.name, data.image);
-  setCollections(prev => prev.map(item => 
-    item.id === id ? updatedCollection : item
-  ));
+      setCollections(prev => prev.map(item => 
+        item.id === id ? updatedCollection : item
+      ));
       console.log('🔄 [UPDATE] Collection updated:', updatedCollection);
+      Toast.show({
+        type: "success",
+        text1: "Collection Updated",
+        text2: "Collection has been updated successfully",
+      });
     } catch (error) {
       console.error('Failed to update collection:', error);
       Toast.show({
@@ -87,70 +91,50 @@ export const useCollections = () => {
     setRefreshing(false);
   };
 
-  const handleDeleteCollection = async (id: string, name: string) => {
-    Alert.alert(
-      "Delete Collection",
-      `Are you sure you want to delete "${name}"? This action cannot be undone.`,
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Delete", 
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await deleteCollections(token!, [id]);
-              setCollections(prev => prev.filter(item => item.id !== id));
-              Toast.show({
-                type: "success",
-                text1: "Collection Deleted",
-                text2: `"${name}" has been deleted successfully`,
-              });
-            } catch (error) {
-              console.error('Failed to delete collection:', error);
-              Toast.show({
-                type: "error",
-                text1: "Delete Failed",
-                text2: "Failed to delete collection. Please try again.",
-              });
-            }
-          }
-        }
-      ]
-    );
+  // Delete single collection - returns callback for confirmation
+  const deleteCollection = async (id: string) => {
+    try {
+      await deleteCollections(token!, [id]);
+      setCollections(prev => prev.filter(item => item.id !== id));
+      Toast.show({
+        type: "success",
+        text1: "Collection Deleted",
+        text2: "Collection has been deleted successfully",
+      });
+      return true;
+    } catch (error) {
+      console.error('Failed to delete collection:', error);
+      Toast.show({
+        type: "error",
+        text1: "Delete Failed",
+        text2: "Failed to delete collection. Please try again.",
+      });
+      return false;
+    }
   };
 
-  const handleBulkDeleteCollections = async (collectionIds: string[]) => {
-    Alert.alert(
-      "Delete Collections",
-      `Are you sure you want to delete ${collectionIds.length} collection(s)? This action cannot be undone.`,
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Delete", 
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await deleteCollections(token!, collectionIds);
-              setCollections(prev => prev.filter(item => !collectionIds.includes(item.id)));
-              setSelectedCollections([]);
-              setIsSelectionMode(false);
-              Toast.show({
-                type: "success",
-                text1: "Collections Deleted",
-                text2: `${collectionIds.length} collection(s) deleted successfully`,
-              });
-            } catch (error) {
-              console.error('Failed to delete collections:', error);
-              Toast.show({
-                type: "error",
-                text1: "Delete Failed",
-                text2: "Failed to delete collections. Please try again.",
-              });
-            }
-          }
-        }
-      ]
-    );
+  // Bulk delete collections - returns callback for confirmation
+  const bulkDeleteCollections = async (collectionIds: string[]) => {
+    try {
+      await deleteCollections(token!, collectionIds);
+      setCollections(prev => prev.filter(item => !collectionIds.includes(item.id)));
+      setSelectedCollections([]);
+      setIsSelectionMode(false);
+      Toast.show({
+        type: "success",
+        text1: "Collections Deleted",
+        text2: `${collectionIds.length} collection(s) deleted successfully`,
+      });
+      return true;
+    } catch (error) {
+      console.error('Failed to delete collections:', error);
+      Toast.show({
+        type: "error",
+        text1: "Delete Failed",
+        text2: "Failed to delete collections. Please try again.",
+      });
+      return false;
+    }
   };
 
   const toggleCollectionSelection = (id: string) => {
@@ -180,8 +164,8 @@ export const useCollections = () => {
     handleCollectionPress,
     handleCreateCollection,
     handleUpdateCollection,
-    handleDeleteCollection,
-    handleBulkDeleteCollections,
+    deleteCollection,
+    bulkDeleteCollections,
     toggleCollectionSelection,
     enterSelectionMode,
     exitSelectionMode,
