@@ -16,6 +16,7 @@ const ImageSelectionModal: React.FC<ImageSelectionModalProps> = ({ visible, onCl
 
   const processImages = async (uris: string[]) => {
     setIsCompressing(true);
+    console.log('Processing Images...');
     Toast.show({
         type: 'info',
         text1: 'Processing Images...',

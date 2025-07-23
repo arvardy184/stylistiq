@@ -112,6 +112,7 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
   };
 
   const handleFormSubmit = (data: ClothesFormData) => {
+    console.log('Form Submitted...');
     if (editingClothes) {
       updateClothesItem(editingClothes.id, data);
     } else {

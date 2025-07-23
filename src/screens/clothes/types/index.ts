@@ -81,16 +81,13 @@ export interface ClothesFilters {
 
 // Categories and options
 export const CLOTHES_CATEGORIES = [
-  "Tops",
-  "Bottoms", 
-  "Dresses",
-  "Outerwear",
-  "Shoes",
-  "Accessories",
-  "Undergarments",
-  "Activewear",
-  "Sleepwear",
-  "Formal"
+  "top",
+  "bottom", 
+  "outer",
+  "head_wear",
+  "accessory",
+  "foot_wear",
+  "full_body"
 ] as const;
 
 export const CLOTHES_COLORS = [

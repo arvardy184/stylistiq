@@ -104,26 +104,7 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       
-      {/* Header */}
-      <View className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
-        <TouchableOpacity
-          onPress={handleGoBack}
-          className="w-10 h-10 bg-gray-100 rounded-lg justify-center items-center"
-        >
-          <Ionicons name="chevron-back" size={24} color="#374151" />
-        </TouchableOpacity>
-        
-        <Text className="text-lg font-semibold text-gray-900 flex-1 text-center">
-          {clothesDetail.name}
-        </Text>
-        
-        <TouchableOpacity
-          onPress={handleShare}
-          className="w-10 h-10 bg-gray-100 rounded-lg justify-center items-center"
-        >
-          <Ionicons name="share-outline" size={24} color="#374151" />
-        </TouchableOpacity>
-      </View>
+  
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Image Section */}

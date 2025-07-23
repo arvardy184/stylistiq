@@ -15,6 +15,13 @@ export const useClothes = () => {
   
   const { token } = useAuthStore();
 
+
+  useEffect(() => {
+    if (token) {
+      fetchClothes();
+    }
+  }, [token]);
+  
   const fetchClothes = useCallback(async () => {
     if (!token) return;
     
