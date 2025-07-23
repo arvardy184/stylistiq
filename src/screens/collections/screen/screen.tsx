@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   RefreshControl,
+  StatusBar,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -28,7 +29,6 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
     loading,
     selectedCollections,
     isSelectionMode,
-    handleCollectionPress,
     handleCreateCollection,
     handleUpdateCollection,
     handleDeleteCollection,
@@ -119,9 +119,7 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
     }
   };
 
-  const renderEmptyState = () => (
-    <EmptyState onCreateCollection={handleCreateCollectionPress} />
-  );
+  const renderEmptyState = () => <EmptyState />;
 
   if (loading) {
     return (
@@ -134,6 +132,7 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
+      <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
       {renderHeader()}
 
       {collections.length === 0 ? (
