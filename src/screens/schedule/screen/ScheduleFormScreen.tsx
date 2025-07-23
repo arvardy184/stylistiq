@@ -102,7 +102,6 @@ const ScheduleFormScreen = () => {
       {renderHeader()}
       <ScrollView>
         <View className="p-4">
-          {/* Date Picker */}
           <TouchableOpacity
             onPress={() => setDatePickerVisibility(true)}
             className="bg-white p-4 rounded-lg shadow-sm mb-4"
@@ -111,15 +110,14 @@ const ScheduleFormScreen = () => {
             <Text>{dayjs(formData.date).format("DD MMMM YYYY")}</Text>
           </TouchableOpacity>
 
-          {/* Note Input */}
           <TextInput
             value={formData.note}
             onChangeText={(text) => handleInputChange("note", text)}
             placeholder="Add a note..."
+            placeholderTextColor="#9CA3AF"
             className="bg-white p-4 rounded-lg shadow-sm mb-4"
           />
 
-          {/* Reminder Picker */}
           <TouchableOpacity
             onPress={() => setTimePickerVisibility(true)}
             className="bg-white p-4 rounded-lg shadow-sm mb-4"
