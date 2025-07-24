@@ -99,6 +99,7 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({
         collectionId,
         selectedIds
       );
+       loadCollectionData();
       setCollection(updatedCollection);
       showSuccess(
         "Clothes Added",
@@ -206,6 +207,7 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({
     try {
       if (confirmContext === "deleteCollection") {
         await deleteCollection(token!, collectionId);
+    
         showSuccess(
           "Collection Deleted",
           "The collection has been successfully deleted"
@@ -213,40 +215,47 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({
         navigation.navigate("Collections" as never);
       } else if (confirmContext === "removeClothes" && itemToProcess) {
         // Get all clothes IDs except the one to remove
-        const remainingClothesIds = collection.clothes
-          .filter((item: Clothes) => item.id !== itemToProcess)
-          .map((item: Clothes) => item.id);
-
-       await removeClothesFromCollection(
-          token!,
-          collectionId,
-          remainingClothesIds
+        const remainingClothes = collection.clothes.filter(
+          (item: Clothes) => item.id !== itemToProcess
         );
-        // setCollection(updatedCollection);
-     
-        await loadCollectionData();
+        const remainingClothesIds = remainingClothes.map((item) => item.id);
+      
+        // Panggil API untuk update koleksi
+        await removeClothesFromCollection(token!, collectionId, remainingClothesIds);
+      
+        // ✅ Update state lokal dulu agar tidak flicker atau kosong
+        setCollection((prev: any) => ({
+          ...prev,
+          clothes: remainingClothes,
+        }));
+        // await loadCollectionData();
+        console.log("✅ Updated state with:", remainingClothes.length, "items");
         showSuccess(
           "Clothes Removed",
           "The item has been removed from the collection"
         );
       } else if (confirmContext === "bulkRemove") {
         // Get remaining clothes IDs (the ones NOT selected)
-        const remainingClothesIds = collection.clothes
-          .filter((item: Clothes) => !selectedClothes.includes(item.id))
-          .map((item: Clothes) => item.id);
-
-        const updatedCollection = await removeClothesFromCollection(
-          token!,
-          collectionId,
-          remainingClothesIds
+        const remainingClothes = collection.clothes.filter(
+          (item: Clothes) => !selectedClothes.includes(item.id)
         );
-        setCollection(updatedCollection);
+        const remainingClothesIds = remainingClothes.map((item) => item.id);
+      
+        await removeClothesFromCollection(token!, collectionId, remainingClothesIds);
+      
+        setCollection((prev: any) => ({
+          ...prev,
+          clothes: remainingClothes,
+        }));
+      
         setSelectionMode(false);
         setSelectedClothes([]);
+        console.log("remainingClothes", remainingClothes)
         showSuccess(
           "Clothes Removed",
           `${selectedClothes.length} clothes removed from collection`
         );
+      
       }
     } catch (error) {
       if (confirmContext === "deleteCollection") {
