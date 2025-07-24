@@ -14,8 +14,9 @@ import {
   Figtree_700Bold,
 } from "@expo-google-fonts/figtree";
 import * as SplashScreen from "expo-splash-screen";
+import { NotificationProvider } from "@/providers/NotificationProvider";
+import { notificationService } from "@/services/notifications";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "@/components/ui/toast/CustomToast";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,6 +36,19 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
+  // Request notification permissions on app start
+  React.useEffect(() => {
+    const initializeNotifications = async () => {
+      try {
+        await notificationService.requestPermissions();
+      } catch (error) {
+        console.error('❌ [APP] Error initializing notifications:', error);
+      }
+    };
+    
+    initializeNotifications();
+  }, []);
+
   if (!fontsLoaded) {
     return null;
   }
@@ -43,11 +57,13 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <SafeAreaProvider>
-          <AppNavigator />
-          <StatusBar style="auto" />
+          <NotificationProvider>
+            <AppNavigator />
+            <StatusBar style="auto" />
+            <Toast />
+          </NotificationProvider>
         </SafeAreaProvider>
       </QueryClientProvider>
-      <Toast config={toastConfig} />
     </GestureHandlerRootView>
   );
 }

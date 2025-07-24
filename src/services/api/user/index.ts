@@ -38,6 +38,7 @@ export const UpdateBodyProfile = async (
 };
 
 export const UpdateProfilePicture = async (token: string, file: FormData) => {
+  console.log("file update profile picture",file);
   const data = await axios.post(`${BASE_URL}/file/upload`, file, {
     headers: {
       Authorization: `Bearer ${token}`,

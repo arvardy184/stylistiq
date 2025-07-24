@@ -4,14 +4,16 @@ import { useAuthStore } from "@/store/auth/authStore";
 import { useGetAllCollectionByToken } from "@/services/queries/collection/getAllCollectionByToken";
 import { Collection } from "./type";
 import CollectionCard from "./card";
+import { useNavigation } from "@react-navigation/native";
 
 const ColletionBody = () => {
   const { token } = useAuthStore();
+  const navigation = useNavigation();
   const {
     data: collections,
     isLoading,
     isError,
-  } = useGetAllCollectionByToken(token || "");
+  } = useGetAllCollectionByToken(token);
 
   const SkeletonCard = () => (
     <View className="w-[48%] bg-white rounded-2xl shadow-md overflow-hidden">
@@ -63,18 +65,22 @@ const ColletionBody = () => {
       );
     }
 
-    return collections.map((collection: Collection) => (
+    return collections.slice(0, 4).map((collection: Collection) => (
       <CollectionCard key={collection.id} collection={collection} />
     ));
   };
 
+  const toCollection = () => {
+    navigation.navigate("Collections");
+  };
+
   return (
-    <View className="px-5 mt-4">
+    <View className="p-5 my-4">
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-slate-800 text-2xl font-bold">
           My Collections
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={toCollection}>
           <Text className="text-primary font-semibold">See All</Text>
         </TouchableOpacity>
       </View>

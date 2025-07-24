@@ -9,7 +9,11 @@ export const useOauthMutation = () => {
   const navigation = useNavigation<any>();
 
   return useMutation({
-    mutationFn: (token: string) => LoginGoogle(token),
+    mutationFn: (token: string) => {
+      console.log('🎯 useOauthMutation called');
+      console.log('🔑 Google token received:', token ? 'Yes' : 'No');
+      return LoginGoogle(token);
+    },
     onSuccess: (data) => {
       setToken(data.token);
       Toast.show({

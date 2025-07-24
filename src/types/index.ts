@@ -3,18 +3,35 @@ export type RootStackParamList = {
   Main: undefined;
   PhotoAnalysis: { imageUri?: string };
   OutfitDetails: { outfitId: string };
+  ClothesDetail: { clothesId: string; clothesName: string };
+  CollectionDetail: { collectionId: string; collectionName: string };
+  MatchResult: { analyzedItem: any };
+  EditClothes: { analyzedItem: any };
+  Schedule: { selectedDate?: string };
+  ScheduleForm: {
+    selectedDate: string;
+    schedule?: any;
+    mode: "create" | "edit";
+  };
+  ScheduleDetail: {
+    scheduleId: string;
+    scheduleName: string;
+  };
   Login: undefined;
   Register: undefined;
   Notification: undefined;
   ResetPassword: { email: string };
+  Scan: { newImages: string[] };
   ChangePassword: undefined;
   Onboarding: undefined;
+  Collections: undefined;
 };
 
 export type MainTabParamList = {
   Home: undefined;
-  Camera: undefined;
-  Wardrobe: undefined;
+  Clothes: undefined;
+  Scan: undefined;
+  Collections: undefined;
   Profile: undefined;
 };
 

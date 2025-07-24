@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { Gender } from "@/common/enums/gender";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
 import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
@@ -24,6 +25,7 @@ import ImagePickerActionSheet from "../components/ImagePickerActionSheet";
 import { useProfileScreen } from "../hook";
 
 const ProfileScreen = () => {
+  const navigation = useNavigation();
   const {
     userProfile,
     isLoading,
@@ -79,7 +81,8 @@ const ProfileScreen = () => {
       >
         <StatusBar barStyle="light-content" />
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 24 }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 16 }}
           keyboardShouldPersistTaps="handled"
         >
           <View className="bg-primary items-center p-6 pb-8 rounded-b-3xl">
@@ -111,8 +114,7 @@ const ProfileScreen = () => {
             <Text className="text-base text-white/80">{userProfile.email}</Text>
           </View>
 
-          {/* Stats Section */}
-          <View className="flex-row justify-around bg-white mx-4 -mt-6 p-4 rounded-xl shadow-md">
+          <View className="flex-row justify-around bg-white mx-4 -mt-6 p-4 rounded-xl shadow-2xl">
             <StatItem count={userProfile.clothesCount || 0} label="Outfits" />
             <StatItem
               count={userProfile.collectionsCount || 0}
@@ -125,7 +127,7 @@ const ProfileScreen = () => {
           </View>
 
           <View className="px-4">
-            <View className="mt-6 rounded-xl bg-white p-4 shadow-sm">
+            <View className="mt-6 rounded-xl bg-white p-4 border border-primary">
               {!isEditingInfo ? (
                 <>
                   <CardHeader
@@ -154,7 +156,6 @@ const ProfileScreen = () => {
                           : "Female"
                         : "Not set"
                     }
-                    isLast
                   />
                 </>
               ) : (
@@ -204,7 +205,7 @@ const ProfileScreen = () => {
                 </>
               )}
             </View>
-            <View className="mt-6 rounded-xl bg-white p-4 shadow-sm">
+            <View className="mt-6 rounded-xl bg-white p-4 border border-primary">
               {!isEditingBody ? (
                 <>
                   <CardHeader
@@ -347,18 +348,23 @@ const ProfileScreen = () => {
                 </>
               )}
             </View>
-            <View className="mt-6 rounded-xl bg-white shadow-sm">
+            <View className="mt-6 rounded-xl bg-white border border-primary shadow-sm">
               <ProfileActionRow
+                icon="calendar"
+                label="Schedule Management"
+                onPress={() => navigation.navigate("Schedule" as never)}
+              /><ProfileActionRow
                 icon="lock"
                 label="Change Password"
                 onPress={handleChangePasswordPress}
               />
+            </View>
+            <View className="mt-6 rounded-xl bg-white border border-primary shadow-sm">
               <ProfileActionRow
                 icon="log-out"
                 label="Log Out"
                 color="text-red-500"
                 onPress={handleLogout}
-                isLast
               />
             </View>
           </View>

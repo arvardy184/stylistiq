@@ -4,12 +4,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../../../components/ui/button";
-import { RouteParams } from "../types/types";
+
 
 export const PhotoAnalysisScreen = () => {
   const navigation = useNavigation<any>();
-  const route = useRoute();
-  const { imageUri } = (route.params as RouteParams) || {};
+  const route = useRoute<any>();
+  const { imageUri } = (route.params) || {};
 
   // Mock analysis data
   const mockAnalysis = {
@@ -35,7 +35,7 @@ export const PhotoAnalysisScreen = () => {
             <Button
               title="Go Back"
               onPress={() => navigation.goBack()}
-              variant="primary"
+          
             />
           </View>
         </View>
@@ -158,12 +158,12 @@ export const PhotoAnalysisScreen = () => {
             <Button
               title="Take Another Photo"
               onPress={() => navigation.navigate("Main")}
-              variant="primary"
+            
             />
             <Button
               title="Save to Wardrobe"
               onPress={() => navigation.navigate("Main")}
-              variant="outline"
+         
             />
           </View>
         </View>
