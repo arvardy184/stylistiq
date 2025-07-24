@@ -47,6 +47,13 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
     setDeleteContext("none");
     setItemToDelete(null);
   };
+
+  const handleFindMatch = () => {
+    if (clothesDetail) {
+      console.log('Navigating to MatchResult with:', clothesDetail.itemType);
+      navigation.navigate("MatchResult", { analyzedItem: clothesDetail });
+    }
+  };
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -79,7 +86,7 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   };
   const getModalMessage = () => {
     if (deleteContext === "single" && itemToDelete) {
-      return `This action cannot be undone. Are you sure you want to delete "${itemToDelete.name}"?`;
+      return `This action cannot be undone. Are you sure you want to delete "${itemToDelete.itemType}"?`;
     }
     if (deleteContext === "bulk") {
       return `This action cannot be undone. You are about to delete ${selectedItems.length} items.`;
@@ -204,7 +211,15 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
             )}
             {/* // <-- SAMPAI SINI --> */}
           </View>
-
+          <View className="mb-4">
+      <TouchableOpacity
+        onPress={handleFindMatch} // Kita akan buat fungsi ini
+        className="bg-[#B2236F] py-4 rounded-xl flex-row items-center justify-center shadow-lg shadow-black/20"
+      >
+        <Ionicons name="search" size={20} color="white" />
+        <Text className="text-white font-bold text-base ml-2">Find Match</Text>
+      </TouchableOpacity>
+    </View>
           {/* Action Buttons */}
           <View className="flex-row gap-4 mb-8">
             <TouchableOpacity

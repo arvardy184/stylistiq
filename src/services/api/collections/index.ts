@@ -3,7 +3,7 @@ import {
   CollectionItem,
   CollectionsResponse,
   CreateCollectionResponse,
-  ImagePickerAsset
+  ImagePickerAsset,
 } from "@/screens/collections/types";
 import axios from "axios";
 
@@ -47,7 +47,11 @@ export const getCollectionDetail = async (
     console.log("📡 BASE_URL:", BASE_URL);
     console.log("🆔 Collection ID:", collectionId);
 
-    const response = await axios.get<{ statusCode: number; message: string; data: CollectionItem }>(`${BASE_URL}/collection/${collectionId}`, {
+    const response = await axios.get<{
+      statusCode: number;
+      message: string;
+      data: CollectionItem;
+    }>(`${BASE_URL}/collection/${collectionId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -81,23 +85,23 @@ export const createCollection = async (
 
     // 3. Tambahkan file gambar jika ada
     if (image) {
-      console.log("🔍 Memeriksa objek gambar sebelum dikirim:", image); 
+      console.log("🔍 Memeriksa objek gambar sebelum dikirim:", image);
       formData.append("image", {
         uri: image.uri,
         type: image.type,
         name: image.fileName,
       } as any);
     }
-    
+
     // (Opsional) Tambahkan clothesIds jika ada
     if (clothesIds && clothesIds.length > 0) {
-      clothesIds.forEach(id => {
+      clothesIds.forEach((id) => {
         formData.append("clothesIds[]", id);
       });
     }
 
     console.log("🚀 Calling createCollection with FormData...");
-    
+
     const response = await axios.post<CreateCollectionResponse>(
       `${BASE_URL}/collection`,
       formData,
@@ -114,16 +118,15 @@ export const createCollection = async (
 
     console.log("✅ createCollection with image upload successful!");
     return response.data.data;
-    
   } catch (error) {
     console.error("❌ createCollection error:", error);
     if (axios.isAxiosError(error)) {
-        console.error("🔍 Axios error details:", {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data,
-            headers: error.response?.headers,
-        });
+      console.error("🔍 Axios error details:", {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        headers: error.response?.headers,
+      });
     }
     throw error;
   }
@@ -143,13 +146,13 @@ export const updateCollection = async (
     console.log("📝 Update data:", { name, image });
 
     // Check if we need to upload a new image or just update text
-    const hasNewImage = image && typeof image === 'object' && 'uri' in image;
+    const hasNewImage = image && typeof image === "object" && "uri" in image;
 
     if (hasNewImage) {
       // Use FormData for new image upload
       const formData = new FormData();
       formData.append("name", name);
-      
+
       formData.append("image", {
         uri: (image as ImagePickerAsset).uri,
         type: (image as ImagePickerAsset).type,
@@ -165,6 +168,7 @@ export const updateCollection = async (
           headers: {
             Authorization: `Bearer ${token}`,
             // Don't set Content-Type, let axios handle it for FormData
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -178,7 +182,7 @@ export const updateCollection = async (
         `${BASE_URL}/collection/${collectionId}`,
         {
           name,
-          ...(typeof image === 'string' && { image }) // Only include image if it's a string URL
+          ...(typeof image === "string" && { image }), // Only include image if it's a string URL
         },
         {
           headers: {
