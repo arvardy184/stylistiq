@@ -1,19 +1,17 @@
 import { Text, View, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useAuthStore } from "@/store/auth/authStore";
-import { useGetAllCollectionByToken } from "@/services/queries/collection/getAllCollectionByToken";
 import { Collection } from "./type";
 import CollectionCard from "./card";
 import { useNavigation } from "@react-navigation/native";
+import { useCollections } from "@/screens/collections/hooks/useCollections";
 
 const ColletionBody = () => {
-  const { token } = useAuthStore();
   const navigation = useNavigation();
-  const {
-    data: collections,
-    isLoading,
-    isError,
-  } = useGetAllCollectionByToken(token);
+  const { collections, loading, loadCollections } = useCollections();
+
+  const ToCollection = () => {
+    navigation.navigate("Collections");
+  };
 
   const SkeletonCard = () => (
     <View className="w-[48%] bg-white rounded-2xl shadow-md overflow-hidden">
@@ -26,7 +24,7 @@ const ColletionBody = () => {
   );
 
   const renderContent = () => {
-    if (isLoading) {
+    if (loading) {
       return (
         <>
           <SkeletonCard />
@@ -34,17 +32,6 @@ const ColletionBody = () => {
           <SkeletonCard />
           <SkeletonCard />
         </>
-      );
-    }
-
-    if (isError) {
-      return (
-        <View className="w-full items-center justify-center py-10">
-          <Feather name="alert-circle" size={40} color="#ef4444" />
-          <Text className="text-slate-600 mt-4 text-center">
-            Failed to load collections.
-          </Text>
-        </View>
       );
     }
 
@@ -58,20 +45,29 @@ const ColletionBody = () => {
           <Text className="text-slate-500 mt-2 text-center max-w-[80%]">
             Tap the button below to create your first collection.
           </Text>
-          <TouchableOpacity className="bg-primary mt-6 py-3 px-6 rounded-full">
+          <TouchableOpacity
+            onPress={ToCollection}
+            className="bg-primary mt-6 py-3 px-6 rounded-full"
+          >
             <Text className="text-white font-bold">Create Collection</Text>
           </TouchableOpacity>
         </View>
       );
     }
 
-    return collections.slice(0, 4).map((collection: Collection) => (
-      <CollectionCard key={collection.id} collection={collection} />
-    ));
+    return collections
+      .slice(0, 4)
+      .map((collection: Collection) => (
+        <CollectionCard key={collection.id} collection={collection} />
+      ));
   };
 
   const toCollection = () => {
     navigation.navigate("Collections");
+  };
+
+  const handleRefresh = () => {
+    loadCollections();
   };
 
   return (
@@ -82,6 +78,9 @@ const ColletionBody = () => {
         </Text>
         <TouchableOpacity onPress={toCollection}>
           <Text className="text-primary font-semibold">See All</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleRefresh} className="ml-2">
+          <Feather name="refresh-cw" size={20} color="#64748b" />
         </TouchableOpacity>
       </View>
 
@@ -94,4 +93,5 @@ const ColletionBody = () => {
     </View>
   );
 };
+
 export default ColletionBody;
