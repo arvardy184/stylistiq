@@ -11,7 +11,6 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useClothesAnalysis } from "../hooks/useClothesAnalysis";
 import { ScanScreenProps } from "../types";
-
 import ImagePickerPrompt from "../components/ImagePickerPrompt";
 import ImageGrid from "../components/ImageGrid";
 import AnalysisLoading from "../components/AnalysisLoading";
