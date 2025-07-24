@@ -175,7 +175,7 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
             <DetailItem
               icon="shirt-outline"
               label="Category"
-              value={clothesDetail.category}
+              value={formatCategoryDisplay(clothesDetail.category)}
               color="#8B5CF6"
             />
 
@@ -192,6 +192,17 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
               value={new Date(clothesDetail.createdAt).toLocaleDateString()}
               color="#10B981"
             />
+
+            {/* // <-- TAMBAHKAN INI --> */}
+            {clothesDetail.note && (
+              <DetailItem
+                icon="reader-outline"
+                label="Note"
+                value={clothesDetail.note}
+                color="#F59E0B"
+              />
+            )}
+            {/* // <-- SAMPAI SINI --> */}
           </View>
 
           {/* Action Buttons */}
