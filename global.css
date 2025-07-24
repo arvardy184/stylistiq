@@ -2,7 +2,11 @@
 
 @layer base {
   Text {
-    @apply font-figtree;
+    font-family: "Poppins";
+  }
+
+  TextInput {
+    font-family: "Poppins";
   }
 }
 
