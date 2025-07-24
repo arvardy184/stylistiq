@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { CollectionItem } from "../types";
+import { formatCategoryDisplay } from "@/utils/formatCategoryDisplay";
 
 interface CollectionCardProps {
   item: CollectionItem;
@@ -97,10 +98,7 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
           className="text-gray-800 font-semibold text-base"
           numberOfLines={1}
         >
-          {item.name}
-        </Text>
-        <Text className="text-gray-500 text-sm mt-1">
-          Updated {new Date(item.updatedAt).toLocaleDateString()}
+          {formatCategoryDisplay(item.name)}
         </Text>
       </View>
     </TouchableOpacity>

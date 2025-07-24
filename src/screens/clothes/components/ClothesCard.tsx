@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ClothesCardProps } from "../types";
+import { formatCategoryDisplay } from "@/utils/formatCategoryDisplay";
 
 const { width: screenWidth } = Dimensions.get("window");
 const cardWidth = (screenWidth - 32) / 2;
@@ -79,13 +80,13 @@ const ClothesCard: React.FC<ClothesCardProps> = ({
           className="text-gray-800 font-bold text-base mb-2"
           numberOfLines={1}
         >
-          {item.itemType}
+          {formatCategoryDisplay(item.itemType)}
         </Text>
 
         <View className="flex-row flex-wrap gap-2 items-center">
           <View className="bg-gray-100 rounded-full px-2.5 py-1">
             <Text className="text-gray-700 text-xs font-medium">
-              {item.category}
+              {formatCategoryDisplay(item.category)}
             </Text>
           </View>
           <View className="flex-row items-center bg-gray-100 rounded-full px-2.5 py-1">

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Clothes } from "../types";
+import { formatCategoryDisplay } from "@/utils/formatCategoryDisplay";
 
 interface ClothesCardProps {
   item: Clothes;
@@ -59,9 +60,9 @@ const ClothesCard: React.FC<ClothesCardProps> = ({
         )}
         
         {/* Category Badge */}
-        <View className="absolute top-2 left-2 bg-black/70 px-2 py-1 rounded-full">
+        <View className="absolute top-2 left-2 bg-black px-2 py-1 rounded-full">
           <Text className="text-white text-xs font-medium">
-            {item.category}
+            {formatCategoryDisplay(item.category)}
           </Text>
         </View>
         
@@ -86,38 +87,18 @@ const ClothesCard: React.FC<ClothesCardProps> = ({
             )}
           </View>
         )}
-        
-        {/* Color Indicator */}
-        <View className="absolute bottom-2 right-2 w-4 h-4 rounded-full border-2 border-white"
-              style={{ backgroundColor: item.color }} />
       </View>
       
       <View className="p-3">
         <Text className="text-gray-800 font-semibold text-sm" numberOfLines={1}>
-          {item.name || item.itemType}
+          {formatCategoryDisplay(item.itemType)}
         </Text>
         <View className="flex-row items-center mt-1">
           <Ionicons name="color-palette-outline" size={12} color="#6B7280" />
           <Text className="text-gray-500 text-xs ml-1 capitalize">
-            {item.color}
+            {formatCategoryDisplay(item.color)}
           </Text>
         </View>
-        {/* {item.season && (
-          <View className="flex-row items-center mt-1">
-            <Ionicons name="sunny-outline" size={12} color="#6B7280" />
-            <Text className="text-gray-500 text-xs ml-1 capitalize">
-              {item.season}
-            </Text>
-          </View>
-        )} */}
-        {item.note && (
-          <View className="flex-row items-center mt-1">
-            <Ionicons name="document-text-outline" size={12} color="#6B7280" />
-            <Text className="text-gray-500 text-xs ml-1" numberOfLines={1}>
-              {item.note}
-            </Text>
-          </View>
-        )}
       </View>
     </TouchableOpacity>
   );

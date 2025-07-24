@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CollectionItem, CreateCollectionData, UpdateCollectionData } from "../types";
+import { CollectionItem, CreateCollectionData, UpdateCollectionData, ImagePickerAsset } from "../types";
 import { getCollections, createCollection, updateCollection, deleteCollections } from "@/services/api/collections";
 import { useAuthStore } from "@/store/auth/authStore";
 import Toast from "react-native-toast-message";
@@ -45,7 +45,7 @@ export const useCollections = () => {
   const handleCreateCollection = async (data: CreateCollectionData) => {
     try {
       const newCollection = await createCollection(token!, data.name, data.image);
-     setCollections(prev => [newCollection, ...prev]);
+      setCollections(prev => [newCollection, ...prev]);
       Toast.show({
         type: "success",
         text1: "Collection Created",
@@ -62,9 +62,26 @@ export const useCollections = () => {
     }
   };
 
+  // 🔧 FIXED: Handle both new images (ImagePickerAsset) and existing URLs (string)
   const handleUpdateCollection = async (id: string, data: UpdateCollectionData) => {
     try {
-      const updatedCollection = await updateCollection(token!, id, data.name, data.image);
+      // Convert the data to match API expectations
+      let imageToSend: ImagePickerAsset | string | undefined;
+      
+      if (data.image) {
+        // If image is a string URL, keep it as string
+        if (typeof data.image === 'string') {
+          imageToSend = data.image;
+        } 
+        // If image is an ImagePickerAsset object, use it directly
+        else if (typeof data.image === 'object' && 'uri' in data.image) {
+          imageToSend = data.image as ImagePickerAsset;
+        }
+      }
+
+      console.log('🔄 [UPDATE] Sending data:', { name: data.name, image: imageToSend });
+
+      const updatedCollection = await updateCollection(token!, id, data.name, imageToSend);
       setCollections(prev => prev.map(item => 
         item.id === id ? updatedCollection : item
       ));
@@ -172,4 +189,4 @@ export const useCollections = () => {
     onRefresh,
     loadCollections,
   };
-}; 
+};

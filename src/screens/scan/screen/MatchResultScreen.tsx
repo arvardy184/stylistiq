@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/auth/authStore';
 import { Clothes } from '@/screens/collections/types';
 import { useNotification } from '@/hooks/useNotification';
 import { RootStackParamList } from '@/types';
+import { formatCategoryDisplay } from '@/utils/formatCategoryDisplay';
 
 const MatchResultScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -188,7 +189,7 @@ navigation.navigate('Main', { screen: 'Collections', params: { refresh: true } }
           {item.itemType}
         </Text>
         <Text className="text-xs text-gray-500 capitalize mt-1">
-          {item.category} • {item.color}
+          {formatCategoryDisplay(item.category)} • {item.color}
         </Text>
         {item.note && (
           <Text className="text-xs text-gray-400 mt-1" numberOfLines={2}>

@@ -226,7 +226,7 @@ export const useClothes = () => {
     setIsSearching(true);
     try {
       const results = await searchClothes(token, query);
-      setSearchResults(results || []);
+      setSearchResults(results.data || []);
     } catch (error) {
       Toast.show({
         type: "error",

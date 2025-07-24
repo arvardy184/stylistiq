@@ -65,7 +65,7 @@ const ColletionBody = () => {
       );
     }
 
-    return collections.map((collection: Collection) => (
+    return collections.slice(0, 4).map((collection: Collection) => (
       <CollectionCard key={collection.id} collection={collection} />
     ));
   };
@@ -75,7 +75,7 @@ const ColletionBody = () => {
   };
 
   return (
-    <View className="px-5 mt-4">
+    <View className="p-5 my-4">
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-slate-800 text-2xl font-bold">
           My Collections

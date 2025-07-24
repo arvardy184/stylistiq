@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useNotification } from '@/hooks/useNotification';
 import { AnalysisResultCardProps, Clothes } from '../types';
+import { formatCategoryDisplay } from '@/utils/formatCategoryDisplay';
 
 const DetailRow = ({ icon, label, value, isStatus = false }) => (
   <View className={`mt-2 ${isStatus ? 'flex-col' : 'flex-row items-center'}`}>
@@ -69,9 +70,9 @@ const AnalysisResultCard: React.FC<AnalysisResultCardProps> = ({ result, onSave 
           {success && detectedItem ? (
             <>
               <Text className="text-lg font-bold text-gray-900" numberOfLines={1}>
-                {detectedItem.itemType}
+                {formatCategoryDisplay(detectedItem.itemType)}
               </Text>
-              <DetailRow icon="shirt-outline" label="Category" value={detectedItem.category} />
+              <DetailRow icon="shirt-outline" label="Category" value={formatCategoryDisplay(detectedItem.category)} />
               <DetailRow icon="color-palette-outline" label="Color" value={detectedItem.color} />
               {/* {detectedItem.season && (
                 <DetailRow icon="sunny-outline" label="Season" value={detectedItem.season} />

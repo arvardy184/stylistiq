@@ -9,6 +9,7 @@ import { getCollections, getCollectionDetail } from '@/services/api/collections'
 import { useAuthStore } from '@/store/auth/authStore';
 import { useNotification } from '@/hooks/useNotification';
 import dayjs from 'dayjs';
+import { formatCategoryDisplay } from '@/utils/formatCategoryDisplay';
 
 type SelectionType = 'Clothes' | 'Collection' | null;
 
@@ -243,7 +244,7 @@ const ScheduleCreationModal: React.FC<ScheduleCreationModalProps> = ({ visible, 
                 renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => toggleClothesSelection(item.id)} style={[styles.itemCard, selectedClothesIds.includes(item.id) && styles.itemCardSelected]}>
                          <Image source={{uri: item.image}} style={styles.itemImage} />
-                        <Text style={styles.itemText} numberOfLines={1}>{item.itemType}</Text>
+                        <Text style={styles.itemText} numberOfLines={1}>{formatCategoryDisplay(item.itemType)}</Text>
                     </TouchableOpacity>
                 )}
             />

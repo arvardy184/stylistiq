@@ -3,6 +3,7 @@ import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { formatCategoryDisplay } from "@/utils/formatCategoryDisplay";
 
 // Konfigurasi behavior notifikasi
 Notifications.setNotificationHandler({
@@ -29,7 +30,7 @@ export interface ScheduleData {
 
 export interface NotificationItem {
   id: string;
-  key: string;
+  key?: string;
   title: string;
   message: string;
   timestamp: Date;
@@ -183,7 +184,7 @@ class NotificationService {
       const clothesCount = scheduleData.clothes.length;
       const clothesSummary = scheduleData.clothes
         .slice(0, 2)
-        .map((item) => `${item.itemType} ${item.color}`)
+        .map((item) => `${formatCategoryDisplay(item.itemType)} ${item.color}`)
         .join(", ");
 
       const title = "👔 Outfit Reminder";

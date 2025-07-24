@@ -5,6 +5,7 @@ import { AnalysisResultItem } from '../types';
 import { Clothes } from '@/screens/collections/types'; 
 import { ClothesFormData } from '@/screens/clothes/types';
 import Toast from 'react-native-toast-message';
+import { formatCategoryDisplay } from '@/utils/formatCategoryDisplay';
 
 export const useClothesAnalysis = () => {
   const { token } = useAuthStore();
@@ -130,7 +131,7 @@ export const useClothesAnalysis = () => {
       Toast.show({
         type: 'success',
         text1: 'Item Saved!',
-        text2: `${item.itemType} added to your wardrobe`,
+        text2: `${formatCategoryDisplay(item.itemType)} added to your wardrobe`,
       });
       
       // Remove from results list to indicate it's been saved

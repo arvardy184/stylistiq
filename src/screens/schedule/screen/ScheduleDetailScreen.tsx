@@ -16,6 +16,7 @@ import { Schedule } from "@/types/schedule";
 import LoadingContent from "@/components/ui/loading/LoadingContent";
 import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
 import { StatusBar } from "react-native";
+import { formatCategoryDisplay } from "@/utils/formatCategoryDisplay";
 
 const ScheduleDetailScreen = () => {
   const navigation = useNavigation();
@@ -152,9 +153,9 @@ const ScheduleDetailScreen = () => {
                   className="w-16 h-16 rounded-lg mr-4"
                 />
                 <View>
-                  <Text className="font-bold">{item.itemType}</Text>
+                  <Text className="font-bold">{formatCategoryDisplay(item.itemType)}</Text>
                   <Text className="text-gray-500 capitalize">
-                    {item.category} - {item.color}
+                    {formatCategoryDisplay(item.category)} - {item.color}
                   </Text>
                 </View>
               </View>

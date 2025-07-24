@@ -26,6 +26,13 @@ export interface Clothes {
   updatedAt: string;
 }
 
+// Image picker asset interface for new uploads
+export interface ImagePickerAsset {
+  uri: string;
+  type: string;
+  fileName: string;
+}
+
 export interface CollectionItem {
   id: string;
   name: string;
@@ -64,12 +71,13 @@ export interface CreateCollectionResponse {
 
 export interface CreateCollectionData {
   name: string;
-  image?: string;
+  image?: ImagePickerAsset; // For new image uploads
 }
 
+// 🔧 FIXED: UpdateCollectionData can handle both new images and existing URLs
 export interface UpdateCollectionData {
   name: string;
-  image?: string;
+  image?: ImagePickerAsset | string; // ImagePickerAsset for new uploads, string for existing URLs
 }
 
 export interface DeleteCollectionsData {
@@ -83,4 +91,4 @@ export interface CollectionFormModalProps {
   initialData?: UpdateCollectionData;
   title: string;
   submitText: string;
-} 
+}

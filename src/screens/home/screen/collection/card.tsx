@@ -1,6 +1,7 @@
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { CardProps } from "./type";
+import { formatCategoryDisplay } from "@/utils/formatCategoryDisplay";
 
 const CollectionCard = ({ collection }: CardProps) => {
   const { id, name, image, clothes } = collection;
@@ -37,7 +38,7 @@ const CollectionCard = ({ collection }: CardProps) => {
               className="text-base font-bold text-slate-800"
               numberOfLines={1}
             >
-              {name}
+              {formatCategoryDisplay(name)}
             </Text>
             <Text className="text-sm text-slate-500 mt-1">
               {itemCount} items

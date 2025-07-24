@@ -217,12 +217,14 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({
           .filter((item: Clothes) => item.id !== itemToProcess)
           .map((item: Clothes) => item.id);
 
-        const updatedCollection = await removeClothesFromCollection(
+       await removeClothesFromCollection(
           token!,
           collectionId,
           remainingClothesIds
         );
-        setCollection(updatedCollection);
+        // setCollection(updatedCollection);
+     
+        await loadCollectionData();
         showSuccess(
           "Clothes Removed",
           "The item has been removed from the collection"
@@ -305,7 +307,7 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({
       </Text>
       <View className="flex-row">
         <TouchableOpacity onPress={handleAddClothes} className="p-2 mr-2">
-          <Ionicons name="add" size={24} color="#3B82F6" />
+          <Ionicons name="add" size={25} color="#B2236F" />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleDeleteCollection} className="p-2">
           <Ionicons name="trash-outline" size={24} color="#EF4444" />
@@ -320,7 +322,7 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({
         <Text className="text-lg font-semibold">
           Items ({collection?.clothes?.length || 0})
         </Text>
-        {collection?.clothes?.length > 0 && (
+        {selectionMode && collection?.clothes?.length > 0 && (
           <View className="flex-row gap-2">
             <TouchableOpacity
               onPress={selectAllClothes}
@@ -337,10 +339,10 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({
               className="px-3 py-1 bg-gray-100 rounded-lg"
             >
               <Text className="text-gray-600 font-medium">
-                {selectionMode ? "Cancel" : "Select"}
+                Cancel
               </Text>
             </TouchableOpacity>
-            {selectionMode && selectedClothes.length > 0 && (
+            {selectedClothes.length > 0 && (
               <TouchableOpacity
                 onPress={handleBulkRemove}
                 className="px-3 py-1 bg-red-100 rounded-lg"
@@ -348,6 +350,18 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({
                 <Text className="text-red-600 font-medium">Remove</Text>
               </TouchableOpacity>
             )}
+          </View>
+        )}
+        {!selectionMode && collection?.clothes?.length > 0 && (
+          <View className="flex-row gap-2">
+            <TouchableOpacity
+              onPress={toggleSelectionMode}
+              className="px-3 py-1 bg-gray-100 rounded-lg"
+            >
+              <Text className="text-gray-600 font-medium">
+                Select
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -363,12 +377,6 @@ const CollectionDetailScreen: React.FC<CollectionDetailScreenProps> = ({
       <Text className="text-gray-600 text-center mt-2 px-8">
         Add some clothes to start building your collection
       </Text>
-      <TouchableOpacity
-        onPress={handleAddClothes}
-        className="mt-6 bg-blue-500 px-6 py-3 rounded-lg"
-      >
-        <Text className="text-white font-semibold">Add Clothes</Text>
-      </TouchableOpacity>
     </View>
   );
 
