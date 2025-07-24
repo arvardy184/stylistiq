@@ -206,7 +206,7 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
 
   const getModalMessage = () => {
     if (deleteContext === "single" && itemToDelete) {
-      return `This action cannot be undone. Are you sure you want to delete "${itemToDelete.name}"?`;
+      return `This action cannot be undone. Are you sure you want to delete "${itemToDelete.itemType}"?`;
     }
     if (deleteContext === "bulk") {
       return `This action cannot be undone. You are about to delete ${selectedItems.length} items.`;
