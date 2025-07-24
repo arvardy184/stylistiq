@@ -13,14 +13,14 @@ interface CollectionCardProps {
   isSelectionMode?: boolean;
 }
 
-const CollectionCard: React.FC<CollectionCardProps> = ({ 
-  item, 
-  onPress, 
-  onEdit, 
+const CollectionCard: React.FC<CollectionCardProps> = ({
+  item,
+  onPress,
+  onEdit,
   onDelete,
   isSelected = false,
   onToggleSelect,
-  isSelectionMode = false 
+  isSelectionMode = false,
 }) => {
   const handlePress = () => {
     if (isSelectionMode && onToggleSelect) {
@@ -33,18 +33,22 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
   return (
     <TouchableOpacity
       onPress={handlePress}
-      className={`bg-white rounded-2xl shadow-lg shadow-black/5 m-2 overflow-hidden ${
-        isSelected ? 'ring-2 ring-[#B2236F]' : ''
+      className={`bg-white rounded-2xl shadow-lg shadow-black m-2 overflow-hidden ${
+        isSelected ? "ring-2 ring-[#B2236F]" : ""
       }`}
       style={{ flex: 1, maxWidth: "45%" }}
     >
       <View className="aspect-square">
         <Image
-          source={{ uri: item.image || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=300&fit=crop" }}
+          source={{
+            uri:
+              item.image ||
+              "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=300&fit=crop",
+          }}
           className="w-full h-full"
           resizeMode="cover"
         />
-                      {/* Selection Indicator */}
+        {/* Selection Indicator */}
         {isSelectionMode && (
           <View className="absolute top-2 left-2 w-6 h-6 rounded-full bg-white justify-center items-center">
             {isSelected ? (
@@ -55,25 +59,23 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
           </View>
         )}
 
-        {/* Item Count Badge */}
         <View className="absolute top-2 right-2 bg-black/70 px-2 py-1 rounded-full">
           <Text className="text-white text-xs font-medium">
             {item.clothes?.length || 0} items
           </Text>
         </View>
 
-        {/* Action Buttons */}
         {!isSelectionMode && (
-          <View className="absolute bottom-2 right-2 flex-row">
+          <View className="absolute gap-3 bottom-2 right-2 flex-row">
             {onEdit && (
               <TouchableOpacity
                 onPress={(e) => {
                   e.stopPropagation();
                   onEdit();
                 }}
-                className="bg-blue-500 w-8 h-8 rounded-full justify-center items-center mr-2"
+                className="bg-gray-300 w-8 h-8 rounded-full justify-center items-center"
               >
-                <Ionicons name="create-outline" size={16} color="white" />
+                <Ionicons name="pencil" size={14} color="#B2236F" />
               </TouchableOpacity>
             )}
             {onDelete && (
@@ -82,18 +84,21 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
                   e.stopPropagation();
                   onDelete();
                 }}
-                className="bg-red-500 w-8 h-8 rounded-full justify-center items-center"
+                className="bg-gray-300 w-8 h-8 rounded-full justify-center items-center"
               >
-                <Ionicons name="trash-outline" size={16} color="white" />
+                <Ionicons name="trash-outline" size={14} color="#B2236F" />
               </TouchableOpacity>
             )}
           </View>
         )}
       </View>
       <View className="p-4">
-              <Text className="text-gray-800 font-semibold text-base" numberOfLines={1}>
-        {item.name}
-      </Text>
+        <Text
+          className="text-gray-800 font-semibold text-base"
+          numberOfLines={1}
+        >
+          {item.name}
+        </Text>
         <Text className="text-gray-500 text-sm mt-1">
           Updated {new Date(item.updatedAt).toLocaleDateString()}
         </Text>
@@ -102,4 +107,4 @@ const CollectionCard: React.FC<CollectionCardProps> = ({
   );
 };
 
-export default CollectionCard; 
+export default CollectionCard;

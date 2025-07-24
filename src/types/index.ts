@@ -4,17 +4,18 @@ export type RootStackParamList = {
   PhotoAnalysis: { imageUri?: string };
   OutfitDetails: { outfitId: string };
   ClothesDetail: { clothesId: string; clothesName: string };
+  CollectionDetail: { collectionId: string; collectionName: string };
   MatchResult: { analyzedItem: any };
   EditClothes: { analyzedItem: any };
   Schedule: { selectedDate?: string };
-  ScheduleForm: { 
-    selectedDate: string; 
-    schedule?: any; 
-    mode: "create" | "edit" 
+  ScheduleForm: {
+    selectedDate: string;
+    schedule?: any;
+    mode: "create" | "edit";
   };
-  ScheduleDetail: { 
-    scheduleId: string; 
-    scheduleName: string 
+  ScheduleDetail: {
+    scheduleId: string;
+    scheduleName: string;
   };
   Login: undefined;
   Register: undefined;
@@ -22,6 +23,7 @@ export type RootStackParamList = {
   ResetPassword: { email: string };
   ChangePassword: undefined;
   Onboarding: undefined;
+  Collections: undefined;
 };
 
 export type MainTabParamList = {

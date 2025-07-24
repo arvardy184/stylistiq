@@ -4,9 +4,11 @@ import { useAuthStore } from "@/store/auth/authStore";
 import { useGetAllCollectionByToken } from "@/services/queries/collection/getAllCollectionByToken";
 import { Collection } from "./type";
 import CollectionCard from "./card";
+import { useNavigation } from "@react-navigation/native";
 
 const ColletionBody = () => {
   const { token } = useAuthStore();
+  const navigation = useNavigation();
   const {
     data: collections,
     isLoading,
@@ -68,13 +70,17 @@ const ColletionBody = () => {
     ));
   };
 
+  const toCollection = () => {
+    navigation.navigate("Collections");
+  };
+
   return (
     <View className="px-5 mt-4">
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-slate-800 text-2xl font-bold">
           My Collections
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={toCollection}>
           <Text className="text-primary font-semibold">See All</Text>
         </TouchableOpacity>
       </View>

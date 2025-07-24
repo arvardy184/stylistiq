@@ -44,18 +44,17 @@ const AppNavigator = () => {
     checkOnboardingStatus();
   }, []);
 
-  // Setup notification handlers
   useEffect(() => {
     if (!token) return;
 
     const navigateToSchedule = (scheduleId: string) => {
-      console.log('🔔 [NOTIFICATION] Navigating to schedule:', scheduleId);
       if (navigationRef.current) {
-        navigationRef.current.navigate('ScheduleDetail', { scheduleId });
+        navigationRef.current.navigate("ScheduleDetail", { scheduleId });
       }
     };
 
-    const subscriptions = notificationService.setupNotificationHandlers(navigateToSchedule);
+    const subscriptions =
+      notificationService.setupNotificationHandlers(navigateToSchedule);
 
     return () => {
       subscriptions.foregroundSubscription.remove();
@@ -83,7 +82,7 @@ const AppNavigator = () => {
         <Stack.Screen
           name="ClothesDetail"
           component={ClothesDetailScreen}
-          options={{ headerShown:true, title: "Clothes Detail"}}
+          options={{ headerShown: true, title: "Clothes Detail" }}
         />
         <Stack.Screen
           name="MatchResult"

@@ -20,8 +20,7 @@ import LoadingState from "../components/LoadingState";
 import CollectionFormModal from "../components/CollectionFormModal";
 import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
 import { useCollections } from "../hooks/useCollections";
-import { useFocusEffect } from "@react-navigation/native";
-import { useCallback } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
   const {
@@ -44,63 +43,80 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
   const [isCreateModalVisible, setIsCreateModalVisible] = React.useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = React.useState(false);
   const [editingCollection, setEditingCollection] = React.useState<any>(null);
-  
-  // Confirmation modal states
   const [isDeleteModalVisible, setIsDeleteModalVisible] = React.useState(false);
-  const [deleteContext, setDeleteContext] = React.useState<"single" | "bulk">("single");
-  const [collectionToDelete, setCollectionToDelete] = React.useState<{id: string, name: string} | null>(null);
+  const [deleteContext, setDeleteContext] = React.useState<"single" | "bulk">(
+    "single"
+  );
+  const [collectionToDelete, setCollectionToDelete] = React.useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   useFocusEffect(
-    useCallback(() => {
+    React.useCallback(() => {
       loadCollections();
     }, [])
   );
 
-  const renderHeader = () => {
-    if (isSelectionMode) {
-      return (
-        <View className="flex-row items-center justify-between p-4 bg-white border-b border-gray-200">
-          <TouchableOpacity onPress={exitSelectionMode}>
-            <Ionicons name="close" size={24} color="#374151" />
-          </TouchableOpacity>
-          <Text className="text-lg font-bold">
-            {selectedCollections.length} selected
-          </Text>
-          <TouchableOpacity
-            onPress={handleBulkDeletePress}
-            disabled={selectedCollections.length === 0}
-            className="p-2 bg-red-100 rounded-lg"
-          >
-            <Ionicons
-              name="trash-outline"
-              size={20}
-              color={selectedCollections.length === 0 ? "#9CA3AF" : "#DC2626"}
-            />
-          </TouchableOpacity>
-        </View>
-      );
-    }
-
-    return (
-      <View className="flex-row items-center justify-between p-4 bg-white border-b border-gray-200">
-        <Text className="text-xl font-bold">Collections</Text>
-        <View className="flex-row gap-2">
-          <TouchableOpacity
-            onPress={enterSelectionMode}
-            className="p-2 bg-gray-100 rounded-lg"
-          >
-            <Ionicons name="checkmark-circle-outline" size={24} color="#6B7280" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setIsCreateModalVisible(true)}
-            className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg"
-          >
-            <Ionicons name="add" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      ...(isSelectionMode
+        ? {
+            title: `${selectedCollections.length} selected`,
+            headerLeft: () => (
+              <TouchableOpacity onPress={exitSelectionMode} className="ml-4">
+                <Ionicons name="close" size={24} color="#374151" />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={handleBulkDeletePress}
+                disabled={selectedCollections.length === 0}
+                className="p-2 bg-red-100 rounded-lg mr-4"
+              >
+                <Ionicons
+                  name="trash-outline"
+                  size={20}
+                  color={
+                    selectedCollections.length === 0 ? "#9CA3AF" : "#DC2626"
+                  }
+                />
+              </TouchableOpacity>
+            ),
+          }
+        : {
+            title: "Collections",
+            headerLeft: undefined,
+            headerRight: () => (
+              <View className="flex-row gap-2 mr-4">
+                <TouchableOpacity
+                  onPress={enterSelectionMode}
+                  className="p-2 bg-gray-100 rounded-lg"
+                >
+                  <Ionicons
+                    name="checkmark-circle-outline"
+                    size={24}
+                    color="#6B7280"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setIsCreateModalVisible(true)}
+                  className="p-2 bg-gray-100 rounded-lg"
+                >
+                  <Ionicons name="add" size={24} color="#6B7280" />
+                </TouchableOpacity>
+              </View>
+            ),
+          }),
+    });
+  }, [
+    navigation,
+    isSelectionMode,
+    selectedCollections.length,
+    enterSelectionMode,
+    exitSelectionMode,
+    setIsCreateModalVisible,
+  ]);
 
   const handleEditCollectionPress = (collection: any) => {
     setEditingCollection(collection);
@@ -120,7 +136,6 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
     }
   };
 
-  // Delete handlers with modal
   const handleDeleteCollectionPress = (id: string, name: string) => {
     setCollectionToDelete({ id, name });
     setDeleteContext("single");
@@ -135,13 +150,11 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
 
   const handleConfirmDelete = async () => {
     let success = false;
-    
     if (deleteContext === "single" && collectionToDelete) {
       success = await deleteCollection(collectionToDelete.id);
     } else if (deleteContext === "bulk") {
       success = await bulkDeleteCollections(selectedCollections);
     }
-    
     setIsDeleteModalVisible(false);
     setCollectionToDelete(null);
   };
@@ -161,12 +174,9 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
     return "";
   };
 
-  const renderEmptyState = () => <EmptyState />;
-
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-gray-50">
-        {renderHeader()}
         <LoadingState message="Loading collections..." />
       </SafeAreaView>
     );
@@ -175,10 +185,9 @@ const CollectionsScreen: React.FC<CollectionScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar backgroundColor="#B2236F" barStyle="light-content" />
-      {renderHeader()}
 
       {collections.length === 0 ? (
-        renderEmptyState()
+        <EmptyState />
       ) : (
         <FlatList
           data={collections}

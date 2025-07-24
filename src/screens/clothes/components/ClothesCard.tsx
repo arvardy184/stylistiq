@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ClothesCardProps } from "../types";
 
 const { width: screenWidth } = Dimensions.get("window");
-const cardWidth = (screenWidth - 48) / 2; // 48 = padding + gaps
+const cardWidth = (screenWidth - 32) / 2;
 
 const ClothesCard: React.FC<ClothesCardProps> = ({
   item,
@@ -18,7 +18,7 @@ const ClothesCard: React.FC<ClothesCardProps> = ({
   const handlePress = () => {
     if (selectionMode && onSelect) {
       onSelect();
-    } else {
+    } else if (onPress) {
       onPress();
     }
   };
@@ -26,8 +26,8 @@ const ClothesCard: React.FC<ClothesCardProps> = ({
   return (
     <TouchableOpacity
       onPress={handlePress}
-      className={`bg-white rounded-2xl shadow-lg shadow-black/10 m-1 overflow-hidden ${
-        isSelected ? "ring-2 ring-blue-500" : ""
+      className={`bg-white rounded-2xl shadow-md shadow-black m-1 overflow-hidden border border-transparent ${
+        isSelected ? "border-blue-500" : ""
       }`}
       style={{ width: cardWidth }}
     >
@@ -37,81 +37,66 @@ const ClothesCard: React.FC<ClothesCardProps> = ({
           className="w-full h-full"
           resizeMode="cover"
         />
-        
-        {/* Selection overlay */}
         {selectionMode && (
-          <View className="absolute inset-0 bg-black/20 justify-center items-center">
-            <View className={`w-8 h-8 rounded-full border-2 border-white justify-center items-center ${
-              isSelected ? "bg-blue-500" : "bg-transparent"
-            }`}>
+          <View className="absolute inset-0 bg-black/30 justify-center items-center">
+            <View
+              className={`w-8 h-8 rounded-full border-2 border-white justify-center items-center ${
+                isSelected ? "bg-blue-500" : "bg-black/20"
+              }`}
+            >
               {isSelected && (
-                <Ionicons name="checkmark" size={18} color="white" />
+                <Ionicons name="checkmark" size={20} color="white" />
               )}
             </View>
           </View>
         )}
-        
-        {/* Category Badge */}
-        <View className="absolute top-3 left-3 bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 rounded-full">
-          <Text className="text-white text-xs font-semibold">
-            {item.category}
-          </Text>
-        </View>
-        
-        {/* Action Buttons */}
+
         {!selectionMode && (
-          <View className="absolute top-3 right-3 flex-row gap-2">
+          <View className="absolute top-2 right-2 flex-row gap-2">
             {onEdit && (
               <TouchableOpacity
                 onPress={onEdit}
-                className="bg-blue-500 w-7 h-7 rounded-full justify-center items-center"
+                className="bg-gray-300 w-8 h-8 rounded-full justify-center items-center"
               >
-                <Ionicons name="pencil" size={12} color="white" />
+                <Ionicons name="pencil" size={14} color="#B2236F" />
               </TouchableOpacity>
             )}
             {onDelete && (
               <TouchableOpacity
                 onPress={onDelete}
-                className="bg-red-500 w-7 h-7 rounded-full justify-center items-center"
+                className="bg-gray-300 w-8 h-8 rounded-full justify-center items-center"
               >
-                <Ionicons name="trash-outline" size={12} color="white" />
+                <Ionicons name="trash-outline" size={14} color="#B2236F" />
               </TouchableOpacity>
             )}
           </View>
         )}
-        
-        {/* Color Indicator */}
-        <View className="absolute bottom-3 right-3 flex-row gap-1">
-          <View 
-            className="w-5 h-5 rounded-full border-2 border-white shadow-md"
-            style={{ backgroundColor: item.color}} 
-          />
-        </View>
       </View>
-      
-      <View className="p-4">
-        <Text className="text-gray-900 font-bold text-sm mb-2" numberOfLines={1}>
-          {item.name}
+
+      {/* Info Container */}
+      <View className="p-3">
+        <Text
+          className="text-gray-800 font-bold text-base mb-2"
+          numberOfLines={1}
+        >
+          {item.itemType}
         </Text>
-        
-        <View className="flex-row justify-between items-center">
-          <View className="flex-row items-center">
-            <Ionicons name="color-palette-outline" size={14} color="#6B7280" />
-            <Text className="text-gray-600 text-xs ml-1 capitalize">
+
+        <View className="flex-row flex-wrap gap-2 items-center">
+          <View className="bg-gray-100 rounded-full px-2.5 py-1">
+            <Text className="text-gray-700 text-xs font-medium">
+              {item.category}
+            </Text>
+          </View>
+          <View className="flex-row items-center bg-gray-100 rounded-full px-2.5 py-1">
+            <Text className="text-gray-700 text-xs font-medium capitalize">
               {item.color}
             </Text>
           </View>
-          
-          {/* <View className="flex-row items-center">
-            <Ionicons name="sunny-outline" size={14} color="#6B7280" />
-            <Text className="text-gray-600 text-xs ml-1 capitalize">
-              {item.season}
-            </Text>
-          </View> */}
         </View>
       </View>
     </TouchableOpacity>
   );
 };
 
-export default ClothesCard; 
+export default ClothesCard;
