@@ -18,10 +18,13 @@ import EmptyState from "../components/EmptyState";
 import LoadingState from "../components/LoadingState";
 import ClothesFormModal from "../components/ClothesFormModal";
 import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
+import ImageSelectionModal from "@/screens/scan/components/ImageSelectionModal";
+import { useClothesAnalysis } from "@/screens/scan/hooks/useClothesAnalysis";
 
 const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showFormModal, setShowFormModal] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
   const [editingClothes, setEditingClothes] = useState<Clothes | null>(null);
   const searchRef = useRef<NodeJS.Timeout | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -29,6 +32,13 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
     "single" | "bulk" | "none"
   >("none");
   const [itemToDelete, setItemToDelete] = useState<Clothes | null>(null);
+  const { addImages } = useClothesAnalysis();
+
+  const handleImagesSelected = (uris: string[]) => {
+    addImages(uris);
+    setShowImageModal(false);
+    navigation.navigate("Scan", { newImages: uris });
+  };
 
   const {
     clothes,
@@ -52,11 +62,8 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
 
   const displayClothes = searchQuery.trim() ? searchResults : clothes;
 
-  // --- HANDLER FUNCTIONS ---
-
   const handleCreateClothes = () => {
-    setEditingClothes(null);
-    setShowFormModal(true);
+    setShowImageModal(true); // Buka ImageSelectionModal saja
   };
 
   const closeDeleteModal = () => {
@@ -108,11 +115,11 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
 
   const handleEditClothes = (item: Clothes) => {
     setEditingClothes(item);
-    setShowFormModal(true);
+    setShowFormModal(true); // Untuk edit, tetap buka ClothesFormModal
   };
 
   const handleFormSubmit = (data: ClothesFormData) => {
-    console.log('Form Submitted...');
+    console.log("Form Submitted...");
     if (editingClothes) {
       updateClothesItem(editingClothes.id, data);
     } else {
@@ -164,14 +171,14 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
                   <Ionicons
                     name="checkmark-circle-outline"
                     size={24}
-                    color="#6B7280"
+                    color="#B2236F"
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={handleCreateClothes}
-                  className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg"
+                  className="p-2 bg-gray-100 rounded-lg"
                 >
-                  <Ionicons name="add" size={24} color="white" />
+                  <Ionicons name="add" size={24} color="#B2236F" />
                 </TouchableOpacity>
               </View>
             ),
@@ -193,7 +200,7 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
     useCallback(() => {
       setSearchQuery("");
       clearSelection();
-      refreshClothes(); 
+      refreshClothes();
     }, [clearSelection, refreshClothes])
   );
 
@@ -289,8 +296,14 @@ const ClothesScreen: React.FC<ClothesScreenProps> = ({ navigation }) => {
         onClose={() => setShowFormModal(false)}
         onSubmit={handleFormSubmit}
         initialData={editingClothes}
-        title={editingClothes ? "Edit Clothes" : "Add New Clothes"}
+        title={"Edit Clothes"}
         submitText={editingClothes ? "Update" : "Create"}
+      />
+
+      <ImageSelectionModal
+        visible={showImageModal}
+        onClose={() => setShowImageModal(false)}
+        onImageSelected={handleImagesSelected}
       />
 
       <ConfirmationModal

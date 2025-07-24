@@ -21,6 +21,7 @@ export type RootStackParamList = {
   Register: undefined;
   Notification: undefined;
   ResetPassword: { email: string };
+  Scan: { newImages: string[] };
   ChangePassword: undefined;
   Onboarding: undefined;
   Collections: undefined;

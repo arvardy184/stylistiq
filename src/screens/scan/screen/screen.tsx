@@ -17,8 +17,14 @@ import ImageGrid from "../components/ImageGrid";
 import AnalysisLoading from "../components/AnalysisLoading";
 import AnalysisResultList from "../components/AnalysisResultList";
 import ImageSelectionModal from "../components/ImageSelectionModal";
+import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
+import { RootStackParamList } from "@/types";
+
+type ScanScreenRouteProp = RouteProp<RootStackParamList, "Scan">;
 
 const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
+  const route = useRoute<ScanScreenRouteProp>();
+  const newImages = route.params?.newImages || [];
   const [modalVisible, setModalVisible] = useState(false);
   const {
     selectedImages,
@@ -32,8 +38,17 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
     clearAll,
   } = useClothesAnalysis();
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if (newImages && newImages.length > 0) {
+        addImages(newImages);
+        navigation.setParams({ newImages: null });
+      }
+    }, [newImages, addImages, navigation])
+  );
+
   const handleImagesSelected = (uris: string[]) => {
-    console.log('Images Selected...');
+    console.log("Images Selected...");
     addImages(uris);
     setModalVisible(false);
   };

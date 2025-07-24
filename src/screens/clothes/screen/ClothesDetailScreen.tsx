@@ -16,6 +16,7 @@ import { Clothes, ClothesDetailScreenProps, ClothesFormData } from "../types";
 import LoadingState from "../components/LoadingState";
 import ConfirmationModal from "@/components/ui/modal/ConfirmationModal";
 import ClothesFormModal from "../components/ClothesFormModal";
+import { formatCategoryDisplay } from "@/utils/formatCategoryDisplay";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -24,7 +25,14 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   route,
 }) => {
   const { clothesId, clothesName } = route.params;
-  const { clothesDetail, loading, deleteClothesItem, bulkDeleteClothes,createClothesItem,updateClothesItem } = useClothesDetail(clothesId);   
+  const {
+    clothesDetail,
+    loading,
+    deleteClothesItem,
+    bulkDeleteClothes,
+    createClothesItem,
+    updateClothesItem,
+  } = useClothesDetail(clothesId);
   const [editingClothes, setEditingClothes] = useState<Clothes | null>(null);
   const [showFormModal, setShowFormModal] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
@@ -33,7 +41,7 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
     "single" | "bulk" | "none"
   >("none");
   const [itemToDelete, setItemToDelete] = useState<Clothes | null>(null);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);  
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const closeDeleteModal = () => {
     setIsModalVisible(false);
     setDeleteContext("none");
@@ -44,16 +52,13 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   };
 
   const handleEdit = () => {
-    setEditingClothes(clothesDetail); 
+    setEditingClothes(clothesDetail);
     setShowFormModal(true);
     console.log("tes edit");
-   
   };
 
-  
-
   const handleFormSubmit = (data: ClothesFormData) => {
-    console.log('Form Submitted...');
+    console.log("Form Submitted...");
     if (editingClothes) {
       updateClothesItem(editingClothes.id, data);
     } else {
@@ -65,7 +70,7 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
 
   const handleConfirmDelete = async () => {
     if (deleteContext === "single" && itemToDelete) {
-     await deleteClothesItem(itemToDelete.id);
+      await deleteClothesItem(itemToDelete.id);
       navigation.navigate("Wardrobe");
     } else if (deleteContext === "bulk") {
       await bulkDeleteClothes(selectedItems);
@@ -89,7 +94,6 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
     console.log("tes delete");
   };
 
-
   const DetailItem = ({ icon, label, value, color = "#6B7280" }) => (
     <View className="flex-row items-center py-3 border-b border-gray-100">
       <View className="w-10 h-10 bg-gray-100 rounded-lg justify-center items-center mr-4">
@@ -105,7 +109,7 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-white">
-        <StatusBar barStyle="dark-content" backgroundColor="white" />
+        <StatusBar barStyle="light-content" backgroundColor="#B2236F" />
         <LoadingState type="simple" />
       </SafeAreaView>
     );
@@ -114,14 +118,15 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   if (!clothesDetail) {
     return (
       <SafeAreaView className="flex-1 bg-white">
-        <StatusBar barStyle="dark-content" backgroundColor="white" />
+        <StatusBar barStyle="light-content" backgroundColor="#B2236F" />
         <View className="flex-1 justify-center items-center px-8">
           <Ionicons name="alert-circle-outline" size={64} color="#EF4444" />
           <Text className="text-xl font-bold text-gray-900 text-center mt-4">
             Clothes Not Found
           </Text>
           <Text className="text-gray-600 text-center mt-2">
-            The clothes item you're looking for doesn't exist or has been deleted.
+            The clothes item you're looking for doesn't exist or has been
+            deleted.
           </Text>
           <TouchableOpacity
             onPress={handleGoBack}
@@ -135,14 +140,10 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
   }
 
   return (
-
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
-      
-  
+      <StatusBar barStyle="light-content" backgroundColor="#B2236F" />
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* Image Section */}
         <View className="relative bg-gray-50">
           <Image
             source={{ uri: clothesDetail.image }}
@@ -151,40 +152,18 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
           />
-          
+
           {imageLoading && (
             <View className="absolute inset-0 justify-center items-center bg-gray-100">
               <LoadingState type="simple" />
             </View>
           )}
-          
-          {/* Category Badge */}
-          <View className="absolute top-6 left-6 bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-full">
-            <Text className="text-white font-semibold">
-              {clothesDetail.category}
-            </Text>
-          </View>
-          
-          {/* Color Indicator */}
-          <View className="absolute top-6 right-6 flex-row items-center bg-white/90 px-3 py-2 rounded-full">
-            <View
-              className="w-4 h-4 rounded-full mr-2"
-              style={{ backgroundColor: clothesDetail.color }}
-            />
-            <Text className="text-gray-900 font-medium capitalize">
-              {clothesDetail.color}
-            </Text>
-          </View>
         </View>
 
-        {/* Details Section */}
-        <View className="px-6 py-6">
-          <View className="mb-6">
-            <Text className="text-2xl font-bold text-gray-900 mb-2">
-              {clothesDetail.name}
-            </Text>
-            <Text className="text-gray-600">
-              Added {new Date(clothesDetail.createdAt).toLocaleDateString()}
+        <View className="p-5">
+          <View className="mb-6 w-full">
+            <Text className="text-2xl font-bold text-gray-900">
+              {formatCategoryDisplay(clothesDetail.itemType)}
             </Text>
           </View>
 
@@ -192,28 +171,21 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
             <Text className="text-lg font-semibold text-gray-900 mb-4">
               Item Details
             </Text>
-            
+
             <DetailItem
               icon="shirt-outline"
               label="Category"
               value={clothesDetail.category}
               color="#8B5CF6"
             />
-            
+
             <DetailItem
               icon="color-palette-outline"
               label="Color"
               value={clothesDetail.color}
               color="#EC4899"
             />
-            
-            {/* <DetailItem
-              icon="sunny-outline"
-              label="Season"
-              value={clothesDetail.season}
-              color="#F59E0B"
-            /> */}
-            
+
             <DetailItem
               icon="calendar-outline"
               label="Date Added"
@@ -231,7 +203,7 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
               <Ionicons name="pencil" size={20} color="white" />
               <Text className="text-white font-semibold ml-2">Edit</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               onPress={handleDelete}
               className="flex-1 bg-red-500 py-4 rounded-xl flex-row items-center justify-center"
@@ -243,30 +215,28 @@ const ClothesDetailScreen: React.FC<ClothesDetailScreenProps> = ({
         </View>
       </ScrollView>
       <ClothesFormModal
-  visible={showFormModal}
-  onClose={() => {
-    setShowFormModal(false);
-    setEditingClothes(null);
-  }}
-  onSubmit={handleFormSubmit}
-  initialData={editingClothes}
-  title={editingClothes ? "Edit Clothes" : "Add New Clothes"}
-  submitText={editingClothes ? "Update" : "Create"}
-/>
-<ConfirmationModal
-  visible={isModalVisible}
-  onClose={closeDeleteModal}
-  onConfirm={handleConfirmDelete}
-  title="Are you sure?"
-  message={getModalMessage()}
-  icon="trash-2"
-  confirmText="Delete"
-  confirmButtonVariant="destructive"
-/>
-
+        visible={showFormModal}
+        onClose={() => {
+          setShowFormModal(false);
+          setEditingClothes(null);
+        }}
+        onSubmit={handleFormSubmit}
+        initialData={editingClothes}
+        title={editingClothes ? "Edit Clothes" : "Add New Clothes"}
+        submitText={editingClothes ? "Update" : "Create"}
+      />
+      <ConfirmationModal
+        visible={isModalVisible}
+        onClose={closeDeleteModal}
+        onConfirm={handleConfirmDelete}
+        title="Are you sure?"
+        message={getModalMessage()}
+        icon="trash-2"
+        confirmText="Delete"
+        confirmButtonVariant="destructive"
+      />
     </SafeAreaView>
-    
   );
 };
 
-export default ClothesDetailScreen; 
+export default ClothesDetailScreen;

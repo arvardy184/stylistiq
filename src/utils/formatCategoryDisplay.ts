@@ -1,5 +1,6 @@
 export const formatCategoryDisplay = (str: string): string => {
-    return str
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-  };
+  return str
+    .split(/[_ ]+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};

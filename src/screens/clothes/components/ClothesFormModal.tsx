@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet, ScrollView,
 import { Ionicons } from '@expo/vector-icons';
 import { Clothes, ClothesFormData, CLOTHES_CATEGORIES, CLOTHES_COLORS } from '../types';
 import * as ImagePicker from 'expo-image-picker';
+import { formatCategoryDisplay } from '@/utils/formatCategoryDisplay';
 
 interface ClothesFormModalProps {
   visible: boolean;
@@ -68,20 +69,36 @@ const ClothesFormModal: React.FC<ClothesFormModalProps> = ({ visible, onClose, o
     onClose(); // Close modal after submit
   };
   
-  const renderPicker = (label: string, selectedValue: string, onValueChange: (value: string) => void, items: readonly string[]) => (
+  const renderPicker = (
+    label: string,
+    selectedValue: string,
+    onValueChange: (value: string) => void,
+    items: readonly string[]
+  ) => (
     <View style={styles.inputContainer}>
-        <Text style={styles.label}>{label}</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 5 }}>
-            {items.map(item => (
-                <TouchableOpacity 
-                    key={item} 
-                    style={[styles.chip, selectedValue === item && styles.chipSelected]}
-                    onPress={() => onValueChange(item)}
-                >
-                    <Text style={[styles.chipText, selectedValue === item && styles.chipTextSelected]}>{item}</Text>
-                </TouchableOpacity>
-            ))}
-        </ScrollView>
+      <Text style={styles.label}>{label}</Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingVertical: 5 }}
+      >
+        {items.map((item) => (
+          <TouchableOpacity
+            key={item}
+            style={[styles.chip, selectedValue === item && styles.chipSelected]}
+            onPress={() => onValueChange(item)}
+          >
+            <Text
+              style={[
+                styles.chipText,
+                selectedValue === item && styles.chipTextSelected,
+              ]}
+            >
+              {formatCategoryDisplay(item)}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
   );
 

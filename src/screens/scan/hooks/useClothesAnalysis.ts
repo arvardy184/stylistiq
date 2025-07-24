@@ -3,7 +3,6 @@ import { useAuthStore } from '@/store/auth/authStore';
 import { analyzeClothes, createClothes } from '@/services/api/clothes';
 import { AnalysisResultItem } from '../types';
 import { Clothes } from '@/screens/collections/types'; 
-import { ClothesFormData } from '@/screens/clothes/types';
 import Toast from 'react-native-toast-message';
 import { formatCategoryDisplay } from '@/utils/formatCategoryDisplay';
 
@@ -16,7 +15,6 @@ export const useClothesAnalysis = () => {
 
   const addImages = useCallback((uris: string[]) => {
     console.log('📸 Adding images to analysis:', uris);
-    // Avoid duplicates
     const newUris = uris.filter(uri => !selectedImages.includes(uri));
     setSelectedImages(prev => [...prev, ...newUris]);
     console.log('📸 Total selected images:', selectedImages.length + newUris.length);

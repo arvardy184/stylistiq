@@ -7,6 +7,8 @@ import { useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { MainTabParamList } from "@/types";
 
+const PRIMARY_COLOR = "#B2236F";
+
 const AnalysisResultList: React.FC<AnalysisResultListProps> = ({
   results,
   onDone,
@@ -19,56 +21,56 @@ const AnalysisResultList: React.FC<AnalysisResultListProps> = ({
   ).length;
   const failedItems = results.length - successfulItems;
 
-
   const handleGoToWardrobe = () => {
-    // Navigate to the Wardrobe/Clothes tab
     navigation.navigate("Wardrobe" as never);
-
     onDone();
   };
 
-  return (
-    <View className="flex-1 bg-gray-50">
-      <View className="p-6 bg-white border-b border-gray-200">
-        <Text className="text-2xl font-bold text-gray-900">
-          Analysis Complete
-        </Text>
-        <Text className="text-base text-gray-600 mt-1">
-          Here are the results of your scan. You can now add the identified
-          items to your wardrobe.
-        </Text>
-        <View className="flex-row mt-4 gap-4">
-          <View className="flex-1 bg-green-100 p-3 rounded-lg items-center">
-            <Text className="text-green-800 font-bold text-lg">
-              {successfulItems}
-            </Text>
-            <Text className="text-green-700">Successful</Text>
-          </View>
-          <View className="flex-1 bg-red-100 p-3 rounded-lg items-center">
-            <Text className="text-red-800 font-bold text-lg">
-              {failedItems}
-            </Text>
-            <Text className="text-red-700">Failed</Text>
-          </View>
+  const ListHeader = () => (
+    <View className="p-6 bg-slate-50">
+      <Text className="text-3xl font-bold text-slate-900">
+        Analysis Finished
+      </Text>
+      <View className="flex-row mt-6 bg-white p-4 rounded-xl border border-slate-100">
+        <View className="flex-1 items-center border-r border-slate-200">
+          <Text className="text-2xl font-bold text-green-600">
+            {successfulItems}
+          </Text>
+          <Text className="text-sm font-medium text-slate-500 mt-1">
+            Successful
+          </Text>
+        </View>
+        <View className="flex-1 items-center">
+          <Text className="text-2xl font-bold text-red-600">{failedItems}</Text>
+          <Text className="text-sm font-medium text-slate-500 mt-1">
+            Failed
+          </Text>
         </View>
       </View>
+    </View>
+  );
 
+  return (
+    <View className="flex-1 bg-slate-50">
       <FlatList
         data={results}
         renderItem={({ item }) => (
           <AnalysisResultCard result={item} onSave={onSaveItem} />
         )}
         keyExtractor={(item) => item.id || item.originalImageUri}
-        contentContainerStyle={{ paddingBottom: 120 }}
+        ListHeaderComponent={ListHeader}
+        contentContainerStyle={{ paddingBottom: 120, paddingHorizontal: 16 }}
       />
 
-      <View className="absolute bottom-0 left-0 right-0 p-10 bg-white border-t border-gray-200">
+      <View className="absolute bottom-0 left-0 right-0 p-6 mb-5 bg-slate-50 border-t border-slate-200">
         <TouchableOpacity
           onPress={handleGoToWardrobe}
-          className="bg-primary py-4 rounded-full flex-row items-center justify-center shadow-lg"
+          className="flex-row items-center justify-center rounded-2xl py-4 px-5 shadow-lg shadow-black/20"
+          style={{ backgroundColor: PRIMARY_COLOR }}
+          activeOpacity={0.8}
         >
-          <Ionicons name="checkmark-done" size={22} color="white" />
-          <Text className="text-white font-bold text-lg ml-2">Done</Text>
+          <Ionicons name="checkmark-done-circle" size={24} color="white" />
+          <Text className="text-white font-bold text-lg ml-3">Done</Text>
         </TouchableOpacity>
       </View>
     </View>
